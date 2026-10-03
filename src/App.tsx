@@ -35,6 +35,7 @@ import {
 } from './components/modals/AuxiliaryModals';
 import { UpayCardModal } from './components/modals/UpayCardModal';
 import { UpayOffersModal } from './components/modals/UpayOffersModal';
+import { UiDesignShowcaseModal } from './components/modals/UiDesignShowcaseModal';
 import { SomitiListScreen } from './components/somiti/SomitiListScreen';
 import { SomitiDetailModal } from './components/somiti/SomitiDetailModal';
 import { CreateSomitiModal } from './components/somiti/CreateSomitiModal';
@@ -126,9 +127,9 @@ export default function App() {
             )
           ) : (
             <div className="flex-1 w-full flex flex-col overflow-hidden">
-              {/* Yellow header fixed on top for all 12 feature screens */}
+              {/* Modern Mint header fixed on top for all 12 feature screens */}
               {isFeatureScreen && (
-                <div className="w-full bg-[#FFD600] px-4 py-2.5 flex items-center justify-between border-b border-amber-300 shadow-xs z-20 shrink-0 sticky top-0 select-none">
+                <div className="w-full bg-gradient-to-r from-[#00D492] to-[#00B478] px-4 py-2.5 flex items-center justify-between border-b border-emerald-400 shadow-xs z-20 shrink-0 sticky top-0 select-none">
                   <button
                     type="button"
                     onClick={() => {
@@ -362,6 +363,9 @@ export default function App() {
         )}
         {(currentModal === 'offers_demo' || currentModal === 'upay_offers') && (
           <UpayOffersModal onClose={() => setCurrentModal(null)} />
+        )}
+        {(currentModal === 'ui_showcase' || currentModal === 'ui_designs') && (
+          <UiDesignShowcaseModal onClose={() => setCurrentModal(null)} />
         )}
         {selectedSomiti && (
           <SomitiDetailModal
