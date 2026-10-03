@@ -58,7 +58,7 @@ export const NEARBY_AGENTS: AgentLiquidityProfile[] = [
   },
   {
     id: 'ag_4',
-    name: 'গুলশান ১ উপায় এক্সপ্রেস হাব',
+    name: 'গুলশান ১ রিকার্শন পে এক্সপ্রেস হাব',
     phone: '01677889900',
     location: 'গুলশান শপিং সেন্টার নিচতলা, ঢাকা',
     area: 'গুলশান',
@@ -142,7 +142,7 @@ export const INITIAL_EXCHANGES: FloatExchangeRequest[] = [
 const INITIAL_RESERVATIONS: CashReservation[] = [
   {
     id: 'res_101',
-    referenceCode: 'UPAY-CASH-8821-DH',
+    referenceCode: 'RPAY-CASH-8821-DH',
     agentId: 'ag_1',
     agentName: 'বিসমিল্লাহ টেলিকম (ফার্মগেট)',
     agentPhone: '01712998811',
@@ -152,7 +152,7 @@ const INITIAL_RESERVATIONS: CashReservation[] = [
     reservedAt: 'আজ, দুপুর ১:৪৫',
     expiresAt: 'আজ, দুপুর ৩:০০',
     status: 'active',
-    qrCodePayload: 'UPAY-RESERVE:8821:10000:AG1'
+    qrCodePayload: 'RPAY-RESERVE:8821:10000:AG1'
   }
 ];
 
@@ -186,7 +186,7 @@ export function createCashReservation(params: {
   const all = getCashReservations();
   const randCode = Math.floor(1000 + Math.random() * 9000);
   const now = new Date();
-  const ref = `UPAY-CASH-${randCode}-${params.agent.area.slice(0, 2).toUpperCase()}`;
+  const ref = `RPAY-CASH-${randCode}-${params.agent.area.slice(0, 2).toUpperCase()}`;
 
   const newReservation: CashReservation = {
     id: `res_${Date.now()}`,
@@ -200,7 +200,7 @@ export function createCashReservation(params: {
     reservedAt: now.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' }),
     expiresAt: '৪৫ মিনিট ভ্যালিডিটি',
     status: 'active',
-    qrCodePayload: `UPAY-RESERVE:${ref}:${params.amount}`
+    qrCodePayload: `RPAY-RESERVE:${ref}:${params.amount}`
   };
 
   all.unshift(newReservation);
