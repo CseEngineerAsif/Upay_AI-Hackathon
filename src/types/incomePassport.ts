@@ -16,7 +16,7 @@ export type PassportPurpose = 'house_rent' | 'school_admission' | 'microloan' | 
 
 export interface IncomePassportToken {
   id: string;
-  referenceCode: string; // e.g. UPAY-PASS-8891-RENT
+  referenceCode: string; // e.g. RPAY-PASS-8891-RENT
   purpose: PassportPurpose;
   purposeBn: string;
   recipientEntity: string; // e.g., বাড়িওয়ালা (House Owner), উত্তরা হাই স্কুল
