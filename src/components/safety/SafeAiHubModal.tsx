@@ -39,8 +39,8 @@ export const SafeAiHubModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
       id: 'maps_grounding',
       titleBn: 'গুগল ম্যাপস গ্রাউন্ডিং (নিকটস্থ এজেন্ট ও বুথ)',
       titleEn: 'Google Maps Grounding',
-      descBn: 'gemini-3.5-flash ও গুগল ম্যাপস ডেটা দিয়ে কাছাকাছি উপায় এজেন্ট ও এটিএম',
-      descEn: 'Locate nearby Upay cash-out agents and ATMs via googleMaps tool',
+      descBn: 'gemini-3.5-flash ও গুগল ম্যাপস ডেটা দিয়ে কাছাকাছি রিকার্শন পে এজেন্ট ও এটিএম',
+      descEn: 'Locate nearby Recursion Pay cash-out agents and ATMs via googleMaps tool',
       icon: '📍',
       color: 'bg-rose-50 text-rose-700 border-rose-200',
       action: () => setCurrentModal('maps_grounding')
@@ -156,7 +156,7 @@ export const SafeAiHubModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
             <span className="text-xl">✨</span>
             <div>
               <h2 className="text-sm font-bold">
-                {language === 'bn' ? 'উপায় সেফ এআই ইন্টেলিজেন্স হাব' : 'Upay Safe AI Intelligence Hub'}
+                {language === 'bn' ? 'রিকার্শন পে সেফ এআই ইন্টেলিজেন্স হাব' : 'Recursion Pay Safe AI Intelligence Hub'}
               </h2>
               <span className="text-[10px] text-sky-200">
                 {language === 'bn' ? 'আর্থিক নিরাপত্তা ও বুদ্ধিমত্তার পূর্ণাঙ্গ স্তর' : 'Next-Gen MFS Safety Suite'}
