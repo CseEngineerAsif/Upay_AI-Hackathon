@@ -8,7 +8,7 @@ interface WelcomeScreenProps {
 }
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onRegister, onLogin }) => {
-  const { language, setLanguage } = useAppStore();
+  const { language, setLanguage, setCurrentModal } = useAppStore();
   
   // Carousel State
   const [currentSlide, setCurrentSlide] = useState<number>(0);
@@ -197,13 +197,15 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onRegister, onLogi
           <UpayLogo size="sm" showText={true} />
         </div>
 
-        <button
-          type="button"
-          onClick={() => setLanguage(language === 'bn' ? 'en' : 'bn')}
-          className="px-4 py-1 rounded-full text-xs font-semibold border border-sky-200 text-[#0B4DA2] bg-sky-50/70 hover:bg-sky-100 transition-colors shadow-2xs"
-        >
-          {language === 'bn' ? 'English' : 'বাংলা'}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setLanguage(language === 'bn' ? 'en' : 'bn')}
+            className="px-4 py-1 rounded-full text-xs font-semibold border border-sky-200 text-[#0B4DA2] bg-sky-50/70 hover:bg-sky-100 transition-colors shadow-2xs cursor-pointer"
+          >
+            {language === 'bn' ? 'English' : 'বাংলা'}
+          </button>
+        </div>
       </div>
 
       {/* 2. CAROUSEL BODY */}
@@ -229,7 +231,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onRegister, onLogi
             {/* SLIDE 1 (Target Image 1): NID Scan + ৳200 Bonus */}
             <div className="w-full shrink-0 flex flex-col items-center px-1">
               <h2 className="text-xl font-black text-slate-800 tracking-tight mb-2.5">
-                {language === 'bn' ? 'উপায়-এ' : 'In Upay'}
+                {language === 'bn' ? 'রিকার্শন পে-তে' : 'In Recursion Pay'}
               </h2>
 
               <div className="relative w-full bg-white rounded-[28px] p-5 shadow-sm flex flex-col items-center overflow-hidden">
@@ -297,7 +299,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onRegister, onLogi
             {/* SLIDE 2 (Target Image 2): Requirements */}
             <div className="w-full shrink-0 flex flex-col items-center px-1">
               <h2 className="text-xl font-black text-slate-800 tracking-tight mb-2.5">
-                {language === 'bn' ? 'উপায়' : 'Upay'}
+                {language === 'bn' ? 'রিকার্শন পে' : 'Recursion Pay'}
               </h2>
 
               <div className="relative w-full bg-white rounded-[28px] p-5 shadow-sm flex flex-col items-center overflow-hidden">
@@ -349,7 +351,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onRegister, onLogi
             {/* SLIDE 3 (Target Image 3): Services Grid */}
             <div className="w-full shrink-0 flex flex-col items-center px-1">
               <h2 className="text-xl font-black text-slate-800 tracking-tight mb-2.5">
-                {language === 'bn' ? 'উপায় আছে' : 'Upay Has Solutions'}
+                {language === 'bn' ? 'রিকার্শন পে আছে পাশে' : 'Recursion Pay Is Here'}
               </h2>
 
               <div className="relative w-full bg-white rounded-[28px] p-4 shadow-sm flex flex-col items-center overflow-hidden">
@@ -369,7 +371,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onRegister, onLogi
                   {[
                     { icon: '💳', nameBn: 'অ্যাড মানি', nameEn: 'Add Money' },
                     { icon: '📱', nameBn: 'মোবাইল রিচার্জ', nameEn: 'Mobile Recharge' },
-                    { icon: '💳', nameBn: 'উপায় কার্ড', nameEn: 'Upay Card' },
+                    { icon: '💳', nameBn: 'রিকার্শন পে কার্ড', nameEn: 'Recursion Pay Card' },
                     { icon: '🧾', nameBn: 'পে বিল', nameEn: 'Pay Bill' },
                     { icon: '💸', nameBn: 'সেন্ড মানি', nameEn: 'Send Money' },
                     { icon: '💰', nameBn: 'ডিপিএস', nameEn: 'DPS Savings' },
@@ -418,15 +420,15 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onRegister, onLogi
                 <div className="w-full mt-3 p-3 bg-slate-50/80 rounded-2xl border border-slate-200/80 text-center">
                   <p className="text-[11px] font-bold text-slate-700 mb-2">
                     {language === 'bn'
-                      ? 'উপায় সম্পর্কিত যেকোনো তথ্য জানতে'
-                      : 'For any information about Upay'}
+                      ? 'রিকার্শন পে সম্পর্কিত যেকোনো তথ্য জানতে'
+                      : 'For any information about Recursion Pay'}
                   </p>
                   <div className="flex items-center justify-center rounded-full overflow-hidden border border-slate-200 shadow-2xs">
                     <div className="bg-[#FFD21F] px-4 py-1.5 text-xs font-black text-slate-900 flex items-center gap-1">
                       <span>📞</span> 16268
                     </div>
                     <div className="bg-[#1F4FB5] text-white px-4 py-1.5 text-xs font-bold">
-                      www.upaybd.com
+                      www.recursionpay.com
                     </div>
                   </div>
                 </div>
