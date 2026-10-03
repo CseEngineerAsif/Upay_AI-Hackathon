@@ -124,7 +124,7 @@ export const PayslipWageScreen: React.FC = () => {
                   <h1 className="text-[19px] font-black tracking-tight text-white leading-tight">
                     {language === 'bn' ? 'পে-স্লিপ ও ওয়েজ-ডে' : 'Payslip & Wage-Day'}
                   </h1>
-                  <span className="px-2 py-0.5 rounded-full bg-[#FFD600] text-slate-950 text-[10px] font-black uppercase tracking-wide shrink-0">
+                  <span className="px-2 py-0.5 rounded-full bg-[#00D492] text-slate-950 text-[10px] font-black uppercase tracking-wide shrink-0 shadow-xs">
                     Worker Aid
                   </span>
                 </div>
