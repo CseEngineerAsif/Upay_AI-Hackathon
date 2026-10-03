@@ -200,7 +200,7 @@ export const useAppStore = create<AppState>((set, get) => {
         transactions: userTxs,
         goals: userGoals,
         guardianAlerts: userAlerts,
-        isAuthenticated: true,
+        isAuthenticated: false,
         language: newUser.language || 'bn'
       });
       return newUser;
