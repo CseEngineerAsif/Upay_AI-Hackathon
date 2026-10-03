@@ -10,6 +10,13 @@ import { generateLlmRiskExplanation, maskPhoneNumber, maskName, sanitizeUserText
 import { analyzeScamMessage } from './functions/scamChecker';
 import { categorizeTransaction } from './functions/categorizer';
 import { generateSeedData } from './functions/seedData';
+import { generateFairPayoutOrderAi, generateEarlyWarningAi } from './functions/somitiAi';
+import { analyzeSellerTrustAi } from './functions/trustPayAi';
+import { generateLiquidityForecastAi } from './functions/liquidityAi';
+import { generateBundleRecommendationAi } from './functions/bundleOptimizerAi';
+import { normalizeDialectWithGemini } from './functions/dialectVoiceAi';
+import { parseMandateInstructionWithGemini } from './functions/mandateParserAi';
+import { auditPayslipWithGemini } from './functions/payslipAuditorAi';
 
 dotenv.config();
 
@@ -258,6 +265,58 @@ app.post('/api/ai/maps-grounding', async (req, res) => {
   }
 });
 
+// Bundle Optimizer AI Recommendation
+app.post('/api/bundle/optimize', async (req, res) => {
+  try {
+    const habits = req.body;
+    const ai = getAiClient();
+    const result = await generateBundleRecommendationAi(ai, habits);
+    res.json(result);
+  } catch (err: any) {
+    console.error('Bundle optimize error:', err);
+    res.status(500).json({ error: err.message || 'Optimization failed' });
+  }
+});
+
+// Dialect-aware Voice Normalization
+app.post('/api/voice/dialect-normalize', async (req, res) => {
+  try {
+    const { spokenText } = req.body;
+    const ai = getAiClient();
+    const result = await normalizeDialectWithGemini(ai, spokenText || '');
+    res.json(result);
+  } catch (err: any) {
+    console.error('Dialect normalize error:', err);
+    res.status(500).json({ error: err.message || 'Dialect normalization failed' });
+  }
+});
+
+// Mandate Wallet AI Instruction Parser (Parses rules ONLY, strictly NO execution)
+app.post('/api/mandate/parse', async (req, res) => {
+  try {
+    const { instruction } = req.body;
+    const ai = getAiClient();
+    const result = await parseMandateInstructionWithGemini(ai, instruction || '');
+    res.json(result);
+  } catch (err: any) {
+    console.error('Mandate parse error:', err);
+    res.status(500).json({ error: err.message || 'Mandate parse failed' });
+  }
+});
+
+// Payslip Auditor AI for Factory Workers
+app.post('/api/payslip/audit', async (req, res) => {
+  try {
+    const { payslip } = req.body;
+    const ai = getAiClient();
+    const result = await auditPayslipWithGemini(ai, payslip);
+    res.json(result);
+  } catch (err: any) {
+    console.error('Payslip audit error:', err);
+    res.status(500).json({ error: err.message || 'Payslip audit failed' });
+  }
+});
+
 // 9. Multi-Turn Gemini Chatbot with selectable models
 app.post('/api/ai/multi-turn-chat', async (req, res) => {
   try {
@@ -369,6 +428,117 @@ app.post('/api/safety/feedback', (req, res) => {
   res.json({ success: true });
 });
 
+// 14. Digital Somiti: AI Fair Payout Order Generator
+app.post('/api/somiti/ai-payout-order', async (req, res) => {
+  try {
+    const { somitiName, members, monthlyContribution, totalCycles } = req.body;
+    if (!members || !Array.isArray(members) || members.length === 0) {
+      return res.status(400).json({ error: 'Members list is required' });
+    }
+
+    const ai = getAiClient();
+    const result = await generateFairPayoutOrderAi(ai, {
+      somitiName: somitiName || 'ডিজিটাল সমিতি',
+      members,
+      monthlyContribution: Number(monthlyContribution) || 2000,
+      totalCycles: Number(totalCycles) || members.length
+    });
+
+    res.json(result);
+  } catch (error: any) {
+    console.error('Somiti payout order error:', error);
+    res.status(500).json({ error: error.message || 'Somiti payout generation failed' });
+  }
+});
+
+// 15. Digital Somiti: Early Warning Check
+app.post('/api/somiti/early-warning-check', async (req, res) => {
+  try {
+    const { memberName, somitiName, dueAmount, daysRemaining, walletBalance } = req.body;
+    const ai = getAiClient();
+    const warning = await generateEarlyWarningAi(ai, {
+      memberName: memberName || 'সদস্য',
+      somitiName: somitiName || 'সমিতি',
+      dueAmount: Number(dueAmount) || 2000,
+      daysRemaining: Number(daysRemaining) || 3,
+      walletBalance: Number(walletBalance) || 0
+    });
+
+    res.json(warning);
+  } catch (error: any) {
+    console.error('Somiti early warning error:', error);
+    res.status(500).json({ error: error.message || 'Early warning check failed' });
+  }
+});
+
+// 16. TrustPay: AI Seller Trust Badge Analysis
+app.post('/api/trustpay/seller-trust', async (req, res) => {
+  try {
+    const {
+      sellerName = 'বিক্রেতা',
+      sellerPhone = '',
+      fCommercePage = '',
+      totalOrders = 45,
+      successfulDeliveries = 42,
+      disputeCount = 1,
+      averageDeliveryDays = 2.5,
+      customerRating = 4.6,
+      accountAgeMonths = 14
+    } = req.body;
+
+    const ai = getAiClient();
+    const result = await analyzeSellerTrustAi(ai, {
+      sellerName,
+      sellerPhone,
+      fCommercePage,
+      totalOrders: Number(totalOrders) || 0,
+      successfulDeliveries: Number(successfulDeliveries) || 0,
+      disputeCount: Number(disputeCount) || 0,
+      averageDeliveryDays: Number(averageDeliveryDays) || 3,
+      customerRating: Number(customerRating) || 4.5,
+      accountAgeMonths: Number(accountAgeMonths) || 12
+    });
+
+    res.json(result);
+  } catch (error: any) {
+    console.error('TrustPay seller analysis error:', error);
+    res.status(500).json({ error: error.message || 'Seller trust analysis failed' });
+  }
+});
+
+// 17. Liquidity Network: AI Agent Float & Shortage Forecast
+app.post('/api/liquidity/forecast', async (req, res) => {
+  try {
+    const {
+      agentName = 'বিসমিল্লাহ টেলিকম (ফার্মগেট)',
+      location = 'ফার্মগেট বাসস্ট্যান্ড, ঢাকা',
+      eFloatBalance = 120000,
+      cashInHand = 18000,
+      timeOfDay = 'সন্ধ্যা ৭:৩০',
+      dayOfWeek = 'বৃহস্পতিবার',
+      recentCashOutVolume = 35000,
+      recentCashInVolume = 8000
+    } = req.body;
+
+    const ai = getAiClient();
+    const result = await generateLiquidityForecastAi(ai, {
+      agentName,
+      location,
+      eFloatBalance: Number(eFloatBalance) || 0,
+      cashInHand: Number(cashInHand) || 0,
+      timeOfDay,
+      dayOfWeek,
+      recentCashOutVolume: Number(recentCashOutVolume) || 0,
+      recentCashInVolume: Number(recentCashInVolume) || 0
+    });
+
+    res.json(result);
+  } catch (error: any) {
+    console.error('Liquidity forecast error:', error);
+    res.status(500).json({ error: error.message || 'Liquidity forecast failed' });
+  }
+});
+
 // WebSocket Server for Gemini-3.8-Live Real-Time Voice Conversation
 const wss = new WebSocketServer({ noServer: true });
 
@@ -471,7 +641,10 @@ async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr: false
+      },
       appType: 'spa'
     });
     app.use(vite.middlewares);
