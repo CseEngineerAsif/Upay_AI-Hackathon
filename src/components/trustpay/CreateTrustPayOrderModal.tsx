@@ -158,7 +158,7 @@ export const CreateTrustPayOrderModal: React.FC<CreateTrustPayOrderModalProps> =
 
               <div className="space-y-1">
                 <label className="font-bold text-slate-800 block">
-                  {language === 'bn' ? 'বিক্রেতার উপায় ওয়ালেট নম্বর:' : 'Seller Upay Number:'}
+                  {language === 'bn' ? 'বিক্রেতার রিকার্শন পে ওয়ালেট নম্বর:' : 'Seller Recursion Pay Number:'}
                 </label>
                 <input
                   type="tel"
