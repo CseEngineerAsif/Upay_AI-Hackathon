@@ -75,10 +75,10 @@ export const PassportVerificationModal: React.FC<PassportVerificationModalProps>
                     </div>
                   </div>
 
-                  {/* Center Upay Shield Icon */}
+                  {/* Center Recursion Pay Shield Icon */}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-10 h-10 rounded-xl bg-[#0B4DA2] text-[#FFD600] flex items-center justify-center font-bold text-xs shadow-md border border-white">
-                      UPAY
+                    <div className="w-10 h-10 rounded-xl bg-[#0B4DA2] text-[#FFD600] flex items-center justify-center font-bold text-[10px] shadow-md border border-white">
+                      RPAY
                     </div>
                   </div>
 
