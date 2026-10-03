@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --upay-yellow: #FFD600;
+    --upay-yellow-light: #FFF8D6;
+    --upay-yellow-dark: #E6C200;
+    --upay-blue: #0B4DA2;
+    --upay-blue-light: #1866CD;
+    --upay-blue-dark: #073877;
+    --upay-bg-grey: #F4F5F7;
+    --upay-border: #E5E7EB;
+  }
+
+  body {
+    font-family: 'Noto Sans Bengali', 'Hind Siliguri', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+}
+
+/* Custom scrollbar for mobile feel */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(11, 77, 162, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(11, 77, 162, 0.4);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Pulse animation for safety shield */
+@keyframes shield-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(11, 77, 162, 0.4);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow: 0 0 0 10px rgba(11, 77, 162, 0);
+  }
+}
+
+.animate-shield-pulse {
+  animation: shield-pulse 2s infinite ease-in-out;
+}

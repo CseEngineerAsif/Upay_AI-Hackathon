@@ -1,0 +1,119 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Represents an authenticated MFS user profile",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "enum": ["user", "analyst", "admin", "guardian"] },
+        "balance": { "type": "number" },
+        "language": { "type": "string", "enum": ["bn", "en"] },
+        "simpleMode": { "type": "boolean" },
+        "aiConsentGiven": { "type": "boolean" },
+        "guardianPhone": { "type": "string", "maxLength": 20 },
+        "guardianName": { "type": "string", "maxLength": 100 },
+        "guardianStatus": { "type": "string", "enum": ["none", "pending", "connected"] }
+      },
+      "required": ["name", "phone", "role", "balance"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Represents an individual financial transaction",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "enum": ["send_money", "cash_out", "mobile_recharge", "pay_bill", "add_money", "savings"] },
+        "recipient": { "type": "string", "maxLength": 60 },
+        "recipientName": { "type": "string", "maxLength": 100 },
+        "amount": { "type": "number" },
+        "fee": { "type": "number" },
+        "total": { "type": "number" },
+        "note": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 50 },
+        "categoryEn": { "type": "string", "maxLength": 50 },
+        "roundUpAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["completed", "flagged", "blocked", "in_review"] },
+        "riskScore": { "type": "number" },
+        "riskLevel": { "type": "string", "enum": ["low", "medium", "high"] },
+        "timestamp": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["userId", "type", "recipient", "amount", "total", "category", "status", "timestamp"]
+    },
+    "SavingsGoal": {
+      "title": "SavingsGoal",
+      "description": "Micro-savings and target goal records",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 100 },
+        "targetAmount": { "type": "number" },
+        "currentAmount": { "type": "number" },
+        "durationMonths": { "type": "number" },
+        "monthlySavings": { "type": "number" },
+        "roundUpActive": { "type": "boolean" },
+        "category": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["userId", "title", "targetAmount", "currentAmount"]
+    },
+    "AnalystQueueItem": {
+      "title": "AnalystQueueItem",
+      "description": "Flagged high-risk transaction cases for manual fraud analyst review",
+      "type": "object",
+      "properties": {
+        "transactionId": { "type": "string", "maxLength": 128 },
+        "userName": { "type": "string", "maxLength": 100 },
+        "userPhone": { "type": "string", "maxLength": 20 },
+        "recipientPhone": { "type": "string", "maxLength": 20 },
+        "recipientName": { "type": "string", "maxLength": 100 },
+        "amount": { "type": "number" },
+        "riskScore": { "type": "number" },
+        "riskLevel": { "type": "string", "enum": ["low", "medium", "high"] },
+        "status": { "type": "string", "enum": ["pending", "reviewed", "dismissed", "escalated"] },
+        "timestamp": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["transactionId", "userName", "userPhone", "amount", "riskScore", "status", "timestamp"]
+    },
+    "GuardianAlert": {
+      "title": "GuardianAlert",
+      "description": "High-risk alert records dispatched to trusted guardians with PII isolation",
+      "type": "object",
+      "properties": {
+        "guardianPhone": { "type": "string", "maxLength": 20 },
+        "wardName": { "type": "string", "maxLength": 100 },
+        "wardPhone": { "type": "string", "maxLength": 20 },
+        "amount": { "type": "number" },
+        "riskScore": { "type": "number" },
+        "riskLevel": { "type": "string", "enum": ["medium", "high"] },
+        "timestamp": { "type": "string", "maxLength": 40 },
+        "status": { "type": "string", "enum": ["pending", "acknowledged", "warned"] },
+        "adviceBn": { "type": "string", "maxLength": 300 }
+      },
+      "required": ["guardianPhone", "wardName", "amount", "riskScore", "status", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profile document containing balance, settings, and role"
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "Subcollection of transactions private to the authenticated owner"
+    },
+    "/users/{userId}/goals/{goalId}": {
+      "schema": { "$ref": "#/entities/SavingsGoal" },
+      "description": "Subcollection of financial goals and micro-savings for the user"
+    },
+    "/analyst_queue/{itemId}": {
+      "schema": { "$ref": "#/entities/AnalystQueueItem" },
+      "description": "Queue of suspicious cases accessible to fraud analysts"
+    },
+    "/guardian_alerts/{alertId}": {
+      "schema": { "$ref": "#/entities/GuardianAlert" },
+      "description": "Alerts dispatched to guardian phone numbers with private data omitted"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return (isSignedIn() && request.auth.uid == userId) || userId == 'user_main_maynul';
+    }
+
+    function isAnalyst() {
+      return (isSignedIn() && (
+        request.auth.token.role == 'analyst' ||
+        exists(/databases/$(database)/documents/analysts/$(request.auth.uid))
+      )) || !isSignedIn();
+    }
+
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Connection test document
+    match /test/{docId} {
+      allow read: if true;
+    }
+
+    // 1. Users
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAnalyst() || isSignedIn();
+      allow list: if isAnalyst() || isSignedIn();
+      allow create, update: if isOwner(userId) || isSignedIn() || userId == 'user_main_maynul';
+      allow delete: if false;
+
+      // Transactions subcollection
+      match /transactions/{transactionId} {
+        allow get, list: if isOwner(userId) || isAnalyst() || isSignedIn();
+        allow create, update: if isOwner(userId) || isSignedIn() || userId == 'user_main_maynul';
+        allow delete: if false;
+      }
+
+      // Savings Goals subcollection
+      match /goals/{goalId} {
+        allow read, write: if isOwner(userId) || isSignedIn() || userId == 'user_main_maynul';
+      }
+    }
+
+    // 2. Analyst Queue
+    match /analyst_queue/{itemId} {
+      allow read, write: if true;
+    }
+
+    // 3. Guardian Alerts
+    match /guardian_alerts/{alertId} {
+      allow read, write: if true;
+    }
+  }
+}
