@@ -62,32 +62,36 @@ export const ClimateShieldScreen: React.FC = () => {
     <div className={`w-full flex-1 flex flex-col overflow-y-auto no-scrollbar pb-24 select-none ${
       isActive ? 'bg-slate-900 text-slate-100' : 'bg-slate-50 text-slate-900'
     }`}>
-      {/* High-Contrast Disaster Emergency Header */}
-      <div className={`w-full px-4 pt-5 pb-5 shadow-md relative overflow-hidden transition-colors ${
+      {/* High-Contrast Disaster Emergency Header (Min-height 96-110px, unclipped, normal flow) */}
+      <div className={`w-full min-h-[96px] sm:min-h-[104px] h-auto shrink-0 px-4 py-5 shadow-md relative transition-colors ${
         isActive
           ? 'bg-rose-950 text-white border-b-2 border-rose-500'
           : 'bg-gradient-to-r from-[#0B4DA2] via-[#093974] to-[#0B4DA2] text-white'
       }`}>
         <div className="relative z-10 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className={`w-9 h-9 rounded-2xl flex items-center justify-center text-xl border ${
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className={`w-10 h-10 rounded-2xl flex items-center justify-center text-xl border shrink-0 ${
                 isActive ? 'bg-rose-900/80 border-rose-400 text-rose-300' : 'bg-white/10 border-white/20'
               }`}>
                 {isActive ? (disasterType === 'flood' ? '🌊' : '🌪️') : '🛡️'}
               </span>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <h1 className="text-base font-black tracking-tight text-white">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                  <h1 className="text-[19px] font-black tracking-tight text-white leading-tight">
                     {language === 'bn' ? 'ক্লাইমেট শিল্ড মোড' : 'Climate Shield Mode'}
                   </h1>
-                  {isActive && (
-                    <span className="px-1.5 py-0.2 rounded-full bg-rose-500 text-white font-mono text-[9px] font-black uppercase animate-pulse">
+                  {isActive ? (
+                    <span className="px-2 py-0.5 rounded-full bg-rose-500 text-white font-mono text-[10px] font-black uppercase tracking-wide animate-pulse shrink-0">
                       EMERGENCY ACTIVE
+                    </span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-full bg-[#FFD600] text-slate-950 text-[10px] font-black uppercase tracking-wide shrink-0">
+                      Relief Shield
                     </span>
                   )}
                 </div>
-                <p className="text-[11px] text-blue-100 font-medium">
+                <p className="text-xs text-blue-100 font-medium leading-snug mt-1">
                   {language === 'bn'
                     ? 'বন্যা ও ঘূর্ণিঝড় দুর্যোগে জরুরি ওয়ালেট ও ত্রাণ বিতরণ'
                     : 'Emergency Disaster Wallet & Relief Disbursement'}
@@ -96,7 +100,7 @@ export const ClimateShieldScreen: React.FC = () => {
             </div>
 
             {/* Mode Switcher Toggle */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 shrink-0">
               <button
                 type="button"
                 onClick={() => handleToggleMode(!isActive)}

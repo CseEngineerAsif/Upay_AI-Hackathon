@@ -52,11 +52,17 @@ import { ZakatGivingScreen } from './components/zakat/ZakatGivingScreen';
 import { DialectVoiceScreen } from './components/voice/DialectVoiceScreen';
 import { MandateWalletScreen } from './components/mandate/MandateWalletScreen';
 import { PayslipWageScreen } from './components/payslip/PayslipWageScreen';
+import { SectionHubScreen } from './components/section/SectionHubScreen';
+import { SECTIONS_DATA, FEATURE_TO_SECTION_MAP, FeatureTab } from './types/sections';
 
 export default function App() {
   const {
     isAuthenticated,
     activeTab,
+    activeSection,
+    openSection,
+    setActiveTab,
+    language,
     currentModal,
     setCurrentModal,
     simpleMode,
@@ -69,6 +75,8 @@ export default function App() {
   const [isCreateSomitiOpen, setIsCreateSomitiOpen] = useState(false);
   const [selectedTrustPayOrder, setSelectedTrustPayOrder] = useState<TrustPayOrder | null>(null);
   const [isCreateTrustPayOpen, setIsCreateTrustPayOpen] = useState(false);
+
+  const isFeatureScreen = Boolean(FEATURE_TO_SECTION_MAP[activeTab as FeatureTab]);
 
   // Load initial synthetic seed data and verify Firestore connection on mount
   useEffect(() => {
@@ -104,10 +112,62 @@ export default function App() {
             )
           ) : (
             <div className="flex-1 w-full flex flex-col overflow-hidden">
+              {/* Yellow header fixed on top for all 12 feature screens */}
+              {isFeatureScreen && (
+                <div className="w-full bg-[#FFD600] px-4 py-2.5 flex items-center justify-between border-b border-amber-300 shadow-xs z-20 shrink-0 sticky top-0 select-none">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const parentSection = activeSection || FEATURE_TO_SECTION_MAP[activeTab as FeatureTab];
+                      if (parentSection) {
+                        openSection(parentSection);
+                      } else {
+                        setActiveTab('home');
+                      }
+                    }}
+                    className="flex items-center gap-1.5 text-xs font-black text-slate-950 hover:opacity-85 active:scale-95 transition-all cursor-pointer"
+                  >
+                    <svg
+                      className="w-4 h-4 text-slate-950"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                    <span>
+                      {language === 'bn'
+                        ? SECTIONS_DATA[activeSection || FEATURE_TO_SECTION_MAP[activeTab as FeatureTab]]?.titleBn || 'ফিরে যান'
+                        : SECTIONS_DATA[activeSection || FEATURE_TO_SECTION_MAP[activeTab as FeatureTab]]?.titleEn || 'Back'}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('home')}
+                    className="px-2.5 py-1 rounded-full bg-slate-900/10 hover:bg-slate-900/15 text-slate-950 font-bold text-xs shrink-0 cursor-pointer active:scale-95 transition-all flex items-center gap-1"
+                  >
+                    <span>{language === 'bn' ? 'হোম' : 'Home'}</span>
+                    <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+
               {activeTab === 'home' && <HomeScreen />}
               {activeTab === 'account' && <AccountScreen />}
               {activeTab === 'history' && <HistoryScreen />}
               {activeTab === 'more' && <MoreScreen />}
+              {activeTab === 'section' && activeSection && (
+                <SectionHubScreen
+                  sectionId={activeSection}
+                  onBack={() => setActiveTab('home')}
+                  onSelectFeature={(tab) => setActiveTab(tab)}
+                />
+              )}
               {activeTab === 'somiti' && (
                 <SomitiListScreen
                   onOpenCreate={() => setIsCreateSomitiOpen(true)}
@@ -126,7 +186,15 @@ export default function App() {
               {activeTab === 'income_passport' && <IncomePassportScreen />}
               {activeTab === 'fee_auditor' && <FeeAuditorScreen />}
               {activeTab === 'bundle_optimizer' && <BundleOptimizerScreen />}
-              {activeTab === 'zakat_giving' && <ZakatGivingScreen />}
+              {(activeTab === 'zakat_giving' || activeTab === 'zakat_calculator') && (
+                <ZakatGivingScreen initialTab="calculator" />
+              )}
+              {activeTab === 'zakat_charities' && (
+                <ZakatGivingScreen initialTab="charities" />
+              )}
+              {(activeTab === 'eid_envelope' || activeTab === 'child_wallet') && (
+                <ZakatGivingScreen initialTab="eid_envelope" />
+              )}
               {activeTab === 'dialect_voice' && <DialectVoiceScreen />}
               {activeTab === 'mandate_wallet' && <MandateWalletScreen />}
               {activeTab === 'payslip_orchestrator' && <PayslipWageScreen />}

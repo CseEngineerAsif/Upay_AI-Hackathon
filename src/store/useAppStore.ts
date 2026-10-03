@@ -14,6 +14,7 @@ import {
   TransactionType,
   TransactionCategory
 } from '../types';
+import { SectionId, FeatureTab } from '../types/sections';
 import {
   getRegisteredUsers,
   findUserByPhone,
@@ -59,7 +60,8 @@ interface AppState {
   unreadAlertCount: number;
 
   // Navigation
-  activeTab: 'home' | 'account' | 'history' | 'more' | 'safe_ai' | 'somiti' | 'trustpay' | 'liquidity' | 'crosswallet' | 'climateshield' | 'income_passport' | 'fee_auditor' | 'bundle_optimizer' | 'zakat_giving' | 'dialect_voice' | 'mandate_wallet' | 'payslip_orchestrator';
+  activeTab: 'home' | 'account' | 'history' | 'more' | 'safe_ai' | FeatureTab | 'section';
+  activeSection: SectionId | null;
   currentModal: string | null;
   
   // Payment Flow State
@@ -77,7 +79,8 @@ interface AppState {
   setLanguage: (lang: Language) => void;
   toggleSimpleMode: () => void;
   grantAiConsent: () => void;
-  setActiveTab: (tab: 'home' | 'account' | 'history' | 'more' | 'safe_ai' | 'somiti' | 'trustpay' | 'liquidity' | 'crosswallet' | 'climateshield' | 'income_passport' | 'fee_auditor' | 'bundle_optimizer' | 'zakat_giving' | 'dialect_voice' | 'mandate_wallet' | 'payslip_orchestrator') => void;
+  setActiveTab: (tab: 'home' | 'account' | 'history' | 'more' | 'safe_ai' | FeatureTab | 'section') => void;
+  openSection: (sectionId: SectionId) => void;
   setCurrentModal: (modal: string | null) => void;
 
   // Data Actions
@@ -147,6 +150,7 @@ export const useAppStore = create<AppState>((set, get) => {
     unreadAlertCount: initialAlerts.filter((a) => a.status === 'pending').length,
 
     activeTab: 'home',
+    activeSection: null,
     currentModal: null,
 
     pendingPayment: null,
@@ -317,7 +321,7 @@ export const useAppStore = create<AppState>((set, get) => {
     },
 
     logout: () => {
-      set({ isAuthenticated: false, activeTab: 'home', currentModal: null });
+      set({ isAuthenticated: false, activeTab: 'home', activeSection: null, currentModal: null });
     },
 
     setLanguage: (lang: Language) => {
@@ -334,6 +338,10 @@ export const useAppStore = create<AppState>((set, get) => {
 
     setActiveTab: (tab) => {
       set({ activeTab: tab, currentModal: null });
+    },
+
+    openSection: (sectionId: SectionId) => {
+      set({ activeSection: sectionId, activeTab: 'section', currentModal: null });
     },
 
     setCurrentModal: (modal) => {

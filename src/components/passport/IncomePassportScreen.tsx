@@ -48,28 +48,24 @@ export const IncomePassportScreen: React.FC = () => {
 
   return (
     <div className="w-full flex-1 flex flex-col bg-slate-50 overflow-y-auto no-scrollbar pb-24 select-none">
-      {/* Top Banner */}
-      <div className="w-full bg-gradient-to-r from-[#0B4DA2] via-[#09356E] to-[#0B4DA2] text-white px-4 pt-5 pb-5 shadow-md relative overflow-hidden">
-        {/* Glow circles */}
-        <div className="absolute -right-10 -top-10 w-36 h-36 rounded-full bg-emerald-400/15 blur-xl pointer-events-none" />
-        <div className="absolute -left-10 -bottom-10 w-32 h-32 rounded-full bg-[#FFD600]/10 blur-xl pointer-events-none" />
-
+      {/* Top Banner (Min-height 96-110px, unclipped, normal flow) */}
+      <div className="w-full min-h-[96px] sm:min-h-[104px] h-auto shrink-0 bg-gradient-to-r from-[#0B4DA2] via-[#09356E] to-[#0B4DA2] text-white px-4 py-5 shadow-md relative">
         <div className="relative z-10 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-9 h-9 rounded-2xl bg-white/10 flex items-center justify-center text-xl border border-white/20">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-xl border border-white/20 shrink-0">
                 🛂
               </span>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <h1 className="text-base font-black tracking-tight text-white">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                  <h1 className="text-[19px] font-black tracking-tight text-white leading-tight">
                     {language === 'bn' ? 'পোর্টেবল ইনকাম পাসপোর্ট' : 'Portable Income Passport'}
                   </h1>
-                  <span className="px-1.5 py-0.2 rounded-full bg-[#FFD600] text-slate-950 text-[9px] font-black uppercase">
+                  <span className="px-2 py-0.5 rounded-full bg-[#FFD600] text-slate-950 text-[10px] font-black uppercase tracking-wide shrink-0">
                     Zero Statement
                   </span>
                 </div>
-                <p className="text-[11px] text-blue-100 font-medium">
+                <p className="text-xs text-blue-100 font-medium leading-snug mt-1">
                   {language === 'bn'
                     ? 'স্টেটমেন্ট ছাড়া আয়ের নির্ভরযোগ্যতা ও নিয়মিততার ডিজিটাল প্রমাণ'
                     : 'Verifiable Income Regularity Proof for Rent & Microloans'}
@@ -81,7 +77,7 @@ export const IncomePassportScreen: React.FC = () => {
               onClick={() => setIsGenerateOpen(true)}
               className="px-3 py-1.5 rounded-xl bg-[#FFD600] hover:bg-yellow-400 text-slate-950 font-black text-xs shadow-xs active:scale-95 transition-all cursor-pointer flex items-center gap-1 shrink-0"
             >
-              <span>+</span>
+              <span className="font-bold">+</span>
               <span>পাসপোর্ট তৈরি</span>
             </button>
           </div>

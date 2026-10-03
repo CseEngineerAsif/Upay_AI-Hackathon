@@ -22,28 +22,24 @@ export const CrossWalletRiskScreen: React.FC = () => {
 
   return (
     <div className="w-full flex-1 flex flex-col bg-slate-50 overflow-y-auto no-scrollbar pb-24 select-none">
-      {/* Top Banner */}
-      <div className="w-full bg-gradient-to-r from-[#0B4DA2] via-[#082C5E] to-[#0B4DA2] text-white px-4 pt-5 pb-5 shadow-md relative overflow-hidden">
-        {/* Glow circles */}
-        <div className="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-indigo-500/15 blur-2xl pointer-events-none" />
-        <div className="absolute -left-10 -bottom-10 w-36 h-36 rounded-full bg-[#FFD600]/10 blur-xl pointer-events-none" />
-
+      {/* Top Banner (Min-height 96-110px, unclipped, normal flow) */}
+      <div className="w-full min-h-[96px] sm:min-h-[104px] h-auto shrink-0 bg-gradient-to-r from-[#0B4DA2] via-[#082C5E] to-[#0B4DA2] text-white px-4 py-5 shadow-md relative">
         <div className="relative z-10 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-9 h-9 rounded-2xl bg-white/10 flex items-center justify-center text-xl border border-white/20">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <span className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-xl border border-white/20 shrink-0">
                 🌐
               </span>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <h1 className="text-base font-black tracking-tight text-white">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                  <h1 className="text-[19px] font-black tracking-tight text-white leading-tight">
                     {language === 'bn' ? 'ক্রস-ওয়ালেট রিস্ক এক্সচেঞ্জ' : 'Cross-Wallet Risk Exchange'}
                   </h1>
-                  <span className="px-1.5 py-0.2 rounded-full bg-[#FFD600] text-slate-950 text-[9px] font-black uppercase">
+                  <span className="px-2 py-0.5 rounded-full bg-[#FFD600] text-slate-950 text-[10px] font-black uppercase tracking-wide shrink-0">
                     Federated AI
                   </span>
                 </div>
-                <p className="text-[11px] text-blue-100 font-medium">
+                <p className="text-xs text-blue-100 font-medium leading-snug mt-1">
                   {language === 'bn'
                     ? 'আন্তঃএমএফএস সমন্বিত জালিয়াতি ও মানি মিউল প্রতিরোধ ড্যাশবোর্ড'
                     : 'Joint Multi-MFS Fraud Ring Detection without Sharing Raw Data'}

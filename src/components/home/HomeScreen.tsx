@@ -1,11 +1,146 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { UpayHeader } from '../layout/UpayHeader';
 
 export const HomeScreen: React.FC = () => {
-  const { language, setCurrentModal, setActiveTab } = useAppStore();
+  const { language, setCurrentModal, setActiveTab, openSection } = useAppStore();
   const [activeBanner, setActiveBanner] = useState(0);
   const navScrollRef = useRef<HTMLDivElement>(null);
+
+  // Strip scrolling, dragging and auto-slide states
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const isMouseDownRef = useRef(false);
+  const startXRef = useRef(0);
+  const scrollLeftStartRef = useRef(0);
+  const hasDraggedRef = useRef(false);
+
+  const isPausedRef = useRef(false);
+  const pauseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Pause auto-scroll on user interaction
+  const pauseAutoScroll = () => {
+    isPausedRef.current = true;
+    if (pauseTimeoutRef.current) {
+      clearTimeout(pauseTimeoutRef.current);
+      pauseTimeoutRef.current = null;
+    }
+  };
+
+  // Resume auto-scroll ~4 seconds after last interaction
+  const resumeAutoScrollAfterDelay = () => {
+    if (pauseTimeoutRef.current) {
+      clearTimeout(pauseTimeoutRef.current);
+    }
+    pauseTimeoutRef.current = setTimeout(() => {
+      isPausedRef.current = false;
+    }, 4000);
+  };
+
+  // Update left/right scroll arrow visibility
+  const updateScrollArrows = () => {
+    const el = navScrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 6);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 6);
+  };
+
+  // Auto-scroll loop and event listeners
+  useEffect(() => {
+    const el = navScrollRef.current;
+    if (!el) return;
+
+    updateScrollArrows();
+    el.addEventListener('scroll', updateScrollArrows, { passive: true });
+    window.addEventListener('resize', updateScrollArrows);
+
+    const ro = new ResizeObserver(updateScrollArrows);
+    ro.observe(el);
+
+    // Auto-scroll every ~4s smoothly to next chip or back to start
+    const autoScrollInterval = setInterval(() => {
+      if (isPausedRef.current || !navScrollRef.current) return;
+      const target = navScrollRef.current;
+      const maxScroll = target.scrollWidth - target.clientWidth;
+      if (target.scrollLeft >= maxScroll - 10) {
+        target.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        target.scrollBy({ left: 140, behavior: 'smooth' });
+      }
+    }, 4000);
+
+    const handleGlobalMouseUp = () => {
+      if (isMouseDownRef.current) {
+        isMouseDownRef.current = false;
+        setIsDragging(false);
+        setTimeout(() => {
+          hasDraggedRef.current = false;
+        }, 60);
+        resumeAutoScrollAfterDelay();
+      }
+    };
+    window.addEventListener('mouseup', handleGlobalMouseUp);
+
+    return () => {
+      clearInterval(autoScrollInterval);
+      if (pauseTimeoutRef.current) clearTimeout(pauseTimeoutRef.current);
+      el.removeEventListener('scroll', updateScrollArrows);
+      window.removeEventListener('resize', updateScrollArrows);
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+      ro.disconnect();
+    };
+  }, []);
+
+  const handleArrowScroll = (direction: 'left' | 'right') => {
+    if (!navScrollRef.current) return;
+    pauseAutoScroll();
+    const amount = (navScrollRef.current.clientWidth || 300) * 0.7;
+    navScrollRef.current.scrollBy({
+      left: direction === 'left' ? -amount : amount,
+      behavior: 'smooth'
+    });
+    resumeAutoScrollAfterDelay();
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!navScrollRef.current) return;
+    isMouseDownRef.current = true;
+    hasDraggedRef.current = false;
+    startXRef.current = e.pageX - navScrollRef.current.offsetLeft;
+    scrollLeftStartRef.current = navScrollRef.current.scrollLeft;
+    pauseAutoScroll();
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isMouseDownRef.current || !navScrollRef.current) return;
+    const x = e.pageX - navScrollRef.current.offsetLeft;
+    const distance = x - startXRef.current;
+    if (Math.abs(distance) > 5) {
+      if (!hasDraggedRef.current) {
+        hasDraggedRef.current = true;
+        setIsDragging(true);
+      }
+      navScrollRef.current.scrollLeft = scrollLeftStartRef.current - distance;
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (isMouseDownRef.current) {
+      isMouseDownRef.current = false;
+      setIsDragging(false);
+      setTimeout(() => {
+        hasDraggedRef.current = false;
+      }, 60);
+      resumeAutoScrollAfterDelay();
+    }
+  };
+
+  const handleChipClick = (action: () => void) => {
+    if (hasDraggedRef.current) return;
+    action();
+  };
 
   const primaryServices = [
     {
@@ -148,177 +283,6 @@ export const HomeScreen: React.FC = () => {
       )
     },
     {
-      id: 'digital_somiti',
-      labelBn: 'ডিজিটাল সমিতি',
-      labelEn: 'Digital Somiti',
-      iconColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-      action: () => setActiveTab('somiti'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
-        </svg>
-      )
-    },
-    {
-      id: 'trustpay',
-      labelBn: 'ট্রাস্টপে',
-      labelEn: 'TrustPay',
-      iconColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-      action: () => setActiveTab('trustpay'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          <path d="M9 12l2 2 4-4" />
-        </svg>
-      )
-    },
-    {
-      id: 'liquidity',
-      labelBn: 'লিকুইডিটি',
-      labelEn: 'Liquidity',
-      iconColor: 'bg-cyan-50 text-cyan-700 border-cyan-200',
-      action: () => setActiveTab('liquidity'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M12 7v10M9 9.5h5.5a2 2 0 010 4H9" />
-        </svg>
-      )
-    },
-    {
-      id: 'crosswallet',
-      labelBn: 'ক্রস-ওয়ালেট',
-      labelEn: 'Cross-Wallet',
-      iconColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-      action: () => setActiveTab('crosswallet'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="2" y1="12" x2="22" y2="12" />
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-        </svg>
-      )
-    },
-    {
-      id: 'climateshield',
-      labelBn: 'ক্লাইমেট শিল্ড',
-      labelEn: 'Climate Shield',
-      iconColor: 'bg-rose-50 text-rose-700 border-rose-200',
-      action: () => setActiveTab('climateshield'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-          <path d="M8 11c1-1 3-1 4 0s3 1 4 0" />
-          <path d="M8 15c1-1 3-1 4 0s3 1 4 0" />
-        </svg>
-      )
-    },
-    {
-      id: 'income_passport',
-      labelBn: 'ইনকাম পাসপোর্ট',
-      labelEn: 'Income Passport',
-      iconColor: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-      action: () => setActiveTab('income_passport'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <rect x="3" y="4" width="18" height="16" rx="3" />
-          <circle cx="9" cy="10" r="2" />
-          <line x1="15" y1="8" x2="17" y2="8" />
-          <line x1="15" y1="12" x2="17" y2="12" />
-          <line x1="7" y1="16" x2="17" y2="16" />
-        </svg>
-      )
-    },
-    {
-      id: 'fee_auditor',
-      labelBn: 'ফি অডিটর',
-      labelEn: 'Fee Auditor',
-      iconColor: 'bg-blue-50 text-blue-900 border-blue-200',
-      action: () => setActiveTab('fee_auditor'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M12 3v18" />
-          <path d="M6 8l6-5 6 5" />
-          <path d="M6 13h12" />
-          <path d="M3 13l3 7h12l3-7" />
-        </svg>
-      )
-    },
-    {
-      id: 'bundle_optimizer',
-      labelBn: 'বান্ডেল অপ্টিমাইজ',
-      labelEn: 'Bundle Optimizer',
-      iconColor: 'bg-blue-50 text-blue-800 border-blue-200',
-      action: () => setActiveTab('bundle_optimizer'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M5 12.55a11 11 0 0 1 14.08 0" />
-          <path d="M1.42 9a16 16 0 0 1 21.16 0" />
-          <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
-          <circle cx="12" cy="20" r="1" />
-        </svg>
-      )
-    },
-    {
-      id: 'zakat_giving',
-      labelBn: 'যাকাত ও দান',
-      labelEn: 'Zakat & Giving',
-      iconColor: 'bg-teal-50 text-teal-800 border-teal-200',
-      action: () => setActiveTab('zakat_giving'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" />
-          <path d="M12 7v5l3 3" />
-          <path d="M16 11l2 2-2 2" />
-        </svg>
-      )
-    },
-    {
-      id: 'dialect_voice',
-      labelBn: 'ভয়েস পে',
-      labelEn: 'Voice Pay',
-      iconColor: 'bg-blue-50 text-blue-900 border-blue-200',
-      action: () => setActiveTab('dialect_voice'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
-          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-          <line x1="12" y1="19" x2="12" y2="22" />
-        </svg>
-      )
-    },
-    {
-      id: 'mandate_wallet',
-      labelBn: 'ম্যান্ডেট পে',
-      labelEn: 'Mandate Pay',
-      iconColor: 'bg-cyan-50 text-cyan-900 border-cyan-200',
-      action: () => setActiveTab('mandate_wallet'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <polyline points="14 2 14 8 20 8" />
-          <path d="M9 15h6" />
-          <path d="M9 11h6" />
-        </svg>
-      )
-    },
-    {
-      id: 'payslip_orchestrator',
-      labelBn: 'পে-স্লিপ অডিট',
-      labelEn: 'Payslip Audit',
-      iconColor: 'bg-emerald-50 text-emerald-900 border-emerald-200',
-      action: () => setActiveTab('payslip_orchestrator'),
-      icon: (
-        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <path d="M14 2v6h6" />
-          <path d="M16 13H8" />
-          <path d="M16 17H8" />
-          <path d="M10 9H8" />
-        </svg>
-      )
-    },
-    {
       id: 'npsb',
       labelBn: 'এনপিএসবি',
       labelEn: 'NPSB',
@@ -328,6 +292,114 @@ export const HomeScreen: React.FC = () => {
         <span className="text-xs font-black tracking-tighter text-purple-700">
           NPSB
         </span>
+      )
+    },
+    {
+      id: 'section_fraud_prevention',
+      labelBn: 'প্রতারণা প্রতিরোধ',
+      labelEn: 'Anti-Fraud',
+      iconColor: 'bg-rose-50 text-rose-700 border-rose-200',
+      action: () => openSection('fraud_prevention'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <path d="M9 12l2 2 4-4" />
+        </svg>
+      )
+    },
+    {
+      id: 'section_agent_cash',
+      labelBn: 'এজেন্ট ও ক্যাশ',
+      labelEn: 'Agent & Cash',
+      iconColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      action: () => openSection('agent_cash'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <line x1="3" y1="9" x2="21" y2="9" />
+          <line x1="7" y1="15" x2="11" y2="15" />
+          <line x1="15" y1="15" x2="17" y2="15" />
+        </svg>
+      )
+    },
+    {
+      id: 'section_savings_somiti',
+      labelBn: 'সঞ্চয় ও সমিতি',
+      labelEn: 'Savings & Somiti',
+      iconColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+      action: () => openSection('savings_somiti'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 00-3-3.87" />
+          <path d="M16 3.13a4 4 0 010 7.75" />
+        </svg>
+      )
+    },
+    {
+      id: 'section_zakat_giving',
+      labelBn: 'যাকাত ও দান',
+      labelEn: 'Zakat & Giving',
+      iconColor: 'bg-amber-50 text-amber-700 border-amber-200',
+      action: () => openSection('zakat_giving'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+        </svg>
+      )
+    },
+    {
+      id: 'section_eid_envelopes',
+      labelBn: 'ঈদ খাম',
+      labelEn: 'Eid Envelopes',
+      iconColor: 'bg-pink-50 text-pink-700 border-pink-200',
+      action: () => openSection('eid_envelopes'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+        </svg>
+      )
+    },
+    {
+      id: 'section_smart_payment',
+      labelBn: 'স্মার্ট পেমেন্ট',
+      labelEn: 'Smart Pay',
+      iconColor: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+      action: () => openSection('smart_payment'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+      )
+    },
+    {
+      id: 'section_income_workers',
+      labelBn: 'আয় ও কর্মজীবী',
+      labelEn: 'Income & Workers',
+      iconColor: 'bg-teal-50 text-teal-700 border-teal-200',
+      action: () => openSection('income_workers'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+        </svg>
+      )
+    },
+    {
+      id: 'section_disaster_support',
+      labelBn: 'দুর্যোগ সহায়তা',
+      labelEn: 'Disaster Relief',
+      iconColor: 'bg-sky-50 text-sky-700 border-sky-200',
+      action: () => openSection('disaster_support'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+          <line x1="8" y1="19" x2="6" y2="22" strokeLinecap="round" />
+          <line x1="12" y1="19" x2="10" y2="22" strokeLinecap="round" />
+          <line x1="16" y1="19" x2="14" y2="22" strokeLinecap="round" />
+        </svg>
       )
     }
   ];
@@ -349,12 +421,27 @@ export const HomeScreen: React.FC = () => {
       <UpayHeader />
 
       {/* Horizontal Scrollable Navigation Bar under Header */}
-      <div className="relative w-full bg-[#ebebf7] shadow-2xs border-b border-indigo-100 select-none py-2 px-1">
+      <div
+        className="relative w-full bg-[#ebebf7] shadow-2xs border-b border-indigo-100 select-none py-2 px-1 shrink-0"
+        style={{ minHeight: '52px', height: 'auto', flexShrink: 0 }}
+        onMouseEnter={pauseAutoScroll}
+        onMouseLeave={() => {
+          if (!isMouseDownRef.current) {
+            resumeAutoScrollAfterDelay();
+          }
+        }}
+        onTouchStart={pauseAutoScroll}
+        onTouchEnd={resumeAutoScrollAfterDelay}
+        onTouchCancel={resumeAutoScrollAfterDelay}
+      >
         {/* Left Arrow Button */}
         <button
           type="button"
-          onClick={() => navScrollRef.current?.scrollBy({ left: -160, behavior: 'smooth' })}
-          className="absolute left-1 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-white text-slate-800 border border-slate-300 font-black text-sm flex items-center justify-center shadow-xs hover:bg-slate-50 active:scale-90 transition-transform cursor-pointer"
+          onClick={() => handleArrowScroll('left')}
+          className={`absolute left-1 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-white/95 text-slate-800 border border-slate-300/80 font-black text-sm flex items-center justify-center shadow-md hover:bg-white active:scale-90 transition-all cursor-pointer ${
+            canScrollLeft ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
+          style={{ width: '28px', height: '28px', flexShrink: 0 }}
           aria-label="Scroll left"
         >
           ‹
@@ -363,17 +450,33 @@ export const HomeScreen: React.FC = () => {
         {/* Scrollable Track */}
         <div
           ref={navScrollRef}
-          className="flex items-center gap-2 px-8 overflow-x-auto scroll-smooth no-scrollbar"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          className={`w-full flex items-center gap-2 px-8 overflow-x-auto overflow-y-hidden scroll-smooth no-scrollbar flex-nowrap ${
+            isDragging ? 'cursor-grabbing select-none' : 'cursor-grab'
+          }`}
+          style={{
+            minHeight: '40px',
+            height: 'auto',
+            flexShrink: 0,
+            WebkitOverflowScrolling: 'touch',
+            touchAction: 'pan-x',
+            scrollSnapType: 'x proximity',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
+          }}
         >
           {/* Digital Somiti (New Group Savings Circle) */}
           <button
             type="button"
-            onClick={() => setActiveTab('somiti')}
-            className="px-3.5 py-1.5 rounded-full bg-[#0B4DA2] hover:bg-blue-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('somiti'))}
+            className="h-9 px-3.5 rounded-full bg-[#0B4DA2] hover:bg-blue-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>👥</span>
             <span>{language === 'bn' ? 'ডিজিটাল সমিতি' : 'Digital Somiti'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               AI
             </span>
           </button>
@@ -381,12 +484,13 @@ export const HomeScreen: React.FC = () => {
           {/* TrustPay F-Commerce Escrow (New Feature) */}
           <button
             type="button"
-            onClick={() => setActiveTab('trustpay')}
-            className="px-3.5 py-1.5 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('trustpay'))}
+            className="h-9 px-3.5 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>🤝</span>
             <span>{language === 'bn' ? 'ট্রাস্টপে' : 'TrustPay'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               ESCROW
             </span>
           </button>
@@ -394,12 +498,13 @@ export const HomeScreen: React.FC = () => {
           {/* Liquidity Network (Cash Reservation & Agent Float) */}
           <button
             type="button"
-            onClick={() => setActiveTab('liquidity')}
-            className="px-3.5 py-1.5 rounded-full bg-cyan-700 hover:bg-cyan-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('liquidity'))}
+            className="h-9 px-3.5 rounded-full bg-cyan-700 hover:bg-cyan-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>⚡</span>
             <span>{language === 'bn' ? 'লিকুইডিটি' : 'Liquidity'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               CASH
             </span>
           </button>
@@ -407,12 +512,13 @@ export const HomeScreen: React.FC = () => {
           {/* Cross-Wallet Federated Risk Exchange */}
           <button
             type="button"
-            onClick={() => setActiveTab('crosswallet')}
-            className="px-3.5 py-1.5 rounded-full bg-indigo-800 hover:bg-indigo-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('crosswallet'))}
+            className="h-9 px-3.5 rounded-full bg-indigo-800 hover:bg-indigo-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>🌐</span>
             <span>{language === 'bn' ? 'ক্রস-ওয়ালেট' : 'Cross-Wallet'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               FEDERATED
             </span>
           </button>
@@ -420,12 +526,13 @@ export const HomeScreen: React.FC = () => {
           {/* Climate Shield Mode (Disaster Alert & Relief) */}
           <button
             type="button"
-            onClick={() => setActiveTab('climateshield')}
-            className="px-3.5 py-1.5 rounded-full bg-rose-700 hover:bg-rose-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('climateshield'))}
+            className="h-9 px-3.5 rounded-full bg-rose-700 hover:bg-rose-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>🌊</span>
             <span>{language === 'bn' ? 'ক্লাইমেট শিল্ড' : 'Climate Shield'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               RELIEF
             </span>
           </button>
@@ -433,12 +540,13 @@ export const HomeScreen: React.FC = () => {
           {/* Portable Income Passport (New Feature) */}
           <button
             type="button"
-            onClick={() => setActiveTab('income_passport')}
-            className="px-3.5 py-1.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('income_passport'))}
+            className="h-9 px-3.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>🛂</span>
             <span>{language === 'bn' ? 'ইনকাম পাসপোর্ট' : 'Income Passport'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               VERIFIED
             </span>
           </button>
@@ -446,12 +554,13 @@ export const HomeScreen: React.FC = () => {
           {/* Fee Auditor & Overcharge Radar */}
           <button
             type="button"
-            onClick={() => setActiveTab('fee_auditor')}
-            className="px-3.5 py-1.5 rounded-full bg-blue-900 hover:bg-blue-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('fee_auditor'))}
+            className="h-9 px-3.5 rounded-full bg-blue-900 hover:bg-blue-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>⚖️</span>
             <span>{language === 'bn' ? 'ফি অডিটর' : 'Fee Auditor'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               RADAR
             </span>
           </button>
@@ -459,12 +568,13 @@ export const HomeScreen: React.FC = () => {
           {/* Bundle Optimizer (AI Mobile Pack Recommendation) */}
           <button
             type="button"
-            onClick={() => setActiveTab('bundle_optimizer')}
-            className="px-3.5 py-1.5 rounded-full bg-blue-800 hover:bg-blue-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('bundle_optimizer'))}
+            className="h-9 px-3.5 rounded-full bg-blue-800 hover:bg-blue-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>📶</span>
             <span>{language === 'bn' ? 'বান্ডেল অপ্টিমাইজার' : 'Bundle Optimizer'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               SAVER
             </span>
           </button>
@@ -472,12 +582,13 @@ export const HomeScreen: React.FC = () => {
           {/* Zakat & Giving Assistant with Eid Envelopes */}
           <button
             type="button"
-            onClick={() => setActiveTab('zakat_giving')}
-            className="px-3.5 py-1.5 rounded-full bg-teal-800 hover:bg-teal-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('zakat_giving'))}
+            className="h-9 px-3.5 rounded-full bg-teal-800 hover:bg-teal-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>🌙</span>
             <span>{language === 'bn' ? 'যাকাত ও ঈদ খাম' : 'Zakat & Eid'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               EID
             </span>
           </button>
@@ -485,12 +596,13 @@ export const HomeScreen: React.FC = () => {
           {/* Dialect-aware Voice Pay */}
           <button
             type="button"
-            onClick={() => setActiveTab('dialect_voice')}
-            className="px-3.5 py-1.5 rounded-full bg-blue-900 hover:bg-blue-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('dialect_voice'))}
+            className="h-9 px-3.5 rounded-full bg-blue-900 hover:bg-blue-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>🎙️</span>
             <span>{language === 'bn' ? 'ভয়েস পে' : 'Voice Pay'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               DIALECT
             </span>
           </button>
@@ -498,12 +610,13 @@ export const HomeScreen: React.FC = () => {
           {/* Mandate Wallet (AI-Permissioned Payments) */}
           <button
             type="button"
-            onClick={() => setActiveTab('mandate_wallet')}
-            className="px-3.5 py-1.5 rounded-full bg-cyan-900 hover:bg-cyan-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('mandate_wallet'))}
+            className="h-9 px-3.5 rounded-full bg-cyan-900 hover:bg-cyan-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>📜</span>
             <span>{language === 'bn' ? 'ম্যান্ডেট ওয়ালেট' : 'Mandate'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               AUTO
             </span>
           </button>
@@ -511,12 +624,13 @@ export const HomeScreen: React.FC = () => {
           {/* Payslip Auditor & Wage-Day Orchestrator */}
           <button
             type="button"
-            onClick={() => setActiveTab('payslip_orchestrator')}
-            className="px-3.5 py-1.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+            onClick={() => handleChipClick(() => setActiveTab('payslip_orchestrator'))}
+            className="h-9 px-3.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             <span>👔</span>
             <span>{language === 'bn' ? 'পে-স্লিপ ও বেতন দিন' : 'Payslip & Wage'}</span>
-            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+            <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
               WAGE
             </span>
           </button>
@@ -524,8 +638,9 @@ export const HomeScreen: React.FC = () => {
           {/* 1. Live Voice */}
           <button
             type="button"
-            onClick={() => setCurrentModal('voice_conversation')}
-            className="px-3.5 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer"
+            onClick={() => handleChipClick(() => setCurrentModal('voice_conversation'))}
+            className="h-9 px-3.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             {language === 'bn' ? 'লাইভ ভয়েস' : 'Live Voice'}
           </button>
@@ -533,8 +648,9 @@ export const HomeScreen: React.FC = () => {
           {/* 2. AI Chatbot */}
           <button
             type="button"
-            onClick={() => setCurrentModal('gemini_chatbot')}
-            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
+            onClick={() => handleChipClick(() => setCurrentModal('gemini_chatbot'))}
+            className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             {language === 'bn' ? 'এআই চ্যাটবট' : 'AI Chatbot'}
           </button>
@@ -542,8 +658,9 @@ export const HomeScreen: React.FC = () => {
           {/* 3. Search Info */}
           <button
             type="button"
-            onClick={() => setCurrentModal('search_grounding')}
-            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
+            onClick={() => handleChipClick(() => setCurrentModal('search_grounding'))}
+            className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             {language === 'bn' ? 'সার্চ তথ্য' : 'Search Info'}
           </button>
@@ -551,8 +668,9 @@ export const HomeScreen: React.FC = () => {
           {/* 4. Agent Map */}
           <button
             type="button"
-            onClick={() => setCurrentModal('maps_grounding')}
-            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
+            onClick={() => handleChipClick(() => setCurrentModal('maps_grounding'))}
+            className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             {language === 'bn' ? 'এজেন্ট ম্যাপ' : 'Agent Map'}
           </button>
@@ -560,8 +678,9 @@ export const HomeScreen: React.FC = () => {
           {/* 5. Transcribe */}
           <button
             type="button"
-            onClick={() => setCurrentModal('audio_transcribe')}
-            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
+            onClick={() => handleChipClick(() => setCurrentModal('audio_transcribe'))}
+            className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             {language === 'bn' ? 'ট্রান্সক্রাইব' : 'Transcribe'}
           </button>
@@ -569,8 +688,9 @@ export const HomeScreen: React.FC = () => {
           {/* 6. Scam SMS */}
           <button
             type="button"
-            onClick={() => setCurrentModal('scam_checker')}
-            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
+            onClick={() => handleChipClick(() => setCurrentModal('scam_checker'))}
+            className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             {language === 'bn' ? 'স্ক্যাম SMS' : 'Scam SMS'}
           </button>
@@ -578,8 +698,9 @@ export const HomeScreen: React.FC = () => {
           {/* 7. Cashless Flow */}
           <button
             type="button"
-            onClick={() => setCurrentModal('cash_flow')}
-            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
+            onClick={() => handleChipClick(() => setCurrentModal('cash_flow'))}
+            className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             {language === 'bn' ? 'ক্যাশ-ফ্লো' : 'Cashless Flow'}
           </button>
@@ -587,8 +708,9 @@ export const HomeScreen: React.FC = () => {
           {/* 8. Safe Hub */}
           <button
             type="button"
-            onClick={() => setCurrentModal('safe_ai_hub')}
-            className="px-3.5 py-1.5 rounded-full bg-[#FFD600] text-slate-950 font-black text-xs shadow-2xs hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer border border-amber-300"
+            onClick={() => handleChipClick(() => setCurrentModal('safe_ai_hub'))}
+            className="h-9 px-3.5 rounded-full bg-[#FFD600] text-slate-950 font-black text-xs shadow-2xs hover:brightness-105 active:scale-95 transition-all shrink-0 snap-start cursor-pointer border border-amber-300 inline-flex items-center justify-center whitespace-nowrap"
+            style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
           >
             {language === 'bn' ? 'সেফ হাব' : 'Safe Hub'}
           </button>
@@ -597,8 +719,11 @@ export const HomeScreen: React.FC = () => {
         {/* Right Arrow Button */}
         <button
           type="button"
-          onClick={() => navScrollRef.current?.scrollBy({ left: 160, behavior: 'smooth' })}
-          className="absolute right-1 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-white text-slate-800 border border-slate-300 font-black text-sm flex items-center justify-center shadow-xs hover:bg-slate-50 active:scale-90 transition-transform cursor-pointer"
+          onClick={() => handleArrowScroll('right')}
+          className={`absolute right-1 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-white/95 text-slate-800 border border-slate-300/80 font-black text-sm flex items-center justify-center shadow-md hover:bg-white active:scale-90 transition-all cursor-pointer ${
+            canScrollRight ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
+          style={{ width: '28px', height: '28px', flexShrink: 0 }}
           aria-label="Scroll right"
         >
           ›

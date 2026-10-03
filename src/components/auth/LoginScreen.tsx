@@ -22,6 +22,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
       setErrorMsg('');
     }
   };
+
   const handleBackspace = () => {
     if (pin.length > 0) {
       setPin(pin.slice(0, -1));
@@ -302,3 +303,4 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
     </div>
   );
 };
+
