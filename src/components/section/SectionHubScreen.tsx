@@ -48,7 +48,7 @@ export const SectionHubScreen: React.FC<SectionHubScreenProps> = ({
               <span>{language === 'bn' ? section.titleBn : section.titleEn}</span>
             </h1>
             <p className="text-[11px] text-slate-800 font-semibold truncate">
-              {language === 'bn' ? 'উপায় প্ল্যাটফর্ম সেবা' : 'Upay Platform Service'}
+              {language === 'bn' ? 'রিকার্শন পে প্ল্যাটফর্ম সেবা' : 'Recursion Pay Platform Service'}
             </p>
           </div>
 
@@ -74,15 +74,15 @@ export const SectionHubScreen: React.FC<SectionHubScreenProps> = ({
               <h1 className="text-[19px] font-black text-white tracking-tight leading-tight">
                 {language === 'bn' ? section.titleBn : section.titleEn}
               </h1>
-              <span className="px-2 py-0.5 rounded-full bg-[#FFD600] text-slate-950 text-[10px] font-black uppercase tracking-wide shrink-0">
-                UPAY SUITE
+              <span className="px-2 py-0.5 rounded-full bg-[#00D492] text-slate-950 text-[10px] font-black uppercase tracking-wide shrink-0 shadow-xs">
+                RECURSION PAY SUITE
               </span>
             </div>
             <p className="text-xs text-blue-100 font-medium leading-snug mt-1">
               {language === 'bn' ? section.subtitleBn : section.subtitleEn}
             </p>
             {(section.taglineBn || section.taglineEn) && (
-              <p className="text-xs text-yellow-300 font-bold tracking-wide mt-1.5">
+              <p className="text-xs text-emerald-300 font-bold tracking-wide mt-1.5">
                 {language === 'bn' ? section.taglineBn : section.taglineEn}
               </p>
             )}
@@ -169,8 +169,8 @@ export const SectionHubScreen: React.FC<SectionHubScreenProps> = ({
       <div className="px-6 pt-4 text-center">
         <p className="text-[11px] text-slate-400 font-medium">
           {language === 'bn'
-            ? 'উপায় নিরাপদ লেনদেন ও সার্বিক সহায়তায় সবসময় আপনার পাশে'
-            : 'Upay is always by your side for secure payments and total protection'}
+            ? 'রিকার্শন পে নিরাপদ লেনদেন ও সার্বিক সহায়তায় সবসময় আপনার পাশে'
+            : 'Recursion Pay is always by your side for secure payments and total protection'}
         </p>
       </div>
     </div>
