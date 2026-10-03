@@ -214,7 +214,7 @@ export function registerNewAccount(params: NewRegistrationParams): UserProfile {
     language: 'bn',
     simpleMode: false,
     aiConsentGiven: true,
-    accountTier: 'Upay Basic (Verified)',
+    accountTier: 'Recursion Pay Basic (Verified)',
     joinedDate: new Date().toISOString().split('T')[0]
   };
 
@@ -224,7 +224,7 @@ export function registerNewAccount(params: NewRegistrationParams): UserProfile {
     userId: newUser.id,
     type: 'add_money',
     recipient: newUser.phone,
-    recipientName: 'উপায় বোনাস (Upay Bonus)',
+    recipientName: 'রিকার্শন পে বোনাস (Recursion Pay Bonus)',
     amount: welcomeBonus,
     fee: 0,
     total: welcomeBonus,
