@@ -406,25 +406,25 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
 
   return (
     <div className="fixed sm:absolute inset-0 z-50 flex flex-col bg-white overflow-hidden animate-scale-up font-sans">
-      {/* 1. UPAY YELLOW HEADER BAR (Identical to Screenshots 1-9) */}
-      <div className="w-full bg-[#FFD21F] px-4 py-3 flex items-center justify-between shrink-0 shadow-xs z-10">
+      {/* 1. MODERN ELECTRIC MINT HEADER BAR */}
+      <div className="w-full bg-gradient-to-r from-[#00D492] to-[#00B478] px-4 py-3 flex items-center justify-between shrink-0 shadow-xs z-10 text-slate-950">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={handleHeaderBack}
-            className="w-9 h-9 -ml-1 rounded-full flex items-center justify-center text-slate-900 hover:bg-black/10 transition-colors"
+            className="w-9 h-9 -ml-1 rounded-full flex items-center justify-center text-slate-950 hover:bg-black/10 transition-colors cursor-pointer"
           >
             <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
           </button>
-          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+          <h2 className="text-lg font-black text-slate-950 tracking-tight">
             {getServiceTitle()}
           </h2>
         </div>
 
         {/* Balance Badge indicator in header */}
-        <div className="text-right text-[11px] text-slate-900 font-semibold bg-black/5 px-2.5 py-1 rounded-full">
+        <div className="text-right text-[11px] text-slate-950 font-bold bg-black/10 px-2.5 py-1 rounded-full">
           <span>৳{user?.balance?.toLocaleString() || '18,450'}</span>
         </div>
       </div>
@@ -454,12 +454,12 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                         value={recipient}
                         onChange={(e) => setRecipient(e.target.value)}
                         placeholder={language === 'bn' ? 'নাম অথবা মোবাইল নম্বর টাইপ করুন' : 'Type name or mobile number'}
-                        className="w-full pl-9 pr-3.5 py-2.5 bg-[#F2F4F7] rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#FFD21F]"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-[#F2F4F7] rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-[#00D492]"
                       />
                     </div>
                   </div>
 
-                  {/* Scan QR Code button (Image 3) */}
+                  {/* Scan QR Code button */}
                   <div className="flex justify-center pt-1">
                     <button
                       type="button"
@@ -467,7 +467,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                         setRecipient('01777889900');
                         setRecipientName('স্বপ্ন সুপারশপ');
                       }}
-                      className="inline-flex items-center gap-2 px-7 py-2 rounded-full bg-[#FFF1B8] border border-[#FFE17D] text-slate-900 text-xs font-extrabold shadow-2xs hover:bg-[#FFE894] transition-colors"
+                      className="inline-flex items-center gap-2 px-7 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-950 text-xs font-extrabold shadow-2xs hover:bg-emerald-100 transition-colors cursor-pointer"
                     >
                       <svg className="w-4 h-4 text-slate-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <rect x="3" y="3" width="7" height="7" rx="1" />
@@ -870,9 +870,9 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                     type="button"
                     onClick={() => {
                       setRecipient('01811002233');
-                      setRecipientName('ফার্মগেট উপায় এজেন্ট');
+                      setRecipientName('ফার্মগেট রিকার্শন এজেন্ট');
                     }}
-                    className="flex items-center justify-center gap-2 py-2.5 rounded-full bg-[#FFF0BA] border border-[#FFE17D] text-slate-900 text-xs font-extrabold shadow-2xs hover:bg-[#FFE894] transition-colors"
+                    className="flex items-center justify-center gap-2 py-2.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-950 text-xs font-extrabold shadow-2xs hover:bg-emerald-100 transition-colors cursor-pointer"
                   >
                     <span>🔳</span>
                     <span>{language === 'bn' ? 'স্ক্যান QR কোড' : 'Scan QR Code'}</span>
@@ -939,7 +939,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                         {language === 'bn' ? 'নিকটবর্তী অনুমোদিত এজেন্ট:' : 'Nearby Authorized Agents:'}
                       </span>
                       {[
-                        { name: 'ফার্মগেট উপায় এজেন্ট', phone: '01811002233', area: 'ফার্মগেট মোড়' },
+                        { name: 'ফার্মগেট রিকার্শন এজেন্ট', phone: '01811002233', area: 'ফার্মগেট মোড়' },
                         { name: 'ধানমন্ডি সেন্ট্রাল এজেন্ট', phone: '01822334455', area: 'ধানমন্ডি ২৭' },
                         { name: 'ইউসিবি এটিএম বুথ', phone: '01811002233', area: 'কাওরান বাজার' }
                       ].map((agent, i) => (
@@ -1119,7 +1119,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                       setRecipient('01777889900');
                       setRecipientName('স্বপ্ন সুপারশপ');
                     }}
-                    className="inline-flex items-center gap-2 px-7 py-2.5 rounded-full bg-[#FFF1B8] border border-[#FFE17D] text-slate-900 text-xs font-extrabold shadow-2xs hover:bg-[#FFE894] transition-colors"
+                    className="inline-flex items-center gap-2 px-7 py-2.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-950 text-xs font-extrabold shadow-2xs hover:bg-emerald-100 transition-colors cursor-pointer"
                   >
                     <span>🔳</span>
                     <span>{language === 'bn' ? 'স্ক্যান QR কোড' : 'Scan QR Code'}</span>
@@ -1141,7 +1141,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                       }}
                       className="flex flex-col items-center cursor-pointer group"
                     >
-                      <div className="w-12 h-12 rounded-full bg-slate-300 text-slate-500 flex items-center justify-center shrink-0 group-hover:ring-2 group-hover:ring-[#FFD21F]">
+                      <div className="w-12 h-12 rounded-full bg-slate-300 text-slate-500 flex items-center justify-center shrink-0 group-hover:ring-2 group-hover:ring-[#00D492]">
                         <svg className="w-7 h-7 fill-current text-slate-500" viewBox="0 0 24 24">
                           <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                         </svg>
@@ -1156,7 +1156,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                       }}
                       className="flex flex-col items-center cursor-pointer group"
                     >
-                      <div className="w-12 h-12 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center shrink-0 group-hover:ring-2 group-hover:ring-[#FFD21F]">
+                      <div className="w-12 h-12 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center shrink-0 group-hover:ring-2 group-hover:ring-[#00D492]">
                         🛒
                       </div>
                       <span className="text-[11px] font-bold text-slate-800 mt-1.5 text-center">আগোরা</span>
@@ -1228,7 +1228,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                         : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    🏦 {language === 'bn' ? 'ব্যাংক টু উপায়' : 'Bank to Upay'}
+                    🏦 {language === 'bn' ? 'ব্যাংক টু রিকার্শন পে' : 'Bank to Recursion Pay'}
                   </button>
                   <button
                     type="button"
@@ -1239,7 +1239,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                         : 'text-slate-600 hover:text-slate-900'
                     }`}
                   >
-                    💳 {language === 'bn' ? 'কার্ড টু উপায়' : 'Card to Upay'}
+                    💳 {language === 'bn' ? 'কার্ড টু রিকার্শন পে' : 'Card to Recursion Pay'}
                   </button>
                 </div>
 
@@ -1253,7 +1253,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                   <select
                     value={selectedBank}
                     onChange={(e) => setSelectedBank(e.target.value)}
-                    className="w-full p-3 rounded-2xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-3 rounded-2xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   >
                     {addMoneyMethod === 'bank' ? (
                       <>
@@ -1286,7 +1286,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                     value={recipient}
                     onChange={(e) => setRecipient(e.target.value)}
                     placeholder={addMoneyMethod === 'bank' ? '2050100234567' : '4123 4567 8901 2345'}
-                    className="w-full p-3 rounded-2xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F] font-mono"
+                    className="w-full p-3 rounded-2xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492] font-mono"
                   />
                 </div>
 
@@ -1300,7 +1300,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                     value={amount}
                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
                     placeholder="0"
-                    className="w-full p-3 rounded-2xl border border-slate-200 text-base font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-3 rounded-2xl border border-slate-200 text-base font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
 
                   {/* Quick Chips */}
@@ -1431,7 +1431,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                       value={amount}
                       onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
                       placeholder="1000"
-                      className="w-full p-3 rounded-2xl border border-slate-200 text-base font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                      className="w-full p-3 rounded-2xl border border-slate-200 text-base font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                     />
 
                     {/* Quick Chips */}
@@ -1469,7 +1469,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                     categoryEn: 'Savings',
                     roundUpAmount: 0
                   })}
-                  className="w-full py-3.5 rounded-2xl bg-[#FFD21F] hover:bg-[#FFD600] text-slate-900 font-extrabold text-sm shadow-md disabled:opacity-40 transition-all flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-2xl bg-[#00D492] hover:bg-[#00BF83] text-slate-950 font-extrabold text-sm shadow-md disabled:opacity-40 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span>{language === 'bn' ? 'ডিপিএস নিশ্চিত করুন' : 'Confirm DPS'}</span>
                   <span>➔</span>
@@ -1518,7 +1518,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                   <select
                     value={selectedBank}
                     onChange={(e) => setSelectedBank(e.target.value)}
-                    className="w-full p-3 rounded-2xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-3 rounded-2xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   >
                     {transferChannel === 'bank' ? (
                       <>
@@ -1551,7 +1551,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                     value={recipient}
                     onChange={(e) => setRecipient(e.target.value)}
                     placeholder={transferChannel === 'bank' ? '2050100234567' : '01XXXXXXXXX'}
-                    className="w-full p-3 rounded-2xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F] font-mono"
+                    className="w-full p-3 rounded-2xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492] font-mono"
                   />
                 </div>
 
@@ -1565,7 +1565,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                     value={amount}
                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
                     placeholder="0"
-                    className="w-full p-3 rounded-2xl border border-slate-200 text-base font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-3 rounded-2xl border border-slate-200 text-base font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                   {/* Quick amount chips: 100, 200, 300, 500 */}
                   <div className="grid grid-cols-4 gap-2 mt-2">
@@ -1628,7 +1628,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                     value={recipient}
                     onChange={(e) => setRecipient(e.target.value)}
                     placeholder="01XXXXXXXXX"
-                    className="w-full p-3 rounded-2xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F] font-mono"
+                    className="w-full p-3 rounded-2xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492] font-mono"
                   />
                   {/* Quick contact pills */}
                   <div className="flex gap-2 mt-2">
@@ -1665,7 +1665,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                     value={amount}
                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
                     placeholder="0"
-                    className="w-full p-3 rounded-2xl border border-slate-200 text-base font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-3 rounded-2xl border border-slate-200 text-base font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                   {/* Quick amount chips: 100, 200, 300, 500 */}
                   <div className="grid grid-cols-4 gap-2 mt-2">
@@ -1751,7 +1751,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                   <select
                     value={selectedBank}
                     onChange={(e) => setSelectedBank(e.target.value)}
-                    className="w-full p-3 rounded-2xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-3 rounded-2xl border border-slate-200 bg-white text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   >
                     <option value="ইউসিবি ব্যাংক (UCB)">ইউনাইটেড কমার্শিয়াল ব্যাংক (UCB)</option>
                     <option value="সোনালী ব্যাংক পিএলসি">সোনালী ব্যাংক পিএলসি</option>
@@ -1773,7 +1773,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                     value={recipient}
                     onChange={(e) => setRecipient(e.target.value)}
                     placeholder="2050100234567"
-                    className="w-full p-3 rounded-2xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F] font-mono"
+                    className="w-full p-3 rounded-2xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492] font-mono"
                   />
                 </div>
 
@@ -1801,7 +1801,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                     value={amount}
                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
                     placeholder="0"
-                    className="w-full p-3 rounded-2xl border border-slate-200 text-base font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-3 rounded-2xl border border-slate-200 text-base font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                   {/* Quick amount chips: 100, 200, 300, 500 */}
                   <div className="grid grid-cols-4 gap-2 mt-2">
@@ -2159,7 +2159,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                 type="button"
                 onClick={() => {
                   if (navigator.clipboard) {
-                    navigator.clipboard.writeText(`Upay Safe Tx: ${completedTx.id}, Amount: ${completedTx.amount}`);
+                    navigator.clipboard.writeText(`Recursion Pay Safe Tx: ${completedTx.id}, Amount: ${completedTx.amount}`);
                   }
                 }}
                 className="w-full py-2.5 rounded-2xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5"
