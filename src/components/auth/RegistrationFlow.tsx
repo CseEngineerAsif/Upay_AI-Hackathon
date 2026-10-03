@@ -16,7 +16,8 @@ type RegistrationStep =
   | 'nid_back'
   | 'profile'
   | 'status_modal'
-  | 'pin_setup';
+  | 'pin_setup'
+  | 'success';
 
 export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
   onBackToWelcome,
@@ -25,6 +26,7 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
   const { language, setLanguage, registerUser } = useAppStore();
 
   const [step, setStep] = useState<RegistrationStep>('intro');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Mobile Step State (Image 6)
   const [mobileNumber, setMobileNumber] = useState('01794809461');
@@ -161,17 +163,24 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
   };
 
   const handlePinSubmit = async () => {
-    if (newPin.length === 4) {
-      await registerUser({
-        name: fullName.trim() || (language === 'bn' ? `নতুন গ্রাহক (${mobileNumber.slice(-4)})` : `New User (${mobileNumber.slice(-4)})`),
-        phone: mobileNumber,
-        pin: newPin,
-        operator: selectedOperator,
-        profession: selectedProfession,
-        gender: selectedGender,
-        email: email.trim() || undefined
-      });
-      onCompleteRegistration();
+    if (newPin.length === 4 && !isSubmitting) {
+      setIsSubmitting(true);
+      try {
+        await registerUser({
+          name: fullName.trim() || (language === 'bn' ? `নতুন গ্রাহক (${mobileNumber.slice(-4)})` : `New User (${mobileNumber.slice(-4)})`),
+          phone: mobileNumber,
+          pin: newPin,
+          operator: selectedOperator,
+          profession: selectedProfession,
+          gender: selectedGender,
+          email: email.trim() || undefined
+        });
+        setStep('success');
+      } catch (err) {
+        console.error('Registration failed:', err);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -313,8 +322,8 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
             </div>
             <p className="text-xs text-slate-600 leading-snug">
               {language === 'bn'
-                ? 'মোবাইল ব্যাংকিংয়ের সকল সুবিধা পেতে মোবাইল নম্বর দিয়ে উপায় অ্যাকাউন্ট তৈরি করুন'
-                : 'Enter your mobile number to create your Upay mobile financial account'}
+                ? 'মোবাইল ব্যাংকিংয়ের সকল সুবিধা পেতে মোবাইল নম্বর দিয়ে রিকার্শন পে অ্যাকাউন্ট তৈরি করুন'
+                : 'Enter your mobile number to create your Recursion Pay mobile financial account'}
             </p>
 
             {/* Mobile Number Field */}
@@ -463,8 +472,8 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
                 {language === 'bn' ? 'নোট:' : 'Note:'}
               </span>{' '}
               {language === 'bn'
-                ? 'একাউন্টের সিকিউরিটির কারনে ওটিপি টাইপ করতে পারবেন না। উপায় সিস্টেম থেকেই ওটিপি ইনপুট দিয়ে দেয়া হবে।'
-                : 'For security reasons, OTP cannot be manually typed. The Upay system automatically verifies it.'}
+                ? 'একাউন্টের সিকিউরিটির কারনে ওটিপি টাইপ করতে পারবেন না। রিকার্শন পে সিস্টেম থেকেই ওটিপি ইনপুট দিয়ে দেয়া হবে।'
+                : 'For security reasons, OTP cannot be manually typed. The Recursion Pay system automatically verifies it.'}
             </p>
           </div>
         </div>
@@ -761,7 +770,7 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
                   <p className="text-xs text-slate-500">
                     {language === 'bn'
                       ? 'লেনদেন শুরু করতে একটি নতুন ৪ ডিজিটের পিন সেট করুন।'
-                      : 'Please set your 4-digit PIN to start using Upay.'}
+                      : 'Please set your 4-digit PIN to start using Recursion Pay.'}
                   </p>
                 </div>
 
@@ -799,8 +808,8 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
             </h3>
             <p className="text-xs text-slate-500 text-center max-w-xs mb-6">
               {language === 'bn'
-                ? 'এই পিনটি দিয়ে আপনি পরবর্তীতে উপায় অ্যাপে লগইন করতে পারবেন'
-                : 'You will use this PIN to log in to your Upay account'}
+                ? 'এই পিনটি দিয়ে আপনি পরবর্তীতে রিকার্শন পে অ্যাপে লগইন করতে পারবেন'
+                : 'You will use this PIN to log in to your Recursion Pay account'}
             </p>
 
             {/* 4 PIN Dots */}
@@ -825,8 +834,68 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
               onKeyPress={handlePinKey}
               onBackspace={handlePinBackspace}
               onSubmit={handlePinSubmit}
-              submitDisabled={newPin.length < 4}
+              submitDisabled={newPin.length < 4 || isSubmitting}
             />
+          </div>
+        </div>
+      )}
+
+      {/* ============================================================ */}
+      {/* 9. STEP: SUCCESS REGISTRATION SCREEN                         */}
+      {/* ============================================================ */}
+      {step === 'success' && (
+        <div className="flex-1 flex flex-col justify-between items-center px-6 py-6 bg-gradient-to-b from-amber-50/40 via-white to-sky-50/30 overflow-y-auto no-scrollbar animate-fade-in text-center">
+          {/* Top Logo */}
+          <div className="w-full flex justify-center pt-4">
+            <UpayLogo size="md" showText={true} />
+          </div>
+
+          {/* Central Card */}
+          <div className="flex flex-col items-center space-y-4 max-w-sm my-auto w-full">
+            <div className="w-20 h-20 rounded-full bg-emerald-100 border-2 border-emerald-400 text-emerald-600 flex items-center justify-center text-4xl shadow-md">
+              ✓
+            </div>
+
+            <div className="space-y-1.5">
+              <h2 className="text-xl font-black text-slate-900 tracking-tight">
+                {language === 'bn' ? 'রেজিস্ট্রেশন সফল হয়েছে!' : 'Registration Successful!'}
+              </h2>
+              <p className="text-xs text-slate-600 leading-relaxed px-2">
+                {language === 'bn'
+                  ? 'আপনার রিকার্শন পে অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। লেনদেন শুরু করতে আপনার সেট করা ৪ ডিজিটের পিন দিয়ে লগইন করুন।'
+                  : 'Your Recursion Pay account has been created successfully. Please login using your 4-digit PIN to access your account.'}
+              </p>
+            </div>
+
+            {/* Account Details Box */}
+            <div className="w-full p-4 rounded-2xl bg-white border border-slate-200/90 shadow-xs space-y-2 text-left">
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-500">{language === 'bn' ? 'গ্রাহকের নাম' : 'Name'}</span>
+                <span className="font-bold text-slate-900 truncate max-w-[180px]">
+                  {fullName.trim() || (language === 'bn' ? 'নতুন গ্রাহক' : 'New User')}
+                </span>
+              </div>
+              <div className="flex justify-between items-center text-xs">
+                <span className="text-slate-500">{language === 'bn' ? 'মোবাইল নম্বর' : 'Mobile'}</span>
+                <span className="font-mono font-bold text-slate-900">{mobileNumber}</span>
+              </div>
+              <div className="flex justify-between items-center text-xs pt-1.5 border-t border-slate-100">
+                <span className="text-slate-500">{language === 'bn' ? 'ওয়েলকাম বোনাস' : 'Welcome Bonus'}</span>
+                <span className="font-extrabold text-emerald-600">৳২০০.০০</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Action Button */}
+          <div className="w-full max-w-sm space-y-2 pb-2">
+            <button
+              type="button"
+              onClick={onCompleteRegistration}
+              className="w-full py-3.5 rounded-full bg-[#0B4DA2] text-white font-black text-sm shadow-md shadow-blue-900/20 active:scale-98 transition-all hover:bg-blue-800 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>{language === 'bn' ? 'লগইন করুন' : 'Proceed to Login'}</span>
+              <span>→</span>
+            </button>
           </div>
         </div>
       )}
