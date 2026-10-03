@@ -15,11 +15,11 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
   const getSystemInstruction = () => {
     switch (selectedRole) {
       case 'security':
-        return 'You are an elite Cyber Threat & MFS Fraud Analyst for Upay Safe. You specialize in analyzing complex fraud rings, mule accounts, phishing schemes, and social engineering in Bangladesh. Provide deep forensic security analysis in Bengali.';
+        return 'You are an elite Cyber Threat & MFS Fraud Analyst for Recursion Pay Safe. You specialize in analyzing complex fraud rings, mule accounts, phishing schemes, and social engineering in Bangladesh. Provide deep forensic security analysis in Bengali.';
       case 'financial':
         return 'You are a certified Financial Planner for Bangladeshi MFS users. You give practical advice on budgeting, micro-savings, inflation management, and emergency funds in warm, respectful Bengali.';
       default:
-        return 'You are Upay Safe Assistant, a friendly and accurate guide for all Upay MFS features and services in Bengali.';
+        return 'You are Recursion Pay Safe Assistant, a friendly and accurate guide for all Recursion Pay MFS features and services in Bengali.';
     }
   };
 
@@ -29,8 +29,8 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
       role: 'model',
       text:
         language === 'bn'
-          ? 'আসসালামু আলাইকুম! আমি উপায় সেফ মাল্টি-টার্ন এআই চ্যাটবট। আপনার যেকোনো জটিল আর্থিক বা নিরাপত্তা প্রশ্ন বিস্তারিতভাবে করতে পারেন।'
-          : 'Hello! I am your Upay Safe multi-turn assistant. Ask me anything about complex MFS transactions, security, or financial plans.'
+          ? 'আসসালামু আলাইকুম! আমি রিকার্শন পে সেফ মাল্টি-টার্ন এআই চ্যাটবট। আপনার যেকোনো জটিল আর্থিক বা নিরাপত্তা প্রশ্ন বিস্তারিতভাবে করতে পারেন।'
+          : 'Hello! I am your Recursion Pay Safe multi-turn assistant. Ask me anything about complex MFS transactions, security, or financial plans.'
     }
   ]);
   const [inputVal, setInputVal] = useState('');
