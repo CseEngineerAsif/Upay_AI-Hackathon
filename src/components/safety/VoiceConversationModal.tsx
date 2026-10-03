@@ -204,7 +204,7 @@ export const VoiceConversationModal: React.FC<{ onClose: () => void }> = ({ onCl
             <h3 className="text-base font-bold text-white">
               {isConnected
                 ? isTalking
-                  ? (language === 'bn' ? 'উপায় সেফ কথা বলছে...' : 'Gemini is speaking...')
+                  ? (language === 'bn' ? 'রিকার্শন পে সেফ কথা বলছে...' : 'Recursion Pay Safe is speaking...')
                   : (language === 'bn' ? 'শুনছি... আপনার প্রশ্ন বলুন' : 'Listening... Speak in Bengali')
                 : (language === 'bn' ? 'ভয়েস কথোপকথন শুরু করুন' : 'Start Live Voice Session')}
             </h3>
