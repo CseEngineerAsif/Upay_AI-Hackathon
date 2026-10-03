@@ -595,18 +595,18 @@ export const SomitiDetailModal: React.FC<SomitiDetailModalProps> = ({ somiti: in
               <div className="p-4 rounded-3xl bg-white border border-slate-200 space-y-3 shadow-2xs">
                 <h4 className="text-xs font-black text-slate-900 uppercase tracking-wide flex items-center gap-2">
                   <span>🏛️</span>
-                  <span>{language === 'bn' ? 'উপায় ব্যাংক এসক্রো নিশ্চয়তা' : 'Upay Bank Escrow Contract'}</span>
+                  <span>{language === 'bn' ? 'রিকার্শন পে ব্যাংক এসক্রো নিশ্চয়তা' : 'Recursion Pay Bank Escrow Contract'}</span>
                 </h4>
                 <p className="text-xs text-slate-600 leading-relaxed">
                   {language === 'bn'
-                    ? 'সমিতির টাকা কারও ব্যক্তিগত অ্যাকাউন্টে জমে থাকে না। প্রতিটি কিস্তি সরাসরি উপায় বাংলাদেশ ব্যাংক নির্দেশিত এসক্রো ভল্টে জমা হয়।'
+                    ? 'সমিতির টাকা কারও ব্যক্তিগত অ্যাকাউন্টে জমে থাকে না। প্রতিটি কিস্তি সরাসরি রিকার্শন পে বাংলাদেশ ব্যাংক নির্দেশিত এসক্রো ভল্টে জমা হয়।'
                     : 'Funds are securely escrowed per Bangladesh Bank regulations and auto-routed to recipients.'}
                 </p>
 
                 <div className="space-y-2 pt-1 border-t border-slate-100">
                   <div className="flex items-center justify-between py-1 border-b border-slate-100 text-xs">
                     <span className="text-slate-500">{language === 'bn' ? 'এসক্রো চুক্তি আইডি:' : 'Escrow ID:'}</span>
-                    <span className="font-mono font-bold text-slate-800">UPAY-SOMITI-2026-DH</span>
+                    <span className="font-mono font-bold text-slate-800">REC-SOMITI-2026-DH</span>
                   </div>
                   <div className="flex items-center justify-between py-1 border-b border-slate-100 text-xs">
                     <span className="text-slate-500">{language === 'bn' ? 'অটো পে-আউট শর্ত:' : 'Payout Condition:'}</span>
@@ -625,7 +625,7 @@ export const SomitiDetailModal: React.FC<SomitiDetailModalProps> = ({ somiti: in
         {/* Footer */}
         <div className="p-3 bg-white border-t border-slate-200 flex items-center justify-between text-xs">
           <span className="text-[11px] text-slate-500 font-medium">
-            {language === 'bn' ? 'নিরাপদ ডিজিটাল সমিতি • উপায় সেফ' : 'Digital Somiti • Upay Safe'}
+            {language === 'bn' ? 'নিরাপদ ডিজিটাল সমিতি • রিকার্শন পে সেফ' : 'Digital Somiti • Recursion Pay Safe'}
           </span>
           <button
             type="button"
