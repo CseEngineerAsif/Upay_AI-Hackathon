@@ -378,7 +378,7 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
       className="absolute inset-0 z-50 overflow-hidden select-none pointer-events-auto"
       role="dialog"
       aria-modal="true"
-      aria-label="উপায় স্মার্ট সার্ভিস"
+      aria-label="রিকার্শন পে স্মার্ট সার্ভিস"
     >
       {/* 1. Dim Backdrop Overlay */}
       <div
@@ -399,14 +399,14 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
         }`}
       >
         {/* Panel Header */}
-        <div className="w-full bg-[#FFD600] px-3.5 py-2.5 flex items-center justify-between border-b border-amber-300 shadow-xs shrink-0">
+        <div className="w-full bg-gradient-to-r from-[#00D492] to-[#00B478] px-3.5 py-2.5 flex items-center justify-between border-b border-emerald-400 shadow-xs shrink-0">
           <div className="flex items-center gap-2 min-w-0">
             <span className="w-7 h-7 rounded-full bg-slate-900/10 flex items-center justify-center text-slate-950 text-xs font-black shrink-0">
               ⚡
             </span>
             <div className="min-w-0">
               <h2 className="text-xs sm:text-sm font-black text-slate-950 leading-tight truncate">
-                {language === 'bn' ? 'উপায় স্মার্ট সার্ভিস' : 'Upay Smart Services'}
+                {language === 'bn' ? 'রিকার্শন পে স্মার্ট সার্ভিস' : 'Recursion Pay Smart Services'}
               </h2>
               <p className="text-[10px] text-slate-800 font-semibold leading-tight truncate">
                 {language === 'bn' ? 'নতুন ফিচারসমূহ (১৫টি)' : 'New Features (15 total)'}
@@ -510,8 +510,8 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
         <div className="p-3 bg-slate-100/90 border-t border-slate-200 text-center shrink-0">
           <p className="text-[10px] text-slate-600 font-medium leading-tight">
             {language === 'bn'
-              ? 'উপায় নিরাপদ লেনদেন ও সার্বিক সহায়তায় সবসময় আপনার পাশে'
-              : 'Upay is always by your side for safe & smart transactions'}
+              ? 'রিকার্শন পে নিরাপদ লেনদেন ও সার্বিক সহায়তায় সবসময় আপনার পাশে'
+              : 'Recursion Pay is always by your side for safe & smart transactions'}
           </p>
         </div>
       </div>
