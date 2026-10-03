@@ -14,6 +14,23 @@ import {
   TransactionType,
   TransactionCategory
 } from '../types';
+import {
+  getRegisteredUsers,
+  findUserByPhone,
+  findUserById,
+  saveSingleUser,
+  getActiveUserId,
+  setActiveUserId,
+  getUserTransactions,
+  saveUserTransactions,
+  getUserGoals,
+  saveUserGoals,
+  getUserAlerts,
+  saveUserAlerts,
+  registerNewAccount,
+  NewRegistrationParams,
+  DEFAULT_DEMO_USER
+} from '../utils/accountManager';
 
 interface PendingPayment {
   type: TransactionType;
@@ -29,6 +46,7 @@ interface PendingPayment {
 
 interface AppState {
   user: UserProfile | null;
+  registeredUsers: UserProfile[];
   isAuthenticated: boolean;
   isLoading: boolean;
   language: Language;
@@ -41,7 +59,7 @@ interface AppState {
   unreadAlertCount: number;
 
   // Navigation
-  activeTab: 'home' | 'account' | 'history' | 'more' | 'safe_ai';
+  activeTab: 'home' | 'account' | 'history' | 'more' | 'safe_ai' | 'somiti' | 'trustpay' | 'liquidity' | 'crosswallet' | 'climateshield' | 'income_passport' | 'fee_auditor' | 'bundle_optimizer' | 'zakat_giving' | 'dialect_voice' | 'mandate_wallet' | 'payslip_orchestrator';
   currentModal: string | null;
   
   // Payment Flow State
@@ -50,14 +68,16 @@ interface AppState {
   lastCompletedTx: Transaction | null;
 
   // Actions
-  loginWithPin: (pin: string) => Promise<boolean>;
+  registerUser: (params: NewRegistrationParams) => Promise<UserProfile>;
+  switchUser: (phoneOrId: string) => boolean;
+  loginWithPin: (pin: string, phoneOrId?: string) => Promise<boolean>;
   loginWithBiometric: () => Promise<boolean>;
   loginWithGoogle: () => Promise<boolean>;
   logout: () => void;
   setLanguage: (lang: Language) => void;
   toggleSimpleMode: () => void;
   grantAiConsent: () => void;
-  setActiveTab: (tab: 'home' | 'account' | 'history' | 'more' | 'safe_ai') => void;
+  setActiveTab: (tab: 'home' | 'account' | 'history' | 'more' | 'safe_ai' | 'somiti' | 'trustpay' | 'liquidity' | 'crosswallet' | 'climateshield' | 'income_passport' | 'fee_auditor' | 'bundle_optimizer' | 'zakat_giving' | 'dialect_voice' | 'mandate_wallet' | 'payslip_orchestrator') => void;
   setCurrentModal: (modal: string | null) => void;
 
   // Data Actions
@@ -72,6 +92,7 @@ interface AppState {
   giveRiskFeedback: (txId: string, feedback: 'helpful' | 'unhelpful', isScam?: boolean) => void;
   analystAction: (queueId: string, action: 'review' | 'dismiss' | 'escalate', notes?: string) => Promise<void>;
   acknowledgeGuardianAlert: (alertId: string) => void;
+  depositRelief: (amount: number) => void;
 }
 
 // Cross-tab broadcast channel for real-time guardian & analyst demo
@@ -104,19 +125,26 @@ export const useAppStore = create<AppState>((set, get) => {
   }
 
   const initialSeed = generateSeedData();
+  const allUsers = getRegisteredUsers();
+  const activeId = getActiveUserId();
+  const initialUser = findUserById(activeId) || allUsers[0] || DEFAULT_DEMO_USER;
+  const initialTxs = getUserTransactions(initialUser.id);
+  const initialGoals = getUserGoals(initialUser.id);
+  const initialAlerts = getUserAlerts(initialUser.id);
 
   return {
-    user: initialSeed.primaryUser,
+    user: initialUser,
+    registeredUsers: allUsers,
     isAuthenticated: false,
     isLoading: false,
-    language: initialSeed.primaryUser.language || 'bn',
-    simpleMode: initialSeed.primaryUser.simpleMode || false,
-    hasAiConsent: initialSeed.primaryUser.aiConsentGiven ?? true,
-    transactions: initialSeed.transactions,
-    goals: initialSeed.goals,
+    language: initialUser.language || 'bn',
+    simpleMode: initialUser.simpleMode || false,
+    hasAiConsent: initialUser.aiConsentGiven ?? true,
+    transactions: initialTxs,
+    goals: initialGoals,
     analystQueue: initialSeed.analystQueue,
-    guardianAlerts: [],
-    unreadAlertCount: 2,
+    guardianAlerts: initialAlerts,
+    unreadAlertCount: initialAlerts.filter((a) => a.status === 'pending').length,
 
     activeTab: 'home',
     currentModal: null,
@@ -126,41 +154,101 @@ export const useAppStore = create<AppState>((set, get) => {
     lastCompletedTx: null,
 
     initData: async () => {
-      try {
-        const res = await fetch('/api/seed');
-        const contentType = res.headers.get('content-type');
-        if (res.ok && contentType && contentType.includes('application/json')) {
-          const data = await res.json();
-          if (data?.primaryUser) {
-            set({
-              user: data.primaryUser,
-              transactions: data.transactions || [],
-              goals: data.goals || [],
-              analystQueue: data.analystQueue || [],
-              language: data.primaryUser?.language || 'bn',
-              simpleMode: data.primaryUser?.simpleMode || false,
-              hasAiConsent: data.primaryUser?.aiConsentGiven ?? true
-            });
-          }
-        }
-      } catch (err) {
-        // Fallback to local baseline seed data without fatal error
-        console.warn('API seed fetch unavailable, using built-in baseline seed data');
-      }
+      // Re-sync from account manager
+      const freshUsers = getRegisteredUsers();
+      const currentActiveId = getActiveUserId();
+      const currentUser = findUserById(currentActiveId) || freshUsers[0] || DEFAULT_DEMO_USER;
+      const userTxs = getUserTransactions(currentUser.id);
+      const userGoals = getUserGoals(currentUser.id);
+      const userAlerts = getUserAlerts(currentUser.id);
+
+      set({
+        registeredUsers: freshUsers,
+        user: currentUser,
+        transactions: userTxs,
+        goals: userGoals,
+        guardianAlerts: userAlerts,
+        language: currentUser.language || 'bn',
+        simpleMode: currentUser.simpleMode || false,
+        hasAiConsent: currentUser.aiConsentGiven ?? true
+      });
     },
 
-    loginWithPin: async (pin: string) => {
-      const { user } = get();
-      if (!user) {
-        // Fetch seed if not loaded
-        await get().initData();
-      }
-      const currentUser = get().user;
-      if (pin === currentUser?.pin || pin === '1234' || pin === '2580') {
-        set({ isAuthenticated: true });
+    registerUser: async (params: NewRegistrationParams) => {
+      const newUser = registerNewAccount(params);
+      const userTxs = getUserTransactions(newUser.id);
+      const userGoals = getUserGoals(newUser.id);
+      const userAlerts = getUserAlerts(newUser.id);
+      const updatedUsers = getRegisteredUsers();
+
+      // Persist active user
+      setActiveUserId(newUser.id);
+
+      set({
+        registeredUsers: updatedUsers,
+        user: newUser,
+        transactions: userTxs,
+        goals: userGoals,
+        guardianAlerts: userAlerts,
+        isAuthenticated: true,
+        language: newUser.language || 'bn'
+      });
+      return newUser;
+    },
+
+    switchUser: (phoneOrId: string) => {
+      const targetUser = findUserByPhone(phoneOrId) || findUserById(phoneOrId);
+      if (targetUser) {
+        setActiveUserId(targetUser.id);
+        const userTxs = getUserTransactions(targetUser.id);
+        const userGoals = getUserGoals(targetUser.id);
+        const userAlerts = getUserAlerts(targetUser.id);
+        set({
+          user: targetUser,
+          transactions: userTxs,
+          goals: userGoals,
+          guardianAlerts: userAlerts,
+          isAuthenticated: false,
+          language: targetUser.language || 'bn'
+        });
         return true;
       }
       return false;
+    },
+
+    loginWithPin: async (pin: string, phoneOrId?: string) => {
+      let targetUser = get().user;
+      if (phoneOrId) {
+        targetUser = findUserByPhone(phoneOrId) || findUserById(phoneOrId) || targetUser;
+      }
+      if (!targetUser) {
+        const users = getRegisteredUsers();
+        targetUser = users[0];
+      }
+      if (!targetUser) return false;
+
+      // Strictly verify that the PIN matches this specific account's PIN
+      const isCorrectPin = pin === targetUser.pin || (targetUser.id === DEFAULT_DEMO_USER.id && pin === '1234');
+      if (!isCorrectPin) {
+        return false;
+      }
+
+      // Load this specific user's isolated data
+      const userTxs = getUserTransactions(targetUser.id);
+      const userGoals = getUserGoals(targetUser.id);
+      const userAlerts = getUserAlerts(targetUser.id);
+      setActiveUserId(targetUser.id);
+
+      set({
+        user: targetUser,
+        transactions: userTxs,
+        goals: userGoals,
+        guardianAlerts: userAlerts,
+        isAuthenticated: true,
+        language: targetUser.language || 'bn',
+        simpleMode: targetUser.simpleMode || false
+      });
+      return true;
     },
 
     loginWithBiometric: async () => {
@@ -168,7 +256,6 @@ export const useAppStore = create<AppState>((set, get) => {
       if (!user) {
         await get().initData();
       }
-      // Simulated biometric authentication success
       await new Promise((resolve) => setTimeout(resolve, 600));
       set({ isAuthenticated: true });
       return true;
@@ -210,6 +297,9 @@ export const useAppStore = create<AppState>((set, get) => {
             console.warn('Firestore user sync fallback:', err);
           }
 
+          saveSingleUser(userProfile);
+          setActiveUserId(userProfile.id);
+
           set({
             user: userProfile,
             isAuthenticated: true
@@ -219,7 +309,6 @@ export const useAppStore = create<AppState>((set, get) => {
         return false;
       } catch (authErr) {
         console.error('Google Sign-in error:', authErr);
-        // Fallback to local session
         const { user } = get();
         if (!user) await get().initData();
         set({ isAuthenticated: true });
@@ -348,9 +437,17 @@ export const useAppStore = create<AppState>((set, get) => {
         });
       }
 
+      // Persist isolated state for this specific user
+      const updatedUser = { ...user, balance: newBalance };
+      const updatedTransactions = [newTx, ...get().transactions];
+      saveSingleUser(updatedUser);
+      saveUserTransactions(user.id, updatedTransactions);
+      saveUserGoals(user.id, updatedGoals);
+      saveUserAlerts(user.id, updatedGuardianAlerts);
+
       set((state) => ({
-        user: { ...user, balance: newBalance },
-        transactions: [newTx, ...state.transactions],
+        user: updatedUser,
+        transactions: updatedTransactions,
         goals: updatedGoals,
         guardianAlerts: updatedGuardianAlerts,
         pendingPayment: null,
@@ -368,30 +465,34 @@ export const useAppStore = create<AppState>((set, get) => {
     },
 
     addGoal: (goalData) => {
-      const { user } = get();
+      const { user, goals } = get();
       if (!user) return;
       const newGoal: SavingsGoal = {
         ...goalData,
         id: `goal_${Date.now()}`,
         userId: user.id
       };
-      set((state) => ({ goals: [...state.goals, newGoal] }));
+      const updatedGoals = [...goals, newGoal];
+      saveUserGoals(user.id, updatedGoals);
+      set({ goals: updatedGoals });
     },
 
     updateGoalDeposit: (goalId, amount) => {
-      set((state) => ({
-        goals: state.goals.map((g) =>
-          g.id === goalId ? { ...g, currentAmount: g.currentAmount + amount } : g
-        )
-      }));
+      const { user, goals } = get();
+      const updatedGoals = goals.map((g) =>
+        g.id === goalId ? { ...g, currentAmount: g.currentAmount + amount } : g
+      );
+      if (user) saveUserGoals(user.id, updatedGoals);
+      set({ goals: updatedGoals });
     },
 
     toggleGoalRoundUp: (goalId) => {
-      set((state) => ({
-        goals: state.goals.map((g) =>
-          g.id === goalId ? { ...g, roundUpActive: !g.roundUpActive } : { ...g, roundUpActive: false }
-        )
-      }));
+      const { user, goals } = get();
+      const updatedGoals = goals.map((g) =>
+        g.id === goalId ? { ...g, roundUpActive: !g.roundUpActive } : { ...g, roundUpActive: false }
+      );
+      if (user) saveUserGoals(user.id, updatedGoals);
+      set({ goals: updatedGoals });
     },
 
     giveRiskFeedback: async (txId, feedback, isScam) => {
@@ -440,6 +541,14 @@ export const useAppStore = create<AppState>((set, get) => {
           a.id === alertId ? { ...a, status: 'acknowledged' } : a
         ),
         unreadAlertCount: Math.max(0, state.unreadAlertCount - 1)
+      }));
+    },
+
+    depositRelief: (amount: number) => {
+      set((state) => ({
+        user: state.user
+          ? { ...state.user, balance: state.user.balance + amount }
+          : null
       }));
     }
   };

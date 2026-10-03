@@ -22,18 +22,23 @@ export const BottomNav: React.FC = () => {
         </span>
       </button>
 
-      {/* 2. Account */}
+      {/* 2. Digital Somiti (New Feature in Main Navigation) */}
       <button
-        onClick={() => setActiveTab('account')}
-        className={`flex flex-col items-center justify-center py-1 flex-1 transition-colors ${
-          activeTab === 'account' ? 'text-[#0B4DA2]' : 'text-slate-400 hover:text-slate-600'
+        onClick={() => setActiveTab('somiti')}
+        className={`flex flex-col items-center justify-center py-1 flex-1 transition-colors relative ${
+          activeTab === 'somiti' ? 'text-[#0B4DA2]' : 'text-slate-400 hover:text-slate-600'
         }`}
       >
-        <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm0 4h16V6H4v2zm0 10h16v-6H4v6z" />
-        </svg>
+        <div className="relative">
+          <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+          </svg>
+          <span className="absolute -top-1 -right-2 px-1 py-0.2 bg-[#FFD600] text-slate-950 text-[8px] font-black rounded-full leading-none">
+            AI
+          </span>
+        </div>
         <span className="text-[11px] font-semibold mt-1">
-          {language === 'bn' ? 'অ্যাকাউন্ট' : 'Account'}
+          {language === 'bn' ? 'সমিতি' : 'Somiti'}
         </span>
       </button>
 

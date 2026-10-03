@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { UpayHeader } from '../layout/UpayHeader';
 
 export const HomeScreen: React.FC = () => {
-  const { language, setCurrentModal } = useAppStore();
+  const { language, setCurrentModal, setActiveTab } = useAppStore();
   const [activeBanner, setActiveBanner] = useState(0);
+  const navScrollRef = useRef<HTMLDivElement>(null);
 
   const primaryServices = [
     {
@@ -147,6 +148,177 @@ export const HomeScreen: React.FC = () => {
       )
     },
     {
+      id: 'digital_somiti',
+      labelBn: 'ডিজিটাল সমিতি',
+      labelEn: 'Digital Somiti',
+      iconColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+      action: () => setActiveTab('somiti'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+        </svg>
+      )
+    },
+    {
+      id: 'trustpay',
+      labelBn: 'ট্রাস্টপে',
+      labelEn: 'TrustPay',
+      iconColor: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+      action: () => setActiveTab('trustpay'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <path d="M9 12l2 2 4-4" />
+        </svg>
+      )
+    },
+    {
+      id: 'liquidity',
+      labelBn: 'লিকুইডিটি',
+      labelEn: 'Liquidity',
+      iconColor: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+      action: () => setActiveTab('liquidity'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v10M9 9.5h5.5a2 2 0 010 4H9" />
+        </svg>
+      )
+    },
+    {
+      id: 'crosswallet',
+      labelBn: 'ক্রস-ওয়ালেট',
+      labelEn: 'Cross-Wallet',
+      iconColor: 'bg-indigo-50 text-indigo-700 border-indigo-200',
+      action: () => setActiveTab('crosswallet'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="2" y1="12" x2="22" y2="12" />
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+        </svg>
+      )
+    },
+    {
+      id: 'climateshield',
+      labelBn: 'ক্লাইমেট শিল্ড',
+      labelEn: 'Climate Shield',
+      iconColor: 'bg-rose-50 text-rose-700 border-rose-200',
+      action: () => setActiveTab('climateshield'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <path d="M8 11c1-1 3-1 4 0s3 1 4 0" />
+          <path d="M8 15c1-1 3-1 4 0s3 1 4 0" />
+        </svg>
+      )
+    },
+    {
+      id: 'income_passport',
+      labelBn: 'ইনকাম পাসপোর্ট',
+      labelEn: 'Income Passport',
+      iconColor: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+      action: () => setActiveTab('income_passport'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <rect x="3" y="4" width="18" height="16" rx="3" />
+          <circle cx="9" cy="10" r="2" />
+          <line x1="15" y1="8" x2="17" y2="8" />
+          <line x1="15" y1="12" x2="17" y2="12" />
+          <line x1="7" y1="16" x2="17" y2="16" />
+        </svg>
+      )
+    },
+    {
+      id: 'fee_auditor',
+      labelBn: 'ফি অডিটর',
+      labelEn: 'Fee Auditor',
+      iconColor: 'bg-blue-50 text-blue-900 border-blue-200',
+      action: () => setActiveTab('fee_auditor'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M12 3v18" />
+          <path d="M6 8l6-5 6 5" />
+          <path d="M6 13h12" />
+          <path d="M3 13l3 7h12l3-7" />
+        </svg>
+      )
+    },
+    {
+      id: 'bundle_optimizer',
+      labelBn: 'বান্ডেল অপ্টিমাইজ',
+      labelEn: 'Bundle Optimizer',
+      iconColor: 'bg-blue-50 text-blue-800 border-blue-200',
+      action: () => setActiveTab('bundle_optimizer'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+          <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+          <circle cx="12" cy="20" r="1" />
+        </svg>
+      )
+    },
+    {
+      id: 'zakat_giving',
+      labelBn: 'যাকাত ও দান',
+      labelEn: 'Zakat & Giving',
+      iconColor: 'bg-teal-50 text-teal-800 border-teal-200',
+      action: () => setActiveTab('zakat_giving'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" />
+          <path d="M12 7v5l3 3" />
+          <path d="M16 11l2 2-2 2" />
+        </svg>
+      )
+    },
+    {
+      id: 'dialect_voice',
+      labelBn: 'ভয়েস পে',
+      labelEn: 'Voice Pay',
+      iconColor: 'bg-blue-50 text-blue-900 border-blue-200',
+      action: () => setActiveTab('dialect_voice'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+          <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+          <line x1="12" y1="19" x2="12" y2="22" />
+        </svg>
+      )
+    },
+    {
+      id: 'mandate_wallet',
+      labelBn: 'ম্যান্ডেট পে',
+      labelEn: 'Mandate Pay',
+      iconColor: 'bg-cyan-50 text-cyan-900 border-cyan-200',
+      action: () => setActiveTab('mandate_wallet'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <path d="M9 15h6" />
+          <path d="M9 11h6" />
+        </svg>
+      )
+    },
+    {
+      id: 'payslip_orchestrator',
+      labelBn: 'পে-স্লিপ অডিট',
+      labelEn: 'Payslip Audit',
+      iconColor: 'bg-emerald-50 text-emerald-900 border-emerald-200',
+      action: () => setActiveTab('payslip_orchestrator'),
+      icon: (
+        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <path d="M14 2v6h6" />
+          <path d="M16 13H8" />
+          <path d="M16 17H8" />
+          <path d="M10 9H8" />
+        </svg>
+      )
+    },
+    {
       id: 'npsb',
       labelBn: 'এনপিএসবি',
       labelEn: 'NPSB',
@@ -176,89 +348,261 @@ export const HomeScreen: React.FC = () => {
       {/* Upay Yellow Header */}
       <UpayHeader />
 
-      {/* Prominent Safe AI Hero Card (AI Intelligence & Safety Layer) */}
-      <div className="mx-4 mt-3 p-3.5 rounded-2xl bg-gradient-to-r from-[#0B4DA2] to-[#1664C0] text-white shadow-md select-none">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center backdrop-blur-xs">
-              <svg className="w-5 h-5 text-yellow-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                <path d="M9 12l2 2 4-4" />
-              </svg>
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-black tracking-wide text-yellow-300 uppercase">
-                  Upay Safe AI
-                </span>
-                <span className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-white/20 text-white">
-                  Active
-                </span>
-              </div>
-              <h3 className="text-sm font-bold leading-tight">
-                {language === 'bn' ? 'আর্থিক নিরাপত্তা ও ইনটেলিজেন্স' : 'Financial Safety & Intelligence'}
-              </h3>
-            </div>
-          </div>
+      {/* Horizontal Scrollable Navigation Bar under Header */}
+      <div className="relative w-full bg-[#ebebf7] shadow-2xs border-b border-indigo-100 select-none py-2 px-1">
+        {/* Left Arrow Button */}
+        <button
+          type="button"
+          onClick={() => navScrollRef.current?.scrollBy({ left: -160, behavior: 'smooth' })}
+          className="absolute left-1 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-white text-slate-800 border border-slate-300 font-black text-sm flex items-center justify-center shadow-xs hover:bg-slate-50 active:scale-90 transition-transform cursor-pointer"
+          aria-label="Scroll left"
+        >
+          ‹
+        </button>
 
+        {/* Scrollable Track */}
+        <div
+          ref={navScrollRef}
+          className="flex items-center gap-2 px-8 overflow-x-auto scroll-smooth no-scrollbar"
+        >
+          {/* Digital Somiti (New Group Savings Circle) */}
           <button
-            onClick={() => setCurrentModal('safe_ai_hub')}
-            className="px-3 py-1.5 rounded-full bg-[#FFD600] text-slate-900 text-xs font-bold shadow-xs active:scale-95 transition-all flex items-center gap-1"
+            type="button"
+            onClick={() => setActiveTab('somiti')}
+            className="px-3.5 py-1.5 rounded-full bg-[#0B4DA2] hover:bg-blue-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
           >
-            <span>{language === 'bn' ? 'সেফ হাব' : 'Safe Hub'}</span>
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
+            <span>👥</span>
+            <span>{language === 'bn' ? 'ডিজিটাল সমিতি' : 'Digital Somiti'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              AI
+            </span>
           </button>
-        </div>
 
-        {/* Quick Pills for AI Tools */}
-        <div className="mt-3 pt-2.5 border-t border-white/15 grid grid-cols-4 gap-1 text-center">
+          {/* TrustPay F-Commerce Escrow (New Feature) */}
           <button
+            type="button"
+            onClick={() => setActiveTab('trustpay')}
+            className="px-3.5 py-1.5 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>🤝</span>
+            <span>{language === 'bn' ? 'ট্রাস্টপে' : 'TrustPay'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              ESCROW
+            </span>
+          </button>
+
+          {/* Liquidity Network (Cash Reservation & Agent Float) */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('liquidity')}
+            className="px-3.5 py-1.5 rounded-full bg-cyan-700 hover:bg-cyan-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>⚡</span>
+            <span>{language === 'bn' ? 'লিকুইডিটি' : 'Liquidity'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              CASH
+            </span>
+          </button>
+
+          {/* Cross-Wallet Federated Risk Exchange */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('crosswallet')}
+            className="px-3.5 py-1.5 rounded-full bg-indigo-800 hover:bg-indigo-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>🌐</span>
+            <span>{language === 'bn' ? 'ক্রস-ওয়ালেট' : 'Cross-Wallet'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              FEDERATED
+            </span>
+          </button>
+
+          {/* Climate Shield Mode (Disaster Alert & Relief) */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('climateshield')}
+            className="px-3.5 py-1.5 rounded-full bg-rose-700 hover:bg-rose-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>🌊</span>
+            <span>{language === 'bn' ? 'ক্লাইমেট শিল্ড' : 'Climate Shield'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              RELIEF
+            </span>
+          </button>
+
+          {/* Portable Income Passport (New Feature) */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('income_passport')}
+            className="px-3.5 py-1.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>🛂</span>
+            <span>{language === 'bn' ? 'ইনকাম পাসপোর্ট' : 'Income Passport'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              VERIFIED
+            </span>
+          </button>
+
+          {/* Fee Auditor & Overcharge Radar */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('fee_auditor')}
+            className="px-3.5 py-1.5 rounded-full bg-blue-900 hover:bg-blue-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>⚖️</span>
+            <span>{language === 'bn' ? 'ফি অডিটর' : 'Fee Auditor'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              RADAR
+            </span>
+          </button>
+
+          {/* Bundle Optimizer (AI Mobile Pack Recommendation) */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('bundle_optimizer')}
+            className="px-3.5 py-1.5 rounded-full bg-blue-800 hover:bg-blue-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>📶</span>
+            <span>{language === 'bn' ? 'বান্ডেল অপ্টিমাইজার' : 'Bundle Optimizer'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              SAVER
+            </span>
+          </button>
+
+          {/* Zakat & Giving Assistant with Eid Envelopes */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('zakat_giving')}
+            className="px-3.5 py-1.5 rounded-full bg-teal-800 hover:bg-teal-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>🌙</span>
+            <span>{language === 'bn' ? 'যাকাত ও ঈদ খাম' : 'Zakat & Eid'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              EID
+            </span>
+          </button>
+
+          {/* Dialect-aware Voice Pay */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('dialect_voice')}
+            className="px-3.5 py-1.5 rounded-full bg-blue-900 hover:bg-blue-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>🎙️</span>
+            <span>{language === 'bn' ? 'ভয়েস পে' : 'Voice Pay'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              DIALECT
+            </span>
+          </button>
+
+          {/* Mandate Wallet (AI-Permissioned Payments) */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('mandate_wallet')}
+            className="px-3.5 py-1.5 rounded-full bg-cyan-900 hover:bg-cyan-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>📜</span>
+            <span>{language === 'bn' ? 'ম্যান্ডেট ওয়ালেট' : 'Mandate'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              AUTO
+            </span>
+          </button>
+
+          {/* Payslip Auditor & Wage-Day Orchestrator */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('payslip_orchestrator')}
+            className="px-3.5 py-1.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer flex items-center gap-1.5"
+          >
+            <span>👔</span>
+            <span>{language === 'bn' ? 'পে-স্লিপ ও বেতন দিন' : 'Payslip & Wage'}</span>
+            <span className="px-1.5 py-0.2 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black">
+              WAGE
+            </span>
+          </button>
+
+          {/* 1. Live Voice */}
+          <button
+            type="button"
             onClick={() => setCurrentModal('voice_conversation')}
-            className="p-1 rounded-lg bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-300 transition-all text-[10px] font-bold"
+            className="px-3.5 py-1.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer"
           >
-            🎙️ {language === 'bn' ? 'লাইভ ভয়েস' : 'Live Voice'}
+            {language === 'bn' ? 'লাইভ ভয়েস' : 'Live Voice'}
           </button>
+
+          {/* 2. AI Chatbot */}
           <button
+            type="button"
             onClick={() => setCurrentModal('gemini_chatbot')}
-            className="p-1 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-[10px] font-medium"
+            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
           >
-            🤖 {language === 'bn' ? 'এআই চ্যাটবট' : 'AI Chatbot'}
+            {language === 'bn' ? 'এআই চ্যাটবট' : 'AI Chatbot'}
           </button>
+
+          {/* 3. Search Info */}
           <button
+            type="button"
             onClick={() => setCurrentModal('search_grounding')}
-            className="p-1 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-[10px] font-medium"
+            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
           >
-            🌐 {language === 'bn' ? 'সার্চ তথ্য' : 'Search Info'}
+            {language === 'bn' ? 'সার্চ তথ্য' : 'Search Info'}
           </button>
+
+          {/* 4. Agent Map */}
           <button
+            type="button"
             onClick={() => setCurrentModal('maps_grounding')}
-            className="p-1 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-[10px] font-medium"
+            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
           >
-            📍 {language === 'bn' ? 'এজেন্ট ম্যাপ' : 'Agent Map'}
+            {language === 'bn' ? 'এজেন্ট ম্যাপ' : 'Agent Map'}
           </button>
-        </div>
-        <div className="mt-1 pt-1 grid grid-cols-3 gap-1 text-center">
+
+          {/* 5. Transcribe */}
           <button
+            type="button"
             onClick={() => setCurrentModal('audio_transcribe')}
-            className="p-1 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-[10px] font-medium"
+            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
           >
-            🗣️ {language === 'bn' ? 'ট্রান্সক্রাইব' : 'Transcribe'}
+            {language === 'bn' ? 'ট্রান্সক্রাইব' : 'Transcribe'}
           </button>
+
+          {/* 6. Scam SMS */}
           <button
+            type="button"
             onClick={() => setCurrentModal('scam_checker')}
-            className="p-1 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-[10px] font-medium"
+            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
           >
-            📱 {language === 'bn' ? 'স্ক্যাম SMS' : 'Scam SMS'}
+            {language === 'bn' ? 'স্ক্যাম SMS' : 'Scam SMS'}
           </button>
+
+          {/* 7. Cashless Flow */}
           <button
+            type="button"
             onClick={() => setCurrentModal('cash_flow')}
-            className="p-1 rounded-lg bg-white/10 hover:bg-white/20 transition-all text-[10px] font-medium"
+            className="px-3.5 py-1.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 cursor-pointer"
           >
-            📈 {language === 'bn' ? 'ক্যাশ-ফ্লো' : 'Cash Flow'}
+            {language === 'bn' ? 'ক্যাশ-ফ্লো' : 'Cashless Flow'}
+          </button>
+
+          {/* 8. Safe Hub */}
+          <button
+            type="button"
+            onClick={() => setCurrentModal('safe_ai_hub')}
+            className="px-3.5 py-1.5 rounded-full bg-[#FFD600] text-slate-950 font-black text-xs shadow-2xs hover:brightness-105 active:scale-95 transition-all shrink-0 cursor-pointer border border-amber-300"
+          >
+            {language === 'bn' ? 'সেফ হাব' : 'Safe Hub'}
           </button>
         </div>
+
+        {/* Right Arrow Button */}
+        <button
+          type="button"
+          onClick={() => navScrollRef.current?.scrollBy({ left: 160, behavior: 'smooth' })}
+          className="absolute right-1 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-white text-slate-800 border border-slate-300 font-black text-sm flex items-center justify-center shadow-xs hover:bg-slate-50 active:scale-90 transition-transform cursor-pointer"
+          aria-label="Scroll right"
+        >
+          ›
+        </button>
       </div>
 
       {/* Primary 4-Column Icon Grid (Matching Screenshot 2.jpeg) */}
@@ -354,20 +698,40 @@ export const HomeScreen: React.FC = () => {
       <div className="px-4 mt-6 flex items-center justify-between gap-3">
         {/* Upay Card Pill */}
         <button
+          type="button"
           onClick={() => setCurrentModal('card_demo')}
-          className="flex-1 py-2.5 px-3 rounded-full bg-[#FFFBEA] border border-amber-300 flex items-center justify-center gap-2 text-slate-900 font-bold text-xs shadow-xs active:scale-98 transition-all hover:bg-amber-100"
+          className="flex-1 py-2.5 px-3.5 rounded-2xl bg-gradient-to-r from-[#FFFBEA] to-amber-50/70 border border-amber-300 flex items-center justify-center gap-2.5 text-slate-900 font-bold text-xs shadow-xs hover:shadow-sm active:scale-95 transition-all hover:bg-amber-100 cursor-pointer group hover:border-amber-400"
         >
-          <span className="text-base">💳</span>
-          <span>{language === 'bn' ? 'উপায় কার্ড' : 'Upay Card'}</span>
+          <span className="w-7 h-7 rounded-xl bg-amber-400/25 text-amber-900 flex items-center justify-center text-sm group-hover:scale-105 transition-transform">
+            💳
+          </span>
+          <div className="text-left">
+            <span className="block font-black text-slate-900 leading-tight">
+              {language === 'bn' ? 'উপায় কার্ড' : 'Upay Card'}
+            </span>
+            <span className="block text-[9px] text-slate-500 font-semibold">
+              {language === 'bn' ? 'ভার্চুয়াল ও ডেবিট' : 'Debit & Virtual'}
+            </span>
+          </div>
         </button>
 
         {/* Upay Offer Pill */}
         <button
+          type="button"
           onClick={() => setCurrentModal('offers_demo')}
-          className="flex-1 py-2.5 px-3 rounded-full bg-[#FFFBEA] border border-amber-300 flex items-center justify-center gap-2 text-slate-900 font-bold text-xs shadow-xs active:scale-98 transition-all hover:bg-amber-100"
+          className="flex-1 py-2.5 px-3.5 rounded-2xl bg-gradient-to-r from-[#FFFBEA] to-yellow-50/70 border border-amber-300 flex items-center justify-center gap-2.5 text-slate-900 font-bold text-xs shadow-xs hover:shadow-sm active:scale-95 transition-all hover:bg-amber-100 cursor-pointer group hover:border-amber-400"
         >
-          <span className="text-base">🎁</span>
-          <span>{language === 'bn' ? 'উপায় অফার' : 'Upay Offers'}</span>
+          <span className="w-7 h-7 rounded-xl bg-yellow-400/25 text-yellow-900 flex items-center justify-center text-sm group-hover:scale-105 transition-transform">
+            🎁
+          </span>
+          <div className="text-left">
+            <span className="block font-black text-slate-900 leading-tight">
+              {language === 'bn' ? 'উপায় অফার' : 'Upay Offers'}
+            </span>
+            <span className="block text-[9px] text-slate-500 font-semibold">
+              {language === 'bn' ? 'ক্যাশব্যাক ও ছাড়' : 'Deals & Cashback'}
+            </span>
+          </div>
         </button>
       </div>
     </div>

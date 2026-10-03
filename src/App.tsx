@@ -32,6 +32,26 @@ import {
   PermissionsModal,
   NotificationsModal
 } from './components/modals/AuxiliaryModals';
+import { UpayCardModal } from './components/modals/UpayCardModal';
+import { UpayOffersModal } from './components/modals/UpayOffersModal';
+import { SomitiListScreen } from './components/somiti/SomitiListScreen';
+import { SomitiDetailModal } from './components/somiti/SomitiDetailModal';
+import { CreateSomitiModal } from './components/somiti/CreateSomitiModal';
+import { DigitalSomiti } from './types/somiti';
+import { TrustPayScreen } from './components/trustpay/TrustPayScreen';
+import { CreateTrustPayOrderModal } from './components/trustpay/CreateTrustPayOrderModal';
+import { TrustPayOrderDetailModal } from './components/trustpay/TrustPayOrderDetailModal';
+import { TrustPayOrder } from './types/trustPay';
+import { LiquidityNetworkScreen } from './components/liquidity/LiquidityNetworkScreen';
+import { CrossWalletRiskScreen } from './components/crosswallet/CrossWalletRiskScreen';
+import { ClimateShieldScreen } from './components/climate/ClimateShieldScreen';
+import { IncomePassportScreen } from './components/passport/IncomePassportScreen';
+import { FeeAuditorScreen } from './components/feeauditor/FeeAuditorScreen';
+import { BundleOptimizerScreen } from './components/bundle/BundleOptimizerScreen';
+import { ZakatGivingScreen } from './components/zakat/ZakatGivingScreen';
+import { DialectVoiceScreen } from './components/voice/DialectVoiceScreen';
+import { MandateWalletScreen } from './components/mandate/MandateWalletScreen';
+import { PayslipWageScreen } from './components/payslip/PayslipWageScreen';
 
 export default function App() {
   const {
@@ -45,26 +65,16 @@ export default function App() {
 
   const [showSplash, setShowSplash] = useState(true);
   const [authView, setAuthView] = useState<'welcome' | 'login' | 'register'>('welcome');
-  const [currentTime, setCurrentTime] = useState('12:06');
+  const [selectedSomiti, setSelectedSomiti] = useState<DigitalSomiti | null>(null);
+  const [isCreateSomitiOpen, setIsCreateSomitiOpen] = useState(false);
+  const [selectedTrustPayOrder, setSelectedTrustPayOrder] = useState<TrustPayOrder | null>(null);
+  const [isCreateTrustPayOpen, setIsCreateTrustPayOpen] = useState(false);
 
   // Load initial synthetic seed data and verify Firestore connection on mount
   useEffect(() => {
     initData();
     testFirestoreConnection();
   }, [initData]);
-
-  // Keep phone status bar time updated
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const hours = now.getHours().toString().padStart(2, '0');
-      const minutes = now.getMinutes().toString().padStart(2, '0');
-      setCurrentTime(`${hours}:${minutes}`);
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 30000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <div className="min-h-screen w-full bg-slate-950 flex items-center justify-center p-0 sm:p-4 font-sans select-none antialiased">
@@ -74,31 +84,6 @@ export default function App() {
           simpleMode ? 'text-base font-medium' : 'text-sm'
         }`}
       >
-        {/* Native Mobile Status Bar (from screenshot 2.jpeg: 12:06, Wi-Fi, battery 37%) */}
-        <div className="w-full bg-[#FFD600] px-5 pt-2 pb-1 flex items-center justify-between text-slate-900 font-semibold text-[11px] select-none shrink-0 z-40">
-          <div className="flex items-center gap-1.5 font-mono">
-            <span>{currentTime}</span>
-            <span className="text-[10px]">M</span>
-            <span>💬</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {/* Wi-Fi Icon */}
-            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-              <path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0012 4zm0 4c3.48 0 6.64 1.35 9 3.55L12 19.5 3 11.55A12.78 12.78 0 0112 8z" />
-            </svg>
-            {/* Signal Bars */}
-            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-              <path d="M2 22h20V2L2 22zm18-2H6.83L20 6.83V20z" />
-            </svg>
-            {/* Battery */}
-            <span className="text-[10px] font-mono">37%</span>
-            <div className="w-5 h-2.5 rounded-sm border border-slate-900 p-0.5 flex items-center">
-              <div className="w-2.5 h-full bg-slate-900 rounded-xs" />
-            </div>
-          </div>
-        </div>
-
         {/* View Routing / Screen Container */}
         <div className="relative flex-1 w-full flex flex-col overflow-hidden bg-white">
           {showSplash ? (
@@ -123,6 +108,28 @@ export default function App() {
               {activeTab === 'account' && <AccountScreen />}
               {activeTab === 'history' && <HistoryScreen />}
               {activeTab === 'more' && <MoreScreen />}
+              {activeTab === 'somiti' && (
+                <SomitiListScreen
+                  onOpenCreate={() => setIsCreateSomitiOpen(true)}
+                  onSelectSomiti={(somiti) => setSelectedSomiti(somiti)}
+                />
+              )}
+              {activeTab === 'trustpay' && (
+                <TrustPayScreen
+                  onOpenCreate={() => setIsCreateTrustPayOpen(true)}
+                  onSelectOrder={(order) => setSelectedTrustPayOrder(order)}
+                />
+              )}
+              {activeTab === 'liquidity' && <LiquidityNetworkScreen />}
+              {activeTab === 'crosswallet' && <CrossWalletRiskScreen />}
+              {activeTab === 'climateshield' && <ClimateShieldScreen />}
+              {activeTab === 'income_passport' && <IncomePassportScreen />}
+              {activeTab === 'fee_auditor' && <FeeAuditorScreen />}
+              {activeTab === 'bundle_optimizer' && <BundleOptimizerScreen />}
+              {activeTab === 'zakat_giving' && <ZakatGivingScreen />}
+              {activeTab === 'dialect_voice' && <DialectVoiceScreen />}
+              {activeTab === 'mandate_wallet' && <MandateWalletScreen />}
+              {activeTab === 'payslip_orchestrator' && <PayslipWageScreen />}
 
               {/* Bottom Nav Bar */}
               <BottomNav />
@@ -255,6 +262,44 @@ export default function App() {
         )}
         {currentModal === 'notifications' && (
           <NotificationsModal onClose={() => setCurrentModal(null)} />
+        )}
+        {(currentModal === 'card_demo' || currentModal === 'upay_card') && (
+          <UpayCardModal onClose={() => setCurrentModal(null)} />
+        )}
+        {(currentModal === 'offers_demo' || currentModal === 'upay_offers') && (
+          <UpayOffersModal onClose={() => setCurrentModal(null)} />
+        )}
+        {selectedSomiti && (
+          <SomitiDetailModal
+            somiti={selectedSomiti}
+            onClose={() => setSelectedSomiti(null)}
+            onUpdated={(updated) => setSelectedSomiti(updated)}
+          />
+        )}
+        {isCreateSomitiOpen && (
+          <CreateSomitiModal
+            onClose={() => setIsCreateSomitiOpen(false)}
+            onCreated={(newSomiti) => {
+              setIsCreateSomitiOpen(false);
+              setSelectedSomiti(newSomiti);
+            }}
+          />
+        )}
+        {selectedTrustPayOrder && (
+          <TrustPayOrderDetailModal
+            order={selectedTrustPayOrder}
+            onClose={() => setSelectedTrustPayOrder(null)}
+            onUpdated={(updated) => setSelectedTrustPayOrder(updated)}
+          />
+        )}
+        {isCreateTrustPayOpen && (
+          <CreateTrustPayOrderModal
+            onClose={() => setIsCreateTrustPayOpen(false)}
+            onCreated={(newOrder) => {
+              setIsCreateTrustPayOpen(false);
+              setSelectedTrustPayOrder(newOrder);
+            }}
+          />
         )}
       </div>
     </div>

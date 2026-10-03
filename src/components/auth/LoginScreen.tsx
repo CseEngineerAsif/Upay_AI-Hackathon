@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { UpayLogo, CustomKeypad } from '../brand/UpayIcons';
+import { DEFAULT_DEMO_USER } from '../../utils/accountManager';
 
 interface LoginScreenProps {
   onBack?: () => void;
 }
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
-  const { language, setLanguage, loginWithPin, loginWithBiometric, user } = useAppStore();
+  const { language, setLanguage, loginWithPin, loginWithBiometric, user, registeredUsers, switchUser } = useAppStore();
   const [pin, setPin] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
+  const [showAccountSwitcher, setShowAccountSwitcher] = useState(false);
+  const [customPhoneInput, setCustomPhoneInput] = useState('');
 
   const handleKeyPress = (digit: string) => {
     if (pin.length < 4) {
       const nextPin = pin + digit;
       setPin(nextPin);
       setErrorMsg('');
-      // If reached 4 digits, user can hit submit or arrow
     }
   };
-
   const handleBackspace = () => {
     if (pin.length > 0) {
       setPin(pin.slice(0, -1));
@@ -40,11 +41,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
     }
 
     setIsVerifying(true);
-    const success = await loginWithPin(pin);
+    const success = await loginWithPin(pin, user?.phone);
     setIsVerifying(false);
 
     if (!success) {
-      setErrorMsg(language === 'bn' ? 'সঠিক পিন প্রদান করুন (ডেমো পিন: 1234)' : 'Incorrect PIN (Demo PIN: 1234)');
+      setErrorMsg(
+        user?.id === DEFAULT_DEMO_USER.id
+          ? (language === 'bn' ? 'সঠিক পিন প্রদান করুন (ডেমো পিন: 1234)' : 'Incorrect PIN (Demo PIN: 1234)')
+          : (language === 'bn' ? 'এই অ্যাকাউন্টের পিন সঠিক নয়' : 'Incorrect PIN for this account')
+      );
       setPin('');
     }
   };
@@ -56,8 +61,35 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
   };
 
   const quickFillDemoPin = () => {
-    setPin('1234');
+    if (user?.id === DEFAULT_DEMO_USER.id) {
+      setPin('1234');
+      setErrorMsg('');
+    }
+  };
+
+  const handleSelectAccount = (phone: string) => {
+    switchUser(phone);
+    setPin('');
     setErrorMsg('');
+    setShowAccountSwitcher(false);
+  };
+
+  const handleCustomPhoneSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleaned = customPhoneInput.replace(/\D/g, '');
+    if (cleaned.length < 11) {
+      setErrorMsg(language === 'bn' ? 'সঠিক ১১ ডিজিটের মোবাইল নম্বর লিখুন' : 'Enter valid 11-digit mobile number');
+      return;
+    }
+    const switched = switchUser(cleaned);
+    if (!switched) {
+      setErrorMsg(language === 'bn' ? 'এই নম্বরে কোনো অ্যাকাউন্ট পাওয়া যায়নি। অনুগ্রহ করে রেজিস্ট্রেশন করুন।' : 'No account found for this number. Please register.');
+    } else {
+      setPin('');
+      setErrorMsg('');
+      setShowAccountSwitcher(false);
+      setCustomPhoneInput('');
+    }
   };
 
   return (
@@ -89,20 +121,84 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
         </button>
       </div>
 
-      {/* Main Body - scrollable if screen is extremely short */}
+      {/* Main Body - scrollable if screen is short */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-1 overflow-y-auto no-scrollbar">
-        {/* User preview */}
-        <div className="mb-1 text-center">
+        {/* User preview with Switch Account option */}
+        <div className="mb-2 text-center">
           <p className="text-[11px] font-semibold tracking-wide text-slate-400 uppercase">
             {language === 'bn' ? 'স্বাগতম' : 'Welcome'}
           </p>
-          <p className="text-xs sm:text-sm font-bold text-slate-700">
-            {user?.name || 'MD. AL-MAYNUL HASAN'}
+          <p className="text-sm sm:text-base font-extrabold text-slate-800">
+            {user?.name || (language === 'bn' ? 'ব্যবহারকারী' : 'User')}
           </p>
-          <p className="text-[11px] text-slate-500 font-mono">
-            {user?.phone || '01794809461'}
-          </p>
+          <div className="flex items-center justify-center gap-1.5 mt-0.5">
+            <span className="text-xs text-slate-600 font-mono font-semibold">
+              {user?.phone || '01XXXXXXXXX'}
+            </span>
+            {registeredUsers.length > 1 && (
+              <button
+                type="button"
+                onClick={() => setShowAccountSwitcher(!showAccountSwitcher)}
+                className="text-[10px] text-[#0B4DA2] font-bold px-2 py-0.5 rounded-full bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-colors"
+              >
+                {language === 'bn' ? 'পরিবর্তন ▾' : 'Switch ▾'}
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* Account Switcher dropdown if requested */}
+        {showAccountSwitcher && (
+          <div className="w-full max-w-xs mb-3 p-3 bg-slate-50 border border-slate-200 rounded-2xl shadow-lg space-y-2 animate-scale-in">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-800 border-b pb-1">
+              <span>{language === 'bn' ? 'অ্যাকাউন্ট নির্বাচন করুন' : 'Select Account'}</span>
+              <button
+                type="button"
+                onClick={() => setShowAccountSwitcher(false)}
+                className="text-slate-400 hover:text-slate-700"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="max-h-36 overflow-y-auto space-y-1.5 no-scrollbar">
+              {registeredUsers.map((u) => (
+                <button
+                  key={u.id}
+                  type="button"
+                  onClick={() => handleSelectAccount(u.phone)}
+                  className={`w-full p-2 rounded-xl text-left flex items-center justify-between transition-colors ${
+                    u.id === user?.id
+                      ? 'bg-[#FFD600]/30 border border-[#FFD600] font-bold'
+                      : 'bg-white hover:bg-slate-100 border border-slate-100'
+                  }`}
+                >
+                  <div className="truncate">
+                    <p className="text-xs text-slate-900 truncate">{u.name}</p>
+                    <p className="text-[10px] text-slate-500 font-mono">{u.phone}</p>
+                  </div>
+                  {u.id === user?.id && <span className="text-xs text-emerald-600 font-bold">✓</span>}
+                </button>
+              ))}
+            </div>
+
+            {/* Custom Phone Number Switch */}
+            <form onSubmit={handleCustomPhoneSubmit} className="pt-1.5 border-t border-slate-200 flex gap-1.5">
+              <input
+                type="tel"
+                value={customPhoneInput}
+                onChange={(e) => setCustomPhoneInput(e.target.value)}
+                placeholder="01XXXXXXXXX"
+                className="flex-1 px-2.5 py-1.5 text-xs rounded-lg border border-slate-300 bg-white font-mono"
+              />
+              <button
+                type="submit"
+                className="px-3 py-1.5 bg-[#0B4DA2] text-white text-xs font-bold rounded-lg"
+              >
+                {language === 'bn' ? 'খুঁজুন' : 'Find'}
+              </button>
+            </form>
+          </div>
+        )}
 
         {/* Heading matching screenshot */}
         <h1 className="text-lg sm:text-xl font-black text-slate-900 text-center tracking-tight mb-3">
@@ -154,7 +250,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
 
         {/* Error message if any */}
         {errorMsg && (
-          <p className="text-xs font-semibold text-rose-600 mb-2 animate-shake">
+          <p className="text-xs font-semibold text-rose-600 mb-2 animate-shake text-center max-w-xs">
             {errorMsg}
           </p>
         )}
@@ -179,13 +275,19 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
           </button>
         </div>
 
-        {/* Forgot PIN Link */}
-        <button
-          onClick={quickFillDemoPin}
-          className="mt-2 text-xs font-semibold text-[#0B4DA2] hover:underline"
-        >
-          {language === 'bn' ? 'পিন ভুলে গিয়েছেন? (ডেমো পিন 1234)' : 'Forgot PIN? (Use demo PIN 1234)'}
-        </button>
+        {/* Forgot PIN / Demo PIN Link */}
+        {user?.id === DEFAULT_DEMO_USER.id ? (
+          <button
+            onClick={quickFillDemoPin}
+            className="mt-2 text-xs font-semibold text-[#0B4DA2] hover:underline"
+          >
+            {language === 'bn' ? 'পিন ভুলে গিয়েছেন? (ডেমো পিন 1234)' : 'Forgot PIN? (Use demo PIN 1234)'}
+          </button>
+        ) : (
+          <p className="mt-2 text-[11px] text-slate-400">
+            {language === 'bn' ? 'আপনার সেট করা ৪ ডিজিটের পিনটি দিন' : 'Enter your 4-digit secret PIN'}
+          </p>
+        )}
       </div>
 
       {/* Custom Fixed Numeric Keypad (Pinned to bottom) */}

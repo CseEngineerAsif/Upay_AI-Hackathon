@@ -22,7 +22,7 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
   onBackToWelcome,
   onCompleteRegistration
 }) => {
-  const { language, setLanguage } = useAppStore();
+  const { language, setLanguage, registerUser } = useAppStore();
 
   const [step, setStep] = useState<RegistrationStep>('intro');
 
@@ -41,6 +41,7 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Profile Details State (Images 10 & 11)
+  const [fullName, setFullName] = useState('');
   const [selectedProfession, setSelectedProfession] = useState('বিজনেস');
   const [selectedGender, setSelectedGender] = useState('পুরুষ');
   const [email, setEmail] = useState('');
@@ -159,8 +160,17 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
     setNewPin((prev) => prev.slice(0, -1));
   };
 
-  const handlePinSubmit = () => {
+  const handlePinSubmit = async () => {
     if (newPin.length === 4) {
+      await registerUser({
+        name: fullName.trim() || (language === 'bn' ? `নতুন গ্রাহক (${mobileNumber.slice(-4)})` : `New User (${mobileNumber.slice(-4)})`),
+        phone: mobileNumber,
+        pin: newPin,
+        operator: selectedOperator,
+        profession: selectedProfession,
+        gender: selectedGender,
+        email: email.trim() || undefined
+      });
       onCompleteRegistration();
     }
   };
@@ -583,6 +593,22 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({
 
           {/* Form Content */}
           <div className="flex-1 px-4 py-3 overflow-y-auto no-scrollbar space-y-4">
+            {/* Section 0: Full Name */}
+            <div>
+              <label className="text-xs font-bold text-slate-900 block mb-1.5">
+                {language === 'bn' ? 'আপনার নাম (জাতীয় পরিচয়পত্র অনুযায়ী)' : 'Full Name (as per NID)'}
+              </label>
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 text-xs flex items-center justify-between">
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder={language === 'bn' ? 'যেমন: মোহাম্মদ আসাদুজ্জামান' : 'e.g. Mohammad Asaduzzaman'}
+                  className="bg-transparent focus:outline-none w-full text-xs font-bold text-slate-900"
+                />
+              </div>
+            </div>
+
             {/* Section 1: Profession Grid (10 items) */}
             <div>
               <label className="text-xs font-bold text-slate-900 block mb-2">

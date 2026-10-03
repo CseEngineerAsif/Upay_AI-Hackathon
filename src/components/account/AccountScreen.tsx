@@ -25,13 +25,13 @@ export const AccountScreen: React.FC = () => {
           </div>
           <div>
             <h2 className="text-base font-black leading-tight">
-              {user?.name || 'MD. AL-MAYNUL HASAN'}
+              {user?.name || (language === 'bn' ? 'ব্যবহারকারী' : 'User')}
             </h2>
             <p className="text-xs text-sky-200 font-mono mt-0.5">
-              {user?.phone || '01794809461'}
+              {user?.phone || '01XXXXXXXXX'}
             </p>
             <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white">
-              {user?.accountTier || 'Verified Plus (Tier-2)'}
+              {user?.accountTier || 'Upay Verified'}
             </span>
           </div>
         </div>
@@ -49,10 +49,10 @@ export const AccountScreen: React.FC = () => {
 
           <div className="z-10 space-y-1">
             <span className="text-sm font-mono tracking-widest block text-slate-200">
-              •••• •••• •••• 9461
+              •••• •••• •••• {user?.phone ? user.phone.slice(-4) : '9461'}
             </span>
             <div className="flex justify-between items-end text-[10px] text-slate-300">
-              <span>{user?.name || 'MD. AL-MAYNUL HASAN'}</span>
+              <span>{user?.name || (language === 'bn' ? 'ব্যবহারকারী' : 'User')}</span>
               <span>EXP: 10/28</span>
             </div>
           </div>

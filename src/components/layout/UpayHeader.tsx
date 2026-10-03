@@ -14,7 +14,7 @@ export const UpayHeader: React.FC<{ onOpenNotifications?: () => void }> = ({ onO
     }
   };
 
-  const balance = user?.balance ?? 18450;
+  const balance = user?.balance ?? 0;
 
   return (
     <header className="w-full bg-[#FFD600] px-4 pt-4 pb-4 select-none shadow-xs">
@@ -27,10 +27,10 @@ export const UpayHeader: React.FC<{ onOpenNotifications?: () => void }> = ({ onO
 
           <div className="min-w-0">
             <h2 className="text-sm font-bold text-slate-900 truncate tracking-tight">
-              {user?.name || 'MD. AL-MAYNUL HAS...'}
+              {user?.name || (language === 'bn' ? 'ব্যবহারকারী' : 'User')}
             </h2>
             <p className="text-xs text-slate-800 font-mono">
-              {user?.phone || '01794809461'}
+              {user?.phone || ''}
             </p>
           </div>
         </div>
