@@ -69,7 +69,7 @@ export const INITIAL_WORKER_SLOTS: WorkerCashoutSlot[] = [
   {
     slotId: 'slot_1',
     timeWindowBn: 'আজ দুপুর ২:০০ - ২:৪৫',
-    agentNameBn: 'সোহাগ টেলিকম ও উপায় পয়েন্ট',
+    agentNameBn: 'সোহাগ টেলিকম ও রিকার্শন পে পয়েন্ট',
     agentLocationBn: 'মেইন গেট সংলগ্ন, কোনাবাড়ী',
     agentPhone: '০১৭**-***১১৩',
     assignedWorkersCount: 45,
