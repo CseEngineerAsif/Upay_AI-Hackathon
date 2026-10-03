@@ -43,7 +43,7 @@ export const TrustPayOrderDetailModal: React.FC<TrustPayOrderDetailModalProps> =
       setOrder(res.updatedOrder);
       onUpdated(res.updatedOrder);
       setShowDisputeForm(false);
-      setActionMsg('বিরোধ সফলভাবে দায়ের করা হয়েছে। এসক্রোর টাকা সম্পূর্ণ ফ্রিজ রাখা হয়েছে। উপায় সাপোর্ট টিম দ্রুত মধ্যস্থতা করবে।');
+      setActionMsg('বিরোধ সফলভাবে দায়ের করা হয়েছে। এসক্রোর টাকা সম্পূর্ণ ফ্রিজ রাখা হয়েছে। রিকার্শন পে সাপোর্ট টিম দ্রুত মধ্যস্থতা করবে।');
       setTimeout(() => setActionMsg(null), 6000);
     }
   };
@@ -260,7 +260,7 @@ export const TrustPayOrderDetailModal: React.FC<TrustPayOrderDetailModalProps> =
                   ✓
                 </div>
                 <h5 className="font-black text-slate-900 text-xs">২. টাকা এসক্রোতে হোল্ড (Payment Held)</h5>
-                <p className="text-[11px] text-slate-500">৳{order.amount.toLocaleString()} নিরাপদ উপায় এসক্রো ভল্টে লক করা হয়েছে</p>
+                <p className="text-[11px] text-slate-500">৳{order.amount.toLocaleString()} নিরাপদ রিকার্শন পে এসক্রো ভল্টে লক করা হয়েছে</p>
               </div>
 
               {/* Step 3: Delivered */}
@@ -288,7 +288,7 @@ export const TrustPayOrderDetailModal: React.FC<TrustPayOrderDetailModalProps> =
                 </h5>
                 <p className="text-[11px] text-slate-500">
                   {isDisputed
-                    ? 'টাকা ফ্রিজ রয়েছে। উপায় কাস্টমার প্রটেকশন সেল বিরোধ নিষ্পত্তি করবে।'
+                    ? 'টাকা ফ্রিজ রয়েছে। রিকার্শন পে কাস্টমার প্রটেকশন সেল বিরোধ নিষ্পত্তি করবে।'
                     : isReleased
                     ? 'ক্রেতা সন্তুষ্ট হয়ে কনফার্ম করেছেন এবং টাকা বিক্রেতাকে পৌঁছে গেছে।'
                     : 'ক্রেতার কনফার্মেশনের পর স্বয়ংক্রিয়ভাবে বিক্রেতার একাউন্টে যাবে।'}
@@ -301,7 +301,7 @@ export const TrustPayOrderDetailModal: React.FC<TrustPayOrderDetailModalProps> =
         {/* Footer */}
         <div className="p-3.5 bg-white border-t border-slate-200 flex items-center justify-between text-xs">
           <span className="text-[11px] text-slate-500 font-medium">
-            উপায় ট্রাস্টপে • F-Commerce Escrow
+            রিকার্শন পে ট্রাস্টপে • F-Commerce Escrow
           </span>
           <button
             type="button"
