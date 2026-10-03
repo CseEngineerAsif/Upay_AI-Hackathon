@@ -45,7 +45,7 @@ export const SalamiReceivedModal: React.FC<SalamiReceivedModalProps> = ({ envelo
             <span className="font-mono font-black text-3xl text-amber-950 block">
               ৳{envelope.salamiAmount.toLocaleString()}
             </span>
-            <span className="text-[10px] text-amber-700">উপায় চাইল্ড ওয়ালেটে জমা হয়েছে</span>
+            <span className="text-[10px] text-amber-700">রিকার্শন পে চাইল্ড ওয়ালেটে জমা হয়েছে</span>
           </div>
 
           {/* Sender Message */}
