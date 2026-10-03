@@ -189,8 +189,21 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
           </div>
         )}
 
+        {/* User Profile Card */}
+        <div className="flex flex-col items-center mb-3 animate-fade-in">
+          <div className="w-13 h-13 rounded-full bg-gradient-to-tr from-[#0B4DA2] to-sky-500 text-white font-black text-lg flex items-center justify-center shadow-xs border-2 border-white mb-1.5">
+            {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+          </div>
+          <h2 className="text-sm font-extrabold text-slate-900 text-center tracking-tight">
+            {user?.name || (language === 'bn' ? 'ব্যবহারকারী' : 'User')}
+          </h2>
+          <p className="text-xs font-mono font-bold text-slate-600 tracking-wider">
+            {user?.phone || ''}
+          </p>
+        </div>
+
         {/* Heading matching screenshot */}
-        <h1 className="text-lg sm:text-xl font-black text-slate-900 text-center tracking-tight mb-3">
+        <h1 className="text-base sm:text-lg font-bold text-slate-800 text-center tracking-tight mb-3">
           {language === 'bn' ? 'আপনার ৪ ডিজিটের পিন প্রদান করুন' : 'Enter your 4-digit PIN'}
         </h1>
 
