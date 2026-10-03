@@ -1,20 +1,20 @@
 import React from 'react';
 
-// Exact Upay Logo matching screenshot 4.jpeg & 2.jpeg
-export const UpayLogo: React.FC<{ size?: 'sm' | 'md' | 'lg' | 'splash'; showText?: boolean }> = ({
+// Modern Glass Recursion Pay Logo (Recursive loop in Royal Blue & Modern Electric Mint)
+export const RecursionPayLogo: React.FC<{ size?: 'sm' | 'md' | 'lg' | 'splash'; showText?: boolean }> = ({
   size = 'md',
   showText = true
 }) => {
   const getDims = () => {
     switch (size) {
       case 'sm':
-        return { w: 32, h: 32, font: 'text-xs' };
+        return { w: 32, h: 32, font: 'text-[11px]' };
       case 'lg':
-        return { w: 56, h: 56, font: 'text-lg' };
+        return { w: 56, h: 56, font: 'text-base font-extrabold' };
       case 'splash':
-        return { w: 96, h: 96, font: 'text-3xl' };
+        return { w: 96, h: 96, font: 'text-2xl font-black' };
       default:
-        return { w: 42, h: 42, font: 'text-sm' };
+        return { w: 42, h: 42, font: 'text-xs font-bold' };
     }
   };
 
@@ -28,33 +28,49 @@ export const UpayLogo: React.FC<{ size?: 'sm' | 'md' | 'lg' | 'splash'; showText
         viewBox="0 0 100 100"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="drop-shadow-xs"
+        className="drop-shadow-sm transition-transform group-hover:scale-105"
       >
-        {/* Left Yellow Figure (Head & Body curve) */}
-        <circle cx="36" cy="28" r="12" fill="#FFD600" />
+        {/* Soft radial glow */}
+        <defs>
+          <linearGradient id="recMintGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00E5A3" />
+            <stop offset="100%" stopColor="#00B87A" />
+          </linearGradient>
+          <linearGradient id="recBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#1E6DEB" />
+            <stop offset="100%" stopColor="#0B4DA2" />
+          </linearGradient>
+        </defs>
+
+        {/* Left Loop: Modern Electric Mint Recursive Node */}
+        <circle cx="34" cy="30" r="13" fill="url(#recMintGrad)" />
         <path
-          d="M 24 45 C 24 68, 38 80, 50 80 C 44 72, 38 60, 48 45 Z"
-          fill="#FFD600"
+          d="M 22 45 C 22 70, 38 82, 50 82 C 43 72, 36 60, 46 45 Z"
+          fill="url(#recMintGrad)"
         />
 
-        {/* Right Blue Figure (Head & Body curve) */}
-        <circle cx="64" cy="28" r="12" fill="#0B4DA2" />
+        {/* Right Loop: Royal Blue Recursive Node */}
+        <circle cx="66" cy="30" r="13" fill="url(#recBlueGrad)" />
         <path
-          d="M 76 45 C 76 68, 62 80, 50 80 C 56 72, 62 60, 52 45 Z"
-          fill="#0B4DA2"
+          d="M 78 45 C 78 70, 62 82, 50 82 C 57 72, 64 60, 54 45 Z"
+          fill="url(#recBlueGrad)"
         />
+
+        {/* Central Intersecting Recursion Spark */}
+        <circle cx="50" cy="56" r="4.5" fill="#FFFFFF" />
       </svg>
       {showText && (
         <span
-          className={`font-black tracking-tight text-slate-800 ${dims.font} -mt-1`}
-          style={{ fontFamily: "'Noto Sans Bengali', sans-serif" }}
+          className={`font-black tracking-tight text-slate-900 ${dims.font} -mt-0.5 whitespace-nowrap`}
         >
-          উপায়
+          Recursion <span className="text-[#0B4DA2]">Pay</span>
         </span>
       )}
     </div>
   );
 };
+
+export const UpayLogo = RecursionPayLogo;
 
 // Center raised Bangla QR button from screenshot 1.jpeg & 2.jpeg
 export const BanglaQRButton: React.FC<{ onClick?: () => void }> = ({ onClick }) => {
@@ -135,15 +151,15 @@ export const CustomKeypad: React.FC<{
           0
         </button>
 
-        {/* Yellow Check/Confirm Key (Image 1: #FFD21F with dark checkmark) */}
+        {/* Modern Mint Check/Confirm Key */}
         <button
           type="button"
           onClick={onSubmit}
           disabled={submitDisabled}
           className={`h-[52px] sm:h-14 rounded-[14px] flex items-center justify-center transition-all ${
             submitDisabled
-              ? 'bg-[#FFE885] opacity-50 text-slate-400 cursor-not-allowed shadow-none'
-              : 'bg-[#FFD21F] text-slate-950 shadow-md shadow-amber-300/40 active:scale-95 hover:brightness-105 cursor-pointer'
+              ? 'bg-emerald-100 opacity-50 text-slate-400 cursor-not-allowed shadow-none'
+              : 'bg-[#00D492] text-slate-950 shadow-md shadow-emerald-400/30 active:scale-95 hover:bg-[#00BF83] cursor-pointer'
           }`}
           aria-label="Confirm PIN"
         >
