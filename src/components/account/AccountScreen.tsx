@@ -31,18 +31,18 @@ export const AccountScreen: React.FC = () => {
               {user?.phone || '01XXXXXXXXX'}
             </p>
             <span className="inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white">
-              {user?.accountTier || 'Upay Verified'}
+              {user?.accountTier || 'Recursion Pay Verified'}
             </span>
           </div>
         </div>
 
-        {/* Upay Virtual Debit Card Preview */}
+        {/* Recursion Pay Virtual Debit Card Preview */}
         <div className="relative w-full h-44 rounded-2xl p-4 bg-gradient-to-br from-[#0B4DA2] via-[#1E40AF] to-slate-900 text-white shadow-xl flex flex-col justify-between overflow-hidden">
           <div className="absolute right-[-20px] top-[-20px] w-36 h-36 rounded-full bg-white/5 pointer-events-none" />
           
           <div className="flex justify-between items-center z-10">
-            <span className="text-xs font-black tracking-widest text-[#FFD600] uppercase">
-              UPAY SAFE CARD
+            <span className="text-xs font-black tracking-widest text-[#00D492] uppercase">
+              RECURSION PAY SAFE CARD
             </span>
             <span className="text-lg">💳</span>
           </div>
