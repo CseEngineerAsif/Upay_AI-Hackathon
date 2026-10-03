@@ -3,8 +3,11 @@ import { useAppStore } from '../../store/useAppStore';
 import { formatCurrency } from '../../utils/formatters';
 import { UpayLogo } from '../brand/UpayIcons';
 
-export const UpayHeader: React.FC<{ onOpenNotifications?: () => void }> = ({ onOpenNotifications }) => {
-  const { user, language, unreadAlertCount, setCurrentModal } = useAppStore();
+export const UpayHeader: React.FC<{
+  onOpenNotifications?: () => void;
+  onOpenSmartServices?: () => void;
+}> = ({ onOpenNotifications, onOpenSmartServices }) => {
+  const { user, language, unreadAlertCount, setCurrentModal, setSidePanelOpen } = useAppStore();
   const [showBalance, setShowBalance] = useState(false);
 
   const toggleBalance = () => {
@@ -17,30 +20,30 @@ export const UpayHeader: React.FC<{ onOpenNotifications?: () => void }> = ({ onO
   const balance = user?.balance ?? 0;
 
   return (
-    <header className="w-full bg-[#FFD600] px-4 pt-4 pb-4 select-none shadow-xs">
+    <header className="w-full bg-[#FFD600] px-3.5 pt-4 pb-3.5 select-none shadow-xs">
       <div className="flex items-center justify-between gap-2">
-        {/* Left: Circular Upay Logo & User Info */}
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-10 h-10 rounded-full bg-white p-1 shadow-xs flex items-center justify-center shrink-0 border border-amber-300">
+        {/* Left: Circular Upay Logo & User Info (Truncated if tight) */}
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white p-1 shadow-xs flex items-center justify-center shrink-0 border border-amber-300">
             <UpayLogo size="sm" showText={false} />
           </div>
 
-          <div className="min-w-0">
-            <h2 className="text-sm font-bold text-slate-900 truncate tracking-tight">
+          <div className="min-w-0 max-w-[105px] sm:max-w-none">
+            <h2 className="text-xs sm:text-sm font-bold text-slate-900 truncate tracking-tight">
               {user?.name || (language === 'bn' ? 'ব্যবহারকারী' : 'User')}
             </h2>
-            <p className="text-xs text-slate-800 font-mono">
+            <p className="text-[11px] sm:text-xs text-slate-800 font-mono truncate">
               {user?.phone || ''}
             </p>
           </div>
         </div>
 
-        {/* Right: Balance Pill & Notification Bell */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Right: Balance Pill, Smart Services Button & Notification Bell */}
+        <div className="flex items-center gap-1.5 shrink-0">
           {/* Balance Pill from screenshot 2.jpeg */}
           <button
             onClick={toggleBalance}
-            className="h-8 px-3.5 rounded-full bg-[#0B4DA2] text-white flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-xs"
+            className="h-8 px-2.5 sm:px-3.5 rounded-full bg-[#0B4DA2] text-white flex items-center justify-center gap-1 active:scale-95 transition-all shadow-xs cursor-pointer"
             aria-label="Toggle Balance"
           >
             {showBalance ? (
@@ -60,13 +63,34 @@ export const UpayHeader: React.FC<{ onOpenNotifications?: () => void }> = ({ onO
             )}
           </button>
 
+          {/* New Smart Services Button (Immediately to the LEFT of the Bell icon) */}
+          <button
+            type="button"
+            onClick={() => {
+              if (onOpenSmartServices) onOpenSmartServices();
+              else setSidePanelOpen(true);
+            }}
+            aria-label="নতুন সার্ভিস"
+            title={language === 'bn' ? 'নতুন সার্ভিস' : 'New Smart Services'}
+            className="relative w-8 h-8 rounded-full flex items-center justify-center text-slate-900 bg-black/5 hover:bg-black/10 active:scale-90 transition-all border border-amber-400/80 cursor-pointer"
+          >
+            {/* Sparkle / Smart Grid icon */}
+            <svg className="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24" strokeWidth="2.2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
+            </svg>
+            {/* Tiny red "নতুন" dot on top-right corner */}
+            <span className="absolute -top-1 -right-1 px-1 py-0.2 bg-rose-600 text-white rounded-full text-[7px] font-black leading-none shadow-xs border border-white">
+              {language === 'bn' ? 'নতুন' : 'NEW'}
+            </span>
+          </button>
+
           {/* Bell Icon with badge */}
           <button
             onClick={() => {
               if (onOpenNotifications) onOpenNotifications();
               else setCurrentModal('notifications');
             }}
-            className="relative w-8 h-8 rounded-full flex items-center justify-center text-slate-900 hover:bg-yellow-400/50 active:scale-90 transition-all"
+            className="relative w-8 h-8 rounded-full flex items-center justify-center text-slate-900 hover:bg-yellow-400/50 active:scale-90 transition-all cursor-pointer"
             aria-label="Notifications"
           >
             <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">

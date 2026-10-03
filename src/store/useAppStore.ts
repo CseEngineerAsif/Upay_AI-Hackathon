@@ -63,6 +63,7 @@ interface AppState {
   activeTab: 'home' | 'account' | 'history' | 'more' | 'safe_ai' | FeatureTab | 'section';
   activeSection: SectionId | null;
   currentModal: string | null;
+  isSidePanelOpen: boolean;
   
   // Payment Flow State
   pendingPayment: PendingPayment | null;
@@ -82,6 +83,7 @@ interface AppState {
   setActiveTab: (tab: 'home' | 'account' | 'history' | 'more' | 'safe_ai' | FeatureTab | 'section') => void;
   openSection: (sectionId: SectionId) => void;
   setCurrentModal: (modal: string | null) => void;
+  setSidePanelOpen: (open: boolean) => void;
 
   // Data Actions
   initData: () => Promise<void>;
@@ -152,6 +154,7 @@ export const useAppStore = create<AppState>((set, get) => {
     activeTab: 'home',
     activeSection: null,
     currentModal: null,
+    isSidePanelOpen: false,
 
     pendingPayment: null,
     currentRiskAssessment: null,
@@ -346,6 +349,10 @@ export const useAppStore = create<AppState>((set, get) => {
 
     setCurrentModal: (modal) => {
       set({ currentModal: modal });
+    },
+
+    setSidePanelOpen: (open) => {
+      set({ isSidePanelOpen: open });
     },
 
     startPaymentFlow: (payment) => {

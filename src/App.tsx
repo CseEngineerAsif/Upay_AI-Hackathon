@@ -53,6 +53,7 @@ import { DialectVoiceScreen } from './components/voice/DialectVoiceScreen';
 import { MandateWalletScreen } from './components/mandate/MandateWalletScreen';
 import { PayslipWageScreen } from './components/payslip/PayslipWageScreen';
 import { SectionHubScreen } from './components/section/SectionHubScreen';
+import { SmartServicesDrawer } from './components/layout/SmartServicesDrawer';
 import { SECTIONS_DATA, FEATURE_TO_SECTION_MAP, FeatureTab } from './types/sections';
 
 export default function App() {
@@ -65,6 +66,8 @@ export default function App() {
     language,
     currentModal,
     setCurrentModal,
+    isSidePanelOpen,
+    setSidePanelOpen,
     simpleMode,
     initData
   } = useAppStore();
@@ -204,6 +207,12 @@ export default function App() {
             </div>
           )}
         </div>
+
+        {/* Slide-In Smart Services Side Panel (above bottom nav and header) */}
+        <SmartServicesDrawer
+          isOpen={isSidePanelOpen}
+          onClose={() => setSidePanelOpen(false)}
+        />
 
         {/* Home Indicator bar on modern mobile */}
         <div className="w-full bg-white pb-1.5 pt-0.5 flex justify-center shrink-0">
