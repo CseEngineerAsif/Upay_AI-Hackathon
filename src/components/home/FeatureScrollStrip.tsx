@@ -172,11 +172,11 @@ export const FeatureScrollStrip: React.FC = () => {
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
-        className={`w-full flex items-center gap-2 px-8 overflow-x-auto overflow-y-hidden scroll-smooth no-scrollbar flex-nowrap ${
+        className={`w-full flex items-center gap-1.5 px-8 overflow-x-auto overflow-y-hidden scroll-smooth no-scrollbar flex-nowrap ${
           isDragging ? 'cursor-grabbing select-none' : 'cursor-grab'
         }`}
         style={{
-          minHeight: '40px',
+          minHeight: '34px',
           height: 'auto',
           flexShrink: 0,
           WebkitOverflowScrolling: 'touch',
@@ -190,236 +190,188 @@ export const FeatureScrollStrip: React.FC = () => {
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('somiti'))}
-          className="h-9 px-3.5 rounded-full bg-[#0B4DA2] hover:bg-blue-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-[#0B4DA2] hover:bg-blue-900 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>👥</span>
-          <span>{language === 'bn' ? 'ডিজিটাল সমিতি' : 'Digital Somiti'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            AI
-          </span>
+          {language === 'bn' ? 'ডিজিটাল সমিতি' : 'Digital Somiti'}
         </button>
 
         {/* TrustPay F-Commerce Escrow */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('trustpay'))}
-          className="h-9 px-3.5 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>🤝</span>
-          <span>{language === 'bn' ? 'ট্রাস্টপে' : 'TrustPay'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            ESCROW
-          </span>
+          {language === 'bn' ? 'ট্রাস্টপে' : 'TrustPay'}
         </button>
 
         {/* Liquidity Network */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('liquidity'))}
-          className="h-9 px-3.5 rounded-full bg-cyan-700 hover:bg-cyan-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-cyan-700 hover:bg-cyan-800 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>⚡</span>
-          <span>{language === 'bn' ? 'লিকুইডিটি' : 'Liquidity'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            CASH
-          </span>
+          {language === 'bn' ? 'লিকুইডিটি' : 'Liquidity'}
         </button>
 
         {/* Cross-Wallet Federated Risk Exchange */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('crosswallet'))}
-          className="h-9 px-3.5 rounded-full bg-indigo-800 hover:bg-indigo-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-indigo-800 hover:bg-indigo-900 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>🌐</span>
-          <span>{language === 'bn' ? 'ক্রস-ওয়ালেট' : 'Cross-Wallet'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            FEDERATED
-          </span>
+          {language === 'bn' ? 'ক্রস-ওয়ালেট' : 'Cross-Wallet'}
         </button>
 
         {/* Climate Shield Mode */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('climateshield'))}
-          className="h-9 px-3.5 rounded-full bg-rose-700 hover:bg-rose-800 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-rose-700 hover:bg-rose-800 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>🌊</span>
-          <span>{language === 'bn' ? 'ক্লাইমেট শিল্ড' : 'Climate Shield'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            RELIEF
-          </span>
+          {language === 'bn' ? 'ক্লাইমেট শিল্ড' : 'Climate Shield'}
         </button>
 
         {/* Portable Income Passport */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('income_passport'))}
-          className="h-9 px-3.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-teal-700 hover:bg-teal-800 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>🛂</span>
-          <span>{language === 'bn' ? 'ইনকাম পাসপোর্ট' : 'Income Passport'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            VERIFIED
-          </span>
+          {language === 'bn' ? 'ইনকাম পাসপোর্ট' : 'Income Passport'}
         </button>
 
         {/* Fee Auditor & Overcharge Radar */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('fee_auditor'))}
-          className="h-9 px-3.5 rounded-full bg-blue-900 hover:bg-blue-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-blue-800 hover:bg-blue-900 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>⚖️</span>
-          <span>{language === 'bn' ? 'ফি অডিটর' : 'Fee Auditor'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            RADAR
-          </span>
+          {language === 'bn' ? 'ফি অডিটর' : 'Fee Auditor'}
         </button>
 
         {/* Bundle Optimizer */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('bundle_optimizer'))}
-          className="h-9 px-3.5 rounded-full bg-blue-800 hover:bg-blue-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-sky-700 hover:bg-sky-800 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>📶</span>
-          <span>{language === 'bn' ? 'বান্ডেল অপ্টিমাইজার' : 'Bundle Optimizer'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            SAVER
-          </span>
+          {language === 'bn' ? 'বান্ডেল অপ্টিমাইজার' : 'Bundle Optimizer'}
         </button>
 
-        {/* Zakat & Giving Assistant with Eid Envelopes */}
+        {/* Zakat & Giving Assistant */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('zakat_giving'))}
-          className="h-9 px-3.5 rounded-full bg-teal-800 hover:bg-teal-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-teal-800 hover:bg-teal-900 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>🌙</span>
-          <span>{language === 'bn' ? 'যাকাত ও ঈদ খাম' : 'Zakat & Eid'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            EID
-          </span>
+          {language === 'bn' ? 'যাকাত ও ঈদ খাম' : 'Zakat & Eid'}
         </button>
 
         {/* Dialect-aware Voice Pay */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('dialect_voice'))}
-          className="h-9 px-3.5 rounded-full bg-blue-900 hover:bg-blue-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-blue-950 hover:bg-black text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>🎙️</span>
-          <span>{language === 'bn' ? 'ভয়েস পে' : 'Voice Pay'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            DIALECT
-          </span>
+          {language === 'bn' ? 'ভয়েস পে' : 'Voice Pay'}
         </button>
 
         {/* Mandate Wallet */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('mandate_wallet'))}
-          className="h-9 px-3.5 rounded-full bg-cyan-900 hover:bg-cyan-950 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-cyan-900 hover:bg-cyan-950 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>📜</span>
-          <span>{language === 'bn' ? 'ম্যান্ডেট ওয়ালেট' : 'Mandate'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            AUTO
-          </span>
+          {language === 'bn' ? 'ম্যান্ডেট ওয়ালেট' : 'Mandate'}
         </button>
 
         {/* Payslip Auditor & Wage-Day */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setActiveTab('payslip_orchestrator'))}
-          className="h-9 px-3.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
-          <span>👔</span>
-          <span>{language === 'bn' ? 'পে-স্লিপ ও বেতন দিন' : 'Payslip & Wage'}</span>
-          <span className="px-1.5 py-0.5 bg-[#FFD600] text-slate-950 rounded-full text-[8px] font-black leading-none shrink-0 inline-flex items-center justify-center">
-            WAGE
-          </span>
+          {language === 'bn' ? 'পে-স্লিপ ও বেতন' : 'Payslip & Wage'}
         </button>
 
         {/* Live Voice */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setCurrentModal('voice_conversation'))}
-          className="h-9 px-3.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs font-black shadow-xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
           {language === 'bn' ? 'লাইভ ভয়েস' : 'Live Voice'}
         </button>
 
-        {/* AI Chatbot */}
+        {/* AI Chatbot - Colorful gradient */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setCurrentModal('gemini_chatbot'))}
-          className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
           {language === 'bn' ? 'এআই চ্যাটবট' : 'AI Chatbot'}
         </button>
 
-        {/* Search Info */}
+        {/* Search Info - Colorful gradient */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setCurrentModal('search_grounding'))}
-          className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-gradient-to-r from-sky-500 to-cyan-600 hover:from-sky-600 hover:to-cyan-700 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
           {language === 'bn' ? 'সার্চ তথ্য' : 'Search Info'}
         </button>
 
-        {/* Agent Map */}
+        {/* Agent Map - Colorful gradient */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setCurrentModal('maps_grounding'))}
-          className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
           {language === 'bn' ? 'এজেন্ট ম্যাপ' : 'Agent Map'}
         </button>
 
-        {/* Transcribe */}
+        {/* Transcribe - Colorful gradient */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setCurrentModal('audio_transcribe'))}
-          className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
           {language === 'bn' ? 'ট্রান্সক্রাইব' : 'Transcribe'}
         </button>
 
-        {/* Scam SMS */}
+        {/* Scam SMS - Colorful gradient */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setCurrentModal('scam_checker'))}
-          className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
           {language === 'bn' ? 'স্ক্যাম SMS' : 'Scam SMS'}
         </button>
 
-        {/* Cashless Flow */}
+        {/* Cashless Flow - Colorful gradient */}
         <button
           type="button"
           onClick={() => handleChipClick(() => setCurrentModal('cash_flow'))}
-          className="h-9 px-3.5 rounded-full bg-white text-[#0B4DA2] border border-slate-200/90 hover:bg-blue-50 text-xs font-black shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-700 hover:to-pink-700 text-white text-[11px] font-bold shadow-2xs active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
           {language === 'bn' ? 'ক্যাশ-ফ্লো' : 'Cashless Flow'}
         </button>
@@ -428,8 +380,8 @@ export const FeatureScrollStrip: React.FC = () => {
         <button
           type="button"
           onClick={() => handleChipClick(() => setCurrentModal('safe_ai_hub'))}
-          className="h-9 px-3.5 rounded-full bg-[#FFD600] text-slate-950 font-black text-xs shadow-2xs hover:brightness-105 active:scale-95 transition-all shrink-0 snap-start cursor-pointer border border-amber-300 inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '36px', height: '36px', scrollSnapAlign: 'start', flexShrink: 0 }}
+          className="h-8 px-2.5 rounded-full bg-[#FFD600] text-slate-950 font-black text-[11px] shadow-2xs hover:brightness-105 active:scale-95 transition-all shrink-0 snap-start cursor-pointer border border-amber-300 inline-flex items-center justify-center whitespace-nowrap"
+          style={{ minHeight: '32px', height: '32px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
           {language === 'bn' ? 'সেফ হাব' : 'Safe Hub'}
         </button>

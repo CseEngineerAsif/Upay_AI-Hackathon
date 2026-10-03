@@ -1,10 +1,90 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { UpayHeader } from '../layout/UpayHeader';
+import { FeatureScrollStrip } from './FeatureScrollStrip';
 
 export const HomeScreen: React.FC = () => {
   const { language, setCurrentModal } = useAppStore();
   const [activeBanner, setActiveBanner] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const touchStartXRef = useRef<number | null>(null);
+
+  // Telco Promotional Banners (Robi, Grameenphone, Banglalink, Airtel)
+  const promoBanners = [
+    {
+      id: 'robi',
+      brandBn: 'রবি স্পেশাল',
+      brandEn: 'Robi Special',
+      titleBn: 'আনলিমিটেড ক্যাশব্যাক ও বোনাস!',
+      titleEn: 'Unlimited Cashback & Bonus!',
+      descBn: '৳৫০ থেকে ৳৭৫ ক্যাশব্যাক ৭০ জিবি ও ১০০ জিবি প্যাক',
+      descEn: '৳50 - ৳75 cashback on 70GB & 100GB internet',
+      btnBn: 'রিচার্জ করুন',
+      btnEn: 'Recharge',
+      gradient: 'from-[#E30613] via-[#F34235] to-[#FF8A00]',
+      tagBg: 'bg-white text-[#E30613]',
+      btnBg: 'bg-white text-[#E30613] hover:bg-red-50',
+      icon: '📶',
+      action: () => setCurrentModal('mobile_recharge')
+    },
+    {
+      id: 'grameenphone',
+      brandBn: 'গ্রামীণফোন ধামাকা',
+      brandEn: 'Grameenphone GP',
+      titleBn: 'GP সুপার ইন্টারনেট ও মিনিট বান্ডেল!',
+      titleEn: 'GP Super Internet & Mins Pack!',
+      descBn: '৫০ জিবি + ১০০০ মিনিট মাত্র ৳৫৯৮ সাথে ১০০% বোনাস ক্যাশব্যাক',
+      descEn: '50GB + 1000 Mins at ৳598 with 100% bonus cashback',
+      btnBn: 'অফার নিন',
+      btnEn: 'Get Pack',
+      gradient: 'from-[#0072CE] via-[#00A3E0] to-[#00C5C8]',
+      tagBg: 'bg-white text-[#0072CE]',
+      btnBg: 'bg-white text-[#0072CE] hover:bg-sky-50',
+      icon: '🌐',
+      action: () => setCurrentModal('mobile_recharge')
+    },
+    {
+      id: 'banglalink',
+      brandBn: 'বাংলালিংক অফার',
+      brandEn: 'Banglalink 4G',
+      titleBn: 'BL ডাবল ডাটা ও ভয়েস বোনাস!',
+      titleEn: 'BL Double Data & Bonus!',
+      descBn: 'যেকোনো আনলিমিটেড মেয়াদ প্যাকে দ্বিগুণ ডাটা ও ৳৪৫ ক্যাশব্যাক',
+      descEn: '2X data on unlimited validity packs + ৳45 cashback',
+      btnBn: 'ক্লিক করুন',
+      btnEn: 'Click Here',
+      gradient: 'from-[#FF6A00] via-[#FF8C00] to-[#FFA726]',
+      tagBg: 'bg-white text-[#FF6A00]',
+      btnBg: 'bg-white text-[#FF6A00] hover:bg-amber-50',
+      icon: '🚀',
+      action: () => setCurrentModal('mobile_recharge')
+    },
+    {
+      id: 'airtel',
+      brandBn: 'এয়ারটেল ফ্রেন্ডজ',
+      brandEn: 'Airtel Friends',
+      titleBn: 'এয়ারটেল আনলিমিটেড ভয়েস ও ডাটা!',
+      titleEn: 'Airtel Unlimited Voice & Data!',
+      descBn: '৩০ দিন মেয়াদে ৩০ জিবি + ৭০০ মিনিট মাত্র ৳৩৯৯',
+      descEn: '30 days validity 30GB + 700 Mins at ৳399 only',
+      btnBn: 'রিচার্জ করুন',
+      btnEn: 'Recharge',
+      gradient: 'from-[#ED1C24] via-[#FA4D56] to-[#9F1853]',
+      tagBg: 'bg-white text-[#ED1C24]',
+      btnBg: 'bg-white text-[#ED1C24] hover:bg-rose-50',
+      icon: '⚡',
+      action: () => setCurrentModal('mobile_recharge')
+    }
+  ];
+
+  // Auto-rotate carousel every 3.5 seconds when not hovered/touched
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(() => {
+      setActiveBanner((prev) => (prev + 1) % promoBanners.length);
+    }, 3500);
+    return () => clearInterval(timer);
+  }, [isPaused, promoBanners.length]);
 
   // Original 11 Core Upay Service Tiles (Row 1: 4, Row 2: 4, Row 3: 3)
   const primaryServices = [
@@ -180,8 +260,11 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <div className="w-full flex-1 flex flex-col bg-white overflow-y-auto no-scrollbar pb-24">
-      {/* Upay Yellow Header with balance & smart services button next to bell */}
+      {/* Upay Yellow Header with balance & notification bell */}
       <UpayHeader />
+
+      {/* Feature Scroll Strip (AI / Services pill nav bar directly beneath header) */}
+      <FeatureScrollStrip />
 
       {/* Primary 4-Column Icon Grid (Core 11 Upay Services) */}
       <div className="px-3 pt-4">
@@ -205,38 +288,108 @@ export const HomeScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* Promotional Banner Carousel */}
-      <div className="mx-4 mt-5">
-        <div className="relative w-full rounded-2xl overflow-hidden bg-gradient-to-r from-red-600 via-rose-500 to-amber-500 text-white shadow-sm p-3.5 select-none">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <span className="inline-block px-2 py-0.5 rounded-full text-[9px] font-bold bg-white text-red-600 uppercase">
-                রবি অফার
-              </span>
-              <h4 className="text-sm font-extrabold leading-tight">
-                {language === 'bn' ? 'আনলিমিটেড ক্যাশব্যাক অফার!' : 'Unlimited Cashback Offer!'}
-              </h4>
-              <p className="text-[11px] text-white/90">
-                {language === 'bn' ? '৳৫০ থেকে ৳৭৫ ক্যাশব্যাক ৭০ জিবি ও ১০০ জিবি' : '৳50 - ৳75 cashback on 70GB & 100GB'}
-              </p>
-            </div>
-            <button
-              onClick={() => setCurrentModal('mobile_recharge')}
-              className="px-3 py-1 rounded-full bg-white text-red-600 font-bold text-xs shadow-xs hover:bg-slate-50 transition-all shrink-0 cursor-pointer"
-            >
-              {language === 'bn' ? 'ক্লিক করুন' : 'Click Here'}
-            </button>
+      {/* Promotional Banner Carousel (Rotating Grameenphone, Banglalink, Robi, Airtel) */}
+      <div
+        className="mx-4 mt-5 relative group select-none"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onTouchStart={(e) => {
+          setIsPaused(true);
+          touchStartXRef.current = e.touches[0].clientX;
+        }}
+        onTouchEnd={(e) => {
+          setIsPaused(false);
+          if (touchStartXRef.current !== null) {
+            const diff = e.changedTouches[0].clientX - touchStartXRef.current;
+            if (diff > 35) {
+              setActiveBanner((prev) => (prev === 0 ? promoBanners.length - 1 : prev - 1));
+            } else if (diff < -35) {
+              setActiveBanner((prev) => (prev + 1) % promoBanners.length);
+            }
+          }
+          touchStartXRef.current = null;
+        }}
+      >
+        {/* Banner Frame with overflow hidden */}
+        <div className="relative w-full rounded-2xl overflow-hidden shadow-sm select-none">
+          {/* Animated Slider Track */}
+          <div
+            className="flex transition-transform duration-500 ease-in-out"
+            style={{ transform: `translateX(-${activeBanner * 100}%)` }}
+          >
+            {promoBanners.map((banner) => (
+              <div
+                key={banner.id}
+                className={`w-full shrink-0 bg-gradient-to-r ${banner.gradient} text-white p-3.5 flex items-center justify-between gap-3 relative`}
+              >
+                {/* Left Content */}
+                <div className="space-y-1 min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs">{banner.icon}</span>
+                    <span className={`inline-block px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase shadow-2xs ${banner.tagBg}`}>
+                      {language === 'bn' ? banner.brandBn : banner.brandEn}
+                    </span>
+                  </div>
+                  <h4 className="text-xs sm:text-sm font-extrabold leading-tight drop-shadow-xs truncate">
+                    {language === 'bn' ? banner.titleBn : banner.titleEn}
+                  </h4>
+                  <p className="text-[10.5px] text-white/95 leading-snug line-clamp-1">
+                    {language === 'bn' ? banner.descBn : banner.descEn}
+                  </p>
+                </div>
+
+                {/* Right Action Button */}
+                <button
+                  type="button"
+                  onClick={banner.action}
+                  className={`px-3 py-1.5 rounded-full font-black text-xs shadow-xs active:scale-95 transition-all shrink-0 cursor-pointer ${banner.btnBg}`}
+                >
+                  {language === 'bn' ? banner.btnBn : banner.btnEn}
+                </button>
+              </div>
+            ))}
           </div>
+
+          {/* Left Arrow Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveBanner((prev) => (prev === 0 ? promoBanners.length - 1 : prev - 1));
+            }}
+            aria-label="Previous Banner"
+            className="absolute left-1.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-black/25 hover:bg-black/45 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer active:scale-90"
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+
+          {/* Right Arrow Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveBanner((prev) => (prev + 1) % promoBanners.length);
+            }}
+            aria-label="Next Banner"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-black/25 hover:bg-black/45 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer active:scale-90"
+          >
+            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
         </div>
 
         {/* Carousel Dot Indicators */}
         <div className="flex items-center justify-center gap-1.5 mt-2">
-          {[0, 1, 2].map((idx) => (
+          {promoBanners.map((banner, idx) => (
             <button
-              key={idx}
+              key={banner.id}
               onClick={() => setActiveBanner(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
               className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                activeBanner === idx ? 'w-5 bg-[#0B4DA2]' : 'w-1.5 bg-slate-300'
+                activeBanner === idx ? 'w-6 bg-[#0B4DA2]' : 'w-1.5 bg-slate-300 hover:bg-slate-400'
               }`}
             />
           ))}
