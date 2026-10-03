@@ -4,7 +4,7 @@ import {
   PassportPurpose
 } from '../types/incomePassport';
 
-const PASSPORT_STORAGE_KEY = 'upay_income_passports_v1';
+const PASSPORT_STORAGE_KEY = 'recursion_pay_income_passports_v1';
 
 export const AGGREGATED_INCOME_SOURCES: IncomeSourceSummary[] = [
   {
@@ -14,7 +14,7 @@ export const AGGREGATED_INCOME_SOURCES: IncomeSourceSummary[] = [
     sourceNameBn: 'কর্পোরেট পেরোল (সফটওয়্যার লিমিটেড)',
     monthlyAverage: 45000,
     percentageOfTotal: 48,
-    walletProviderBn: 'উপায় পেরোল ওয়ালেট',
+    walletProviderBn: 'রিকার্শন পে পেরোল ওয়ালেট',
     icon: '💼',
     color: '#0B4DA2'
   },
@@ -25,7 +25,7 @@ export const AGGREGATED_INCOME_SOURCES: IncomeSourceSummary[] = [
     sourceNameBn: 'আন্তর্জাতিক রিমোট ইনকাম (Upwork/Fiverr)',
     monthlyAverage: 22000,
     percentageOfTotal: 23,
-    walletProviderBn: 'উপায় ফ্রিল্যান্সার হাব',
+    walletProviderBn: 'রিকার্শন পে ফ্রিল্যান্সার হাব',
     icon: '💻',
     color: '#10B981'
   },
@@ -36,7 +36,7 @@ export const AGGREGATED_INCOME_SOURCES: IncomeSourceSummary[] = [
     sourceNameBn: 'পরিবারের সহায়তা (মধ্যপ্রাচ্য)',
     monthlyAverage: 15000,
     percentageOfTotal: 16,
-    walletProviderBn: 'উপায় রেমিট্যান্স পে',
+    walletProviderBn: 'রিকার্শন পে রেমিট্যান্স পে',
     icon: '🌍',
     color: '#F59E0B'
   },
@@ -47,7 +47,7 @@ export const AGGREGATED_INCOME_SOURCES: IncomeSourceSummary[] = [
     sourceNameBn: 'ডিজিটাল মার্চেন্ট বিক্রয়',
     monthlyAverage: 12000,
     percentageOfTotal: 13,
-    walletProviderBn: 'উপায় মার্চেন্ট ওয়ালেট',
+    walletProviderBn: 'রিকার্শন পে মার্চেন্ট ওয়ালেট',
     icon: '🏪',
     color: '#8B5CF6'
   }
@@ -56,7 +56,7 @@ export const AGGREGATED_INCOME_SOURCES: IncomeSourceSummary[] = [
 export const INITIAL_PASSPORTS: IncomePassportToken[] = [
   {
     id: 'pass_1',
-    referenceCode: 'UPAY-PASS-9102-RENT',
+    referenceCode: 'RPAY-PASS-9102-RENT',
     purpose: 'house_rent',
     purposeBn: 'বাড়ি ভাড়া চুক্তি যাচাইকরণ',
     recipientEntity: 'বাড়িওয়ালা (বাশারের বাড়ি, ধানমন্ডি ৫/এ)',
@@ -68,7 +68,7 @@ export const INITIAL_PASSPORTS: IncomePassportToken[] = [
     expiresAt: 'আগামীকাল সকাল ১০:১৫ (২৪ ঘণ্টা)',
     expiryHours: 24,
     status: 'active',
-    qrPayload: 'https://upay.com.bd/verify/pass/UPAY-PASS-9102-RENT',
+    qrPayload: 'https://recursionpay.com.bd/verify/pass/RPAY-PASS-9102-RENT',
     sharedFieldsBn: [
       'মাসিক আয়ের সামগ্রিক রেঞ্জ (৳৮০,০০০ - ৳৯৫,০০০)',
       'ধারাবাহিক আয় প্রবাহের মাস সংখ্যা (টানা ২৮ মাস)',
@@ -124,7 +124,7 @@ export function createPassportToken(params: {
       ? 'LOAN'
       : 'VISA';
 
-  const refCode = `UPAY-PASS-${randNum}-${purposeTag}`;
+  const refCode = `RPAY-PASS-${randNum}-${purposeTag}`;
   const now = new Date();
   const expiryDate = new Date(now.getTime() + params.expiryHours * 3600 * 1000);
 
