@@ -32,12 +32,12 @@ export const MapsGroundingModal: React.FC<{ onClose: () => void }> = ({ onClose 
         setResult(data);
       } else {
         setResult({
-          text: `${q} এলাকার নিকটস্থ উপায় সার্ভিস পয়েন্ট: প্রধান বাসস্ট্যান্ড মোড়, স্থানীয় ইউসিবি ব্যাংক উপশাখা বা অনুমোদিত উপায় বিকাশ পয়েন্ট। (সকাল ৯টা - রাত ১০টা)`
+          text: `${q} এলাকার নিকটস্থ রিকার্শন পে সার্ভিস পয়েন্ট: প্রধান বাসস্ট্যান্ড মোড়, স্থানীয় ব্যাংক উপশাখা বা অনুমোদিত রিকার্শন পে এজেন্ট পয়েন্ট। (সকাল ৯টা - রাত ১০টা)`
         });
       }
     } catch {
       setResult({
-        text: `${q} এলাকার নিকটস্থ উপায় সার্ভিস পয়েন্ট: স্থানীয় বাজার ও ব্যাংক মোড়। লেনদেনের পূর্বে এজেন্ট কোড যাচাই করুন।`
+        text: `${q} এলাকার নিকটস্থ রিকার্শন পে সার্ভিস পয়েন্ট: স্থানীয় বাজার ও ব্যাংক মোড়। লেনদেনের পূর্বে এজেন্ট কোড যাচাই করুন।`
       });
     } finally {
       setLoading(false);
@@ -53,7 +53,7 @@ export const MapsGroundingModal: React.FC<{ onClose: () => void }> = ({ onClose 
             <span className="text-xl">📍</span>
             <div>
               <h2 className="text-sm font-bold text-slate-800">
-                {language === 'bn' ? 'নিকটস্থ উপায় এজেন্ট ও বুথ' : 'Find Nearby Upay Agents'}
+                {language === 'bn' ? 'নিকটস্থ রিকার্শন পে এজেন্ট ও বুথ' : 'Find Nearby Recursion Pay Agents'}
               </h2>
               <span className="text-[10px] text-slate-500">gemini-3.5-flash + Google Maps Data</span>
             </div>
