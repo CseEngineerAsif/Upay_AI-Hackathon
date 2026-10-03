@@ -3,10 +3,10 @@ import { MfsFederatedNode, FraudRingAlert } from '../types/federatedRisk';
 export const MFS_NODES: MfsFederatedNode[] = [
   {
     id: 'upay_node',
-    nameBn: 'উপায় (Upay Safe AI নোড)',
-    nameEn: 'Upay MFS Node',
+    nameBn: 'রিকার্শন পে (Recursion Pay Safe AI নোড)',
+    nameEn: 'Recursion Pay MFS Node',
     brandColor: '#0B4DA2',
-    localModelVersion: 'Upay-FedRisk v4.2',
+    localModelVersion: 'Recursion-FedRisk v4.2',
     localSamplesTrained: '৪,৫০,০০০+ ট্রানজেকশন',
     encryptionStatusBn: 'জিরো-নলেজ প্রুফ ও ডিফারেনশিয়াল প্রাইভেসি',
     lastGradientSync: '২ মিনিট আগে'
@@ -72,7 +72,7 @@ export const FRAUD_RINGS_DATA: FraudRingAlert[] = [
       {
         step: 2,
         walletHash: '0x3d7b81e...a409',
-        providerNameBn: 'উপায় (Upay)',
+        providerNameBn: 'রিকার্শন পে (Recursion Pay)',
         amount: 49500,
         timestamp: 'দুপুর ১:২২',
         suspiciousActionBn: '১ মিনিট ২০ সেকেন্ডের মধ্যে দ্রুত সেন্ড মানি'
@@ -123,7 +123,7 @@ export const FRAUD_RINGS_DATA: FraudRingAlert[] = [
       {
         step: 2,
         walletHash: '0x14de88a...99bb',
-        providerNameBn: 'উপায় (Upay)',
+        providerNameBn: 'রিকার্শন পে (Recursion Pay)',
         amount: 44000,
         timestamp: 'সকাল ১১:৩৭',
         suspiciousActionBn: 'নতুন অচেনা ডিভাইসে লগইন ও তাৎক্ষণিক ট্রান্সফার'
@@ -166,7 +166,7 @@ export const FRAUD_RINGS_DATA: FraudRingAlert[] = [
       {
         step: 2,
         walletHash: '0x22bc994...a110',
-        providerNameBn: 'উপায় (Upay)',
+        providerNameBn: 'রিকার্শন পে (Recursion Pay)',
         amount: 78000,
         timestamp: 'রাত ৯:১০',
         suspiciousActionBn: 'অ্যাকাউন্টে কোনো বিল বা ব্যালেন্স না রেখে সরানো'
