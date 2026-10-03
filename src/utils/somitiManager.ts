@@ -75,7 +75,7 @@ const INITIAL_SOMITIS: DigitalSomiti[] = [
       }
     ],
     payoutExplanation: {
-      algorithm: 'Upay AI Fair Lottery v2.4',
+      algorithm: 'Recursion Pay AI Fair Lottery v2.4',
       rationaleBn:
         'নিরপেক্ষ ক্রিপ্টোগ্রাফিক লটারি সিড ও পারিবারিক জরুরি আর্থিক চাহিদার সমন্বয়ে এই পে-আউট ক্রম নির্ধারিত হয়েছে। কোনো সদস্য বা অ্যাডমিনকে অযৌক্তিক অগ্রাধিকার দেওয়া হয়নি। গ্রুপের ৫ জনের সম্মতি ও স্বচ্ছ অডিট রেকর্ড সংরক্ষিত।',
       rationaleEn:
@@ -345,7 +345,7 @@ const INITIAL_SOMITIS: DigitalSomiti[] = [
         {
           titleBn: '১০০% এসক্রো নিশ্চয়তা',
           titleEn: '100% Escrow Guarantee',
-          descriptionBn: 'সকল টাকা সরাসরি উপায় এসক্রো ওয়ালেটে সুরক্ষিত থাকে।',
+          descriptionBn: 'সকল টাকা সরাসরি রিকার্শন পে এসক্রো ওয়ালেটে সুরক্ষিত থাকে।',
           descriptionEn: 'All pooled money is locked in smart bank escrow.'
         }
       ],
@@ -484,7 +484,7 @@ export function contributeInstallment(
     time: timeStr,
     immutableHash: hash,
     verifiedBy: 'system_escrow',
-    note: `সাইকেল ${somiti.currentCycle} কিস্তি (উপায় ওয়ালেট ডেবিট)`
+    note: `সাইকেল ${somiti.currentCycle} কিস্তি (রিকার্শন পে ওয়ালেট ডেবিট)`
   };
 
   somiti.ledger = [ledgerEntry, ...somiti.ledger];
@@ -627,9 +627,9 @@ export function createNewSomiti(params: {
     status: 'active',
     members: allMembersData,
     payoutExplanation: params.payoutExplanation || {
-      algorithm: 'Upay AI Fair Lottery v2.4',
+      algorithm: 'Recursion Pay AI Fair Lottery v2.4',
       rationaleBn: 'সিস্টেমের নিরপেক্ষ ক্রিপ্টোগ্রাফিক লটারি সিড দ্বারা এই পে-আউট ক্রম নির্ধারিত হয়েছে।',
-      rationaleEn: 'Generated via Upay AI fair lottery consensus protocol.',
+      rationaleEn: 'Generated via Recursion Pay AI fair lottery consensus protocol.',
       fairnessScore: 98,
       factors: [
         {
