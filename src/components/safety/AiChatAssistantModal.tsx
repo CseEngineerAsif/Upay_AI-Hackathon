@@ -12,8 +12,8 @@ export const AiChatAssistantModal: React.FC<{ onClose: () => void }> = ({ onClos
     {
       sender: 'assistant',
       text: language === 'bn'
-        ? 'আসসালামু আলাইকুম! আমি উপায় সেফ এআই সহকারী। আপনার মাসিক খরচ, নিরাপত্তা ও সঞ্চয় সম্পর্কে যেকোনো প্রশ্ন করতে পারেন।'
-        : 'Hello! I am your Upay Safe AI Assistant. Ask me anything about your spending, savings, or safety.'
+        ? 'আসসালামু আলাইকুম! আমি রিকার্শন পে সেফ এআই সহকারী। আপনার মাসিক খরচ, নিরাপত্তা ও সঞ্চয় সম্পর্কে যেকোনো প্রশ্ন করতে পারেন।'
+        : 'Hello! I am your Recursion Pay Safe AI Assistant. Ask me anything about your spending, savings, or safety.'
     }
   ]);
   const [inputVal, setInputVal] = useState('');
@@ -86,7 +86,7 @@ export const AiChatAssistantModal: React.FC<{ onClose: () => void }> = ({ onClos
             </div>
             <div>
               <h2 className="text-sm font-bold">
-                {language === 'bn' ? 'উপায় সেফ এআই সহকারী' : 'Upay Safe AI Assistant'}
+                {language === 'bn' ? 'রিকার্শন পে সেফ এআই সহকারী' : 'Recursion Pay Safe AI Assistant'}
               </h2>
               <span className="text-[10px] text-sky-200">বাংলা ফিন্যান্সিয়াল চ্যাটবট</span>
             </div>
