@@ -332,10 +332,10 @@ export const MoreDrawer: React.FC<MoreDrawerProps> = ({ isOpen, onClose }) => {
             </div>
           </div>
 
-          {/* Group 3: উপায় সাপোর্ট (Upay Support) */}
+          {/* Group 3: রিকার্শন পে সাপোর্ট (Recursion Pay Support) */}
           <div className="w-full">
             <div className="bg-[#F2F2F2] px-3.5 py-1.5 text-[10px] font-black text-slate-500 uppercase tracking-wider">
-              {language === 'bn' ? 'উপায় সাপোর্ট' : 'UPAY SUPPORT'}
+              {language === 'bn' ? 'রিকার্শন পে সাপোর্ট' : 'RECURSION PAY SUPPORT'}
             </div>
 
             <div className="divide-y divide-slate-100">
@@ -408,7 +408,7 @@ export const MoreDrawer: React.FC<MoreDrawerProps> = ({ isOpen, onClose }) => {
                     🎡
                   </div>
                   <span className="text-xs font-bold text-slate-800 truncate">
-                    {language === 'bn' ? 'উপায় চাকা (লাকি হুইল)' : 'Upay Lucky Wheel'}
+                    {language === 'bn' ? 'রিকার্শন পে চাকা (লাকি হুইল)' : 'Recursion Pay Wheel'}
                   </span>
                 </div>
                 <svg className="w-3.5 h-3.5 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
