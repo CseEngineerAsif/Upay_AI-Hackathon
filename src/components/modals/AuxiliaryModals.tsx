@@ -249,7 +249,7 @@ export const NotificationsModal: React.FC<{ onClose: () => void }> = ({ onClose 
   const notifications = [
     {
       id: 'notif_1',
-      title: 'উপায় সেফ এআই সুরক্ষা সক্রিয় আছে',
+      title: 'রিকার্শন পে সেফ এআই সুরক্ষা সক্রিয় আছে',
       time: 'আজ, দুপুর ১২:৩০',
       desc: 'আপনার অ্যাকাউন্টে কোনো সন্দেহজনক লেনদেন ঘটলে তা স্বয়ংক্রিয়ভাবে সতর্ক করা হবে।'
     },
