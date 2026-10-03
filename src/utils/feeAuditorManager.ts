@@ -5,10 +5,10 @@ import {
   AdminInvestigationStatus
 } from '../types/feeAuditor';
 
-const INVESTIGATION_STORAGE_KEY = 'upay_overcharge_investigations_v1';
-const AUDIT_HISTORY_STORAGE_KEY = 'upay_cashout_audit_history_v1';
+const INVESTIGATION_STORAGE_KEY = 'recursion_pay_overcharge_investigations_v1';
+const AUDIT_HISTORY_STORAGE_KEY = 'recursion_pay_cashout_audit_history_v1';
 
-// Official Upay Cash-Out Fee: 1.4% (৳14 per ৳1,000)
+// Official Recursion Pay Cash-Out Fee: 1.4% (৳14 per ৳1,000)
 export const OFFICIAL_CASHOUT_RATE_PCT = 1.4;
 
 export function calculateOfficialFee(amount: number): number {
@@ -110,7 +110,7 @@ export const INITIAL_INVESTIGATIONS: AgentInvestigationItem[] = [
   {
     id: 'inv_5',
     agentCode: 'AGT-DH-1109',
-    agentNameBn: 'বন্ধু টেলিকম ও বিকাশ/উপায় পয়েন্ট',
+    agentNameBn: 'বন্ধু টেলিকম ও রিকার্শন পে পয়েন্ট',
     phoneMasked: '০১৭৫২-****৪৫',
     outletAddressBn: 'নিউমার্কেট কাঁচাবাজারের গলি, ঢাকা',
     reportsCount: 7,
