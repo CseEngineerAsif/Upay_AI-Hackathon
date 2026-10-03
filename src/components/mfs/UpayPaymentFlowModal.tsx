@@ -175,7 +175,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
       case 'zakat':
         return { name: `যাকাত তহবিল (${zakatCategory})`, phone: 'যাকাত আদায় ২০২৬', sub: '২.৫% শরীয়াহ যাকাত' };
       default:
-        return { name: 'উপায় পেমেন্ট', phone: '01711223344', sub: 'সার্ভিস চার্জ ফ্রি' };
+        return { name: 'রিকার্শন পে পেমেন্ট', phone: '01711223344', sub: 'সার্ভিস চার্জ ফ্রি' };
     }
   };
 
@@ -344,25 +344,25 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
 
   return (
     <div className="fixed sm:absolute inset-0 z-50 flex flex-col bg-white overflow-hidden animate-scale-up font-sans">
-      {/* 1. UPAY YELLOW HEADER BAR */}
-      <div className="w-full bg-[#FFD21F] px-4 py-3 flex items-center justify-between shrink-0 shadow-xs z-10">
+      {/* 1. MODERN ELECTRIC MINT HEADER BAR */}
+      <div className="w-full bg-gradient-to-r from-[#00D492] to-[#00B478] px-4 py-3 flex items-center justify-between shrink-0 shadow-xs z-10 text-slate-950">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={handleHeaderBack}
-            className="w-9 h-9 -ml-1 rounded-full flex items-center justify-center text-slate-900 hover:bg-black/10 transition-colors"
+            className="w-9 h-9 -ml-1 rounded-full flex items-center justify-center text-slate-950 hover:bg-black/10 transition-colors cursor-pointer"
           >
             <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
           </button>
-          <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+          <h2 className="text-lg font-black text-slate-950 tracking-tight">
             {getServiceTitle()}
           </h2>
         </div>
 
         {/* Balance Badge in Header */}
-        <div className="text-right text-[11px] text-slate-900 font-semibold bg-black/5 px-2.5 py-1 rounded-full">
+        <div className="text-right text-[11px] text-slate-950 font-bold bg-black/10 px-2.5 py-1 rounded-full">
           <span>৳{user?.balance?.toLocaleString() || '18,450'}</span>
         </div>
       </div>
@@ -391,7 +391,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     value={challanNo}
                     onChange={(e) => setChallanNo(e.target.value)}
                     placeholder="DMP-2026-889021"
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F] font-mono font-bold"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492] font-mono font-bold"
                   />
                 </div>
 
@@ -404,7 +404,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     value={trafficVehicleRegNo}
                     onChange={(e) => setTrafficVehicleRegNo(e.target.value)}
                     placeholder="ঢাকা মেট্রো-গ ১২-৩৪৫৬"
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                 </div>
 
@@ -436,7 +436,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                   <select
                     value={tollPlaza}
                     onChange={(e) => setTollPlaza(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   >
                     <option value="পদ্মা বহুমুখী সেতু">পদ্মা বহুমুখী সেতু (Padma Bridge)</option>
                     <option value="বঙ্গবন্ধু সেতু (যমুনা)">বঙ্গবন্ধু সেতু (যমুনা)</option>
@@ -453,7 +453,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                   <select
                     value={vehicleType}
                     onChange={(e) => setVehicleType(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   >
                     <option value="কার / জিপ / মাইক্রোবাস">কার / জিপ / মাইক্রোবাস (৳৭৫০)</option>
                     <option value="পিকআপ / ছোট ট্রাক">পিকআপ / ছোট ট্রাক (৳১,২০০)</option>
@@ -472,7 +472,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     value={tollVehicleRegNo}
                     onChange={(e) => setTollVehicleRegNo(e.target.value)}
                     placeholder="ঢাকা মেট্রো-ঘ ১১-২২৩৩"
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                 </div>
 
@@ -494,7 +494,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                   <select
                     value={govtService}
                     onChange={(e) => setGovtService(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   >
                     <option value="ই-পাসপোর্ট ফি (e-Passport Fee)">ই-পাসপোর্ট ফি (e-Passport Fee)</option>
                     <option value="ভূমি উন্নয়ন কর (Land Development Tax / e-Namzari)">ভূমি উন্নয়ন কর ও ই-নামজারি</option>
@@ -513,7 +513,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     value={govtRefNo}
                     onChange={(e) => setGovtRefNo(e.target.value)}
                     placeholder="EP-88710294-BD"
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F] font-mono font-bold"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492] font-mono font-bold"
                   />
                 </div>
 
@@ -526,7 +526,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     value={applicantName}
                     onChange={(e) => setApplicantName(e.target.value)}
                     placeholder="মোহাম্মদ মাইনুল ইসলাম"
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                 </div>
 
@@ -538,7 +538,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                 </div>
               </div>
@@ -554,7 +554,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                   <select
                     value={institution}
                     onChange={(e) => setInstitution(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   >
                     <option value="নটর ডেম কলেজ, ঢাকা">নটর ডেম কলেজ, ঢাকা</option>
                     <option value="ঢাকা রেসিডেনসিয়াল মডেল কলেজ">ঢাকা রেসিডেনসিয়াল মডেল কলেজ</option>
@@ -575,7 +575,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     value={studentId}
                     onChange={(e) => setStudentId(e.target.value)}
                     placeholder="STD-2026-4401"
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F] font-mono font-bold"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492] font-mono font-bold"
                   />
                 </div>
 
@@ -586,7 +586,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                   <select
                     value={feeType}
                     onChange={(e) => setFeeType(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   >
                     <option value="টিউশন ফি (Tuition Fee)">টিউশন ফি (Tuition Fee)</option>
                     <option value="ভর্তি ফি (Admission Fee)">ভর্তি ফি (Admission Fee)</option>
@@ -603,7 +603,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                 </div>
               </div>
@@ -619,7 +619,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                   <select
                     value={ngoOrg}
                     onChange={(e) => setNgoOrg(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   >
                     <option value="ব্র্যাক (BRAC Microfinance)">ব্র্যাক (BRAC Microfinance)</option>
                     <option value="আশা (ASA)">আশা (ASA Microfinance)</option>
@@ -639,7 +639,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     value={memberId}
                     onChange={(e) => setMemberId(e.target.value)}
                     placeholder="MEM-89021-BR"
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F] font-mono font-bold"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492] font-mono font-bold"
                   />
                 </div>
 
@@ -665,7 +665,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                 </div>
               </div>
@@ -681,7 +681,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                   <select
                     value={insurer}
                     onChange={(e) => setInsurer(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   >
                     <option value="মেটলাইফ বাংলাদেশ (MetLife)">মেটলাইফ বাংলাদেশ (MetLife)</option>
                     <option value="ডেল্টা লাইফ ইন্স্যুরেন্স">ডেল্টা লাইফ ইন্স্যুরেন্স</option>
@@ -701,7 +701,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     value={policyNo}
                     onChange={(e) => setPolicyNo(e.target.value)}
                     placeholder="POL-992104-ML"
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F] font-mono font-bold"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492] font-mono font-bold"
                   />
                 </div>
 
@@ -728,7 +728,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                 </div>
               </div>
@@ -753,7 +753,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                         onClick={() => setDonationCause(item.title)}
                         className={`p-3 rounded-xl border cursor-pointer flex items-center justify-between transition-all ${
                           donationCause === item.title
-                            ? 'bg-[#FFF9DE] border-[#FFD21F] shadow-xs'
+                            ? 'bg-emerald-50 border-[#00D492] shadow-xs'
                             : 'bg-slate-50 border-slate-200 hover:bg-slate-100'
                         }`}
                       >
@@ -783,7 +783,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                   {/* Quick Chips */}
                   <div className="grid grid-cols-4 gap-2 mt-2">
@@ -860,7 +860,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                   <select
                     value={zakatCategory}
                     onChange={(e) => setZakatCategory(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   >
                     <option value="অসহায় ও দরিদ্র (Fakir & Miskin)">অসহায় ও দরিদ্র (Fakir & Miskin)</option>
                     <option value="এতিম ও শিশু পুনর্বাসন তহবিল">এতিম ও শিশু পুনর্বাসন তহবিল</option>
@@ -877,7 +877,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     type="number"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value ? Number(e.target.value) : '')}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#FFD21F]"
+                    className="w-full p-2.5 rounded-xl border border-slate-200 text-sm font-bold bg-white focus:outline-none focus:ring-2 focus:ring-[#00D492]"
                   />
                 </div>
               </div>
@@ -1217,7 +1217,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                 type="button"
                 onClick={() => {
                   if (navigator.clipboard) {
-                    navigator.clipboard.writeText(`Upay Payment: ${completedTx.id}, Service: ${getServiceTitle()}, Amount: ${completedTx.amount}`);
+                    navigator.clipboard.writeText(`Recursion Pay Payment: ${completedTx.id}, Service: ${getServiceTitle()}, Amount: ${completedTx.amount}`);
                   }
                 }}
                 className="w-full py-2.5 rounded-2xl border border-slate-200 text-slate-700 font-bold text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5"
