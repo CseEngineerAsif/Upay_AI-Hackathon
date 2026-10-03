@@ -47,7 +47,7 @@ export const KNOWN_SELLERS: SellerTrustInfo[] = [
     badgeTitleEn: 'Caution / High Risk',
     explanationBn:
       'সতর্কতা: এই বিক্রেতার বিরুদ্ধে ১৮টি অর্ডারের মধ্যে ৬টি ডেলিভারি না দেওয়া বা ভুল পণ্য পাঠানোর অভিযোগ রয়েছে। কোনো অবস্থাতেই অগ্রিম পুরো টাকা ছাড়বেন না। ট্রাস্টপে এসক্রো ব্যবহার করুন।',
-    explanationEn: 'High dispute rate (33%). Do not send advance payment without Upay TrustPay escrow.',
+    explanationEn: 'High dispute rate (33%). Do not send advance payment without Recursion Pay TrustPay escrow.',
     riskWarningBn: 'ভুয়া পেজ বা অগ্রিম টাকা নিয়ে ব্লক করার ঝুঁকি রয়েছে। পণ্য বুঝে পাওয়ার পরই কেবল টাকা ছাড়ুন।',
     totalOrders: 18,
     successfulDeliveries: 11,
@@ -83,11 +83,11 @@ const INITIAL_ORDERS: TrustPayOrder[] = [
         status: 'payment_held',
         timestamp: '০২ অক্টোবর ২০২৬, সকাল ১০:১৮',
         noteBn: 'ক্রেতার ওয়ালেট থেকে ৳৩,৮৫০ নিরাপদে এসক্রো ভল্টে আটকে রাখা হয়েছে।',
-        noteEn: '৳3,850 safely held in Upay Escrow.'
+        noteEn: '৳3,850 safely held in Recursion Pay Escrow.'
       }
     ],
     sellerTrust: KNOWN_SELLERS[0],
-    escrowContractId: 'UPAY-TP-ESCROW-8841-A',
+    escrowContractId: 'REC-TP-ESCROW-8841-A',
     createdAt: '০২ অক্টোবর ২০২৬',
     estimatedDeliveryDate: '০৪ অক্টোবর ২০২৬'
   },
@@ -126,7 +126,7 @@ const INITIAL_ORDERS: TrustPayOrder[] = [
       }
     ],
     sellerTrust: KNOWN_SELLERS[1],
-    escrowContractId: 'UPAY-TP-ESCROW-6629-B',
+    escrowContractId: 'RPAY-TP-ESCROW-6629-B',
     createdAt: '২৯ সেপ্টেম্বর ২০২৬',
     estimatedDeliveryDate: '০২ অক্টোবর ২০২৬'
   },
@@ -165,7 +165,7 @@ const INITIAL_ORDERS: TrustPayOrder[] = [
       }
     ],
     sellerTrust: KNOWN_SELLERS[2],
-    escrowContractId: 'UPAY-TP-ESCROW-1102-C',
+    escrowContractId: 'RPAY-TP-ESCROW-1102-C',
     disputeReason: 'বিজ্ঞাপনের সাথে পণ্যের কোনো মিল নেই, চামড়ার বদলে নিম্নমানের রেক্সিনের জুতা পাঠানো হয়েছে।',
     createdAt: '২৫ সেপ্টেম্বর ২০২৬',
     estimatedDeliveryDate: '২৮ সেপ্টেম্বর ২০২৬'
@@ -211,7 +211,7 @@ const INITIAL_ORDERS: TrustPayOrder[] = [
       }
     ],
     sellerTrust: KNOWN_SELLERS[0],
-    escrowContractId: 'UPAY-TP-ESCROW-9932-D',
+    escrowContractId: 'RPAY-TP-ESCROW-9932-D',
     createdAt: '২০ সেপ্টেম্বর ২০২৬',
     estimatedDeliveryDate: '২২ সেপ্টেম্বর ২০২৬'
   }
@@ -313,12 +313,12 @@ export function createTrustPayOrder(params: {
       {
         status: 'payment_held',
         timestamp: `${dateStr}, ${timeStr}`,
-        noteBn: `৳${params.amount.toLocaleString()} উপায় এসক্রো ভল্টে নিরাপদে আটকে রাখা হয়েছে।`,
-        noteEn: `৳${params.amount.toLocaleString()} securely held in Upay Escrow.`
+        noteBn: `৳${params.amount.toLocaleString()} রিকার্শন পে এসক্রো ভল্টে নিরাপদে আটকে রাখা হয়েছে।`,
+        noteEn: `৳${params.amount.toLocaleString()} securely held in Recursion Pay Escrow.`
       }
     ],
     sellerTrust: params.sellerTrust,
-    escrowContractId: `UPAY-TP-ESCROW-${Math.floor(1000 + Math.random() * 9000)}-Z`,
+    escrowContractId: `REC-TP-ESCROW-${Math.floor(1000 + Math.random() * 9000)}-Z`,
     createdAt: dateStr,
     estimatedDeliveryDate: '৩-৫ কার্যদিবস'
   };
@@ -369,7 +369,7 @@ export function disputeTrustPayOrder(
   order.statusHistory.push({
     status: 'disputed',
     timestamp: `${dateStr}, ${timeStr}`,
-    noteBn: `ক্রেতা বিরোধ দায়ের করেছেন: "${reason}"। এসক্রো টাকা ফ্রিজ করা হয়েছে। উপায় সাপোর্ট ও মধ্যস্থতা সেল খতিয়ে দেখছে।`,
+    noteBn: `ক্রেতা বিরোধ দায়ের করেছেন: "${reason}"। এসক্রো টাকা ফ্রিজ করা হয়েছে। রিকার্শন পে সাপোর্ট ও মধ্যস্থতা সেল খতিয়ে দেখছে।`,
     noteEn: `Dispute filed: "${reason}". Escrow frozen pending mediation.`
   });
 
