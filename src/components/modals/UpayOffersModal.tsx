@@ -42,11 +42,11 @@ export const UpayOffersModal: React.FC<UpayOffersModalProps> = ({ onClose }) => 
       category: 'shopping',
       titleBn: 'স্বপ্ন সুপারশপ ১৫% ইনস্ট্যান্ট ক্যাশব্যাক',
       titleEn: 'Shwapno Superhop 15% Cashback',
-      descBn: 'যেকোনো গ্রোসারি বা কেনাকাটায় বাংলা কিউআর দিয়ে উপায় পেমেন্ট করলেই ১৫% ক্যাশব্যাক (সর্বোচ্চ ৳১৫০)।',
-      descEn: 'Pay via Upay Bangla QR at any Shwapno outlet and get 15% cashback up to ৳150.',
+      descBn: 'যেকোনো গ্রোসারি বা কেনাকাটায় বাংলা কিউআর দিয়ে রিকার্শন পে পেমেন্ট করলেই ১৫% ক্যাশব্যাক (সর্বোচ্চ ৳১৫০)।',
+      descEn: 'Pay via Recursion Pay Bangla QR at any Shwapno outlet and get 15% cashback up to ৳150.',
       badgeBn: '১৫% ছাড়',
       badgeEn: '15% Off',
-      code: 'UPAYSWAPNO',
+      code: 'RECURSIONSWAPNO',
       validityBn: '১৫ নভেম্বর ২০২৬ পর্যন্ত',
       validityEn: 'Valid till 15 Nov 2026',
       icon: '🛒',
@@ -58,11 +58,11 @@ export const UpayOffersModal: React.FC<UpayOffersModalProps> = ({ onClose }) => 
       category: 'food',
       titleBn: 'কেএফসি ও পিৎজা হাট ফিস্ট অফার',
       titleEn: 'KFC & Pizza Hut Feast Offer',
-      descBn: 'উপায় কার্ড বা পেমেন্টে পাবেন সরাসরি ১০% ক্যাশব্যাক ও স্পেশাল ক্রিস্পি বাকেট অফার।',
+      descBn: 'রিকার্শন পে কার্ড বা পেমেন্টে পাবেন সরাসরি ১০% ক্যাশব্যাক ও স্পেশাল ক্রিস্পি বাকেট অফার।',
       descEn: 'Get 10% instant cashback on minimum ৳800 order at KFC or Pizza Hut.',
       badgeBn: '১০% ক্যাশব্যাক',
       badgeEn: '10% Cashback',
-      code: 'UPAYFOOD',
+      code: 'RECFOOD',
       validityBn: '৩০ অক্টোবর ২০২৬ পর্যন্ত',
       validityEn: 'Valid till 30 Oct 2026',
       icon: '🍗',
@@ -74,11 +74,11 @@ export const UpayOffersModal: React.FC<UpayOffersModalProps> = ({ onClose }) => 
       category: 'food',
       titleBn: 'পাঠাও রাইড ও ফুড ২০% ডিসকাউন্ট',
       titleEn: 'Pathao Rides & Food 20% Discount',
-      descBn: 'উপায় ওয়ালেট লিংক করে পাঠাও ফুড ও রাইডে প্রতি সপ্তাহে ৩ বার ২০% ছাড় উপভোগ করুন।',
-      descEn: 'Link Upay wallet on Pathao app and enjoy 20% discount up to ৳70.',
+      descBn: 'রিকার্শন পে ওয়ালেট লিংক করে পাঠাও ফুড ও রাইডে প্রতি সপ্তাহে ৩ বার ২০% ছাড় উপভোগ করুন।',
+      descEn: 'Link Recursion Pay wallet on Pathao app and enjoy 20% discount up to ৳70.',
       badgeBn: '২০% ছাড়',
       badgeEn: '20% Off',
-      code: 'PATHAOUPAY',
+      code: 'PATHAOREC',
       validityBn: 'চলমান অফার',
       validityEn: 'Ongoing',
       icon: '🛵',
@@ -90,8 +90,8 @@ export const UpayOffersModal: React.FC<UpayOffersModalProps> = ({ onClose }) => 
       category: 'bill',
       titleBn: 'ডেসকো ও পল্লী বিদ্যুৎ প্রথম বিলে ৳৫০ ক্যাশব্যাক',
       titleEn: 'DESCO & PBS Bill Pay ৳50 Cashback',
-      descBn: 'প্রথমবার বিদ্যুৎ বিল উপায় অ্যাপ দিয়ে পরিশোধ করলে সরাসরি ৳৫০ ক্যাশব্যাক আপনার ওয়ালেটে।',
-      descEn: 'Pay your electricity bill for the first time on Upay and receive ৳50 cashback.',
+      descBn: 'প্রথমবার বিদ্যুৎ বিল রিকার্শন পে অ্যাপ দিয়ে পরিশোধ করলে সরাসরি ৳৫০ ক্যাশব্যাক আপনার ওয়ালেটে।',
+      descEn: 'Pay your electricity bill for the first time on Recursion Pay and receive ৳50 cashback.',
       badgeBn: '৳৫০ ক্যাশব্যাক',
       badgeEn: '৳50 Cashback',
       code: 'BILL50',
@@ -106,11 +106,11 @@ export const UpayOffersModal: React.FC<UpayOffersModalProps> = ({ onClose }) => 
       category: 'shopping',
       titleBn: 'দারাজ ১০.১০ মেগা শপিং অফার',
       titleEn: 'Daraz 10.10 Mega Shopping Deal',
-      descBn: 'উপায় কার্ড বা পেমেন্টে দারাজ অ্যাপে কেনাকাটায় অতিরিক্ত ১২% ইনস্ট্যান্ট ডিসকাউন্ট।',
-      descEn: 'Extra 12% instant discount on Daraz purchases with Upay checkout.',
+      descBn: 'রিকার্শন পে কার্ড বা পেমেন্টে দারাজ অ্যাপে কেনাকাটায় অতিরিক্ত ১২% ইনস্ট্যান্ট ডিসকাউন্ট।',
+      descEn: 'Extra 12% instant discount on Daraz purchases with Recursion Pay checkout.',
       badgeBn: '১২% ছাড়',
       badgeEn: '12% Off',
-      code: 'DARAZUPAY',
+      code: 'DARAZREC',
       validityBn: '২০ অক্টোবর ২০২৬ পর্যন্ত',
       validityEn: 'Valid till 20 Oct 2026',
       icon: '🛍️',
@@ -122,11 +122,11 @@ export const UpayOffersModal: React.FC<UpayOffersModalProps> = ({ onClose }) => 
       category: 'cashback',
       titleBn: 'স্টার সিনেপ্লেক্স বাই ১ গেট ১ মুভি টিকেট',
       titleEn: 'Star Cineplex Buy 1 Get 1 Cashback',
-      descBn: 'উপায় কার্ড দিয়ে বসুন্ধরা বা সীমান্ত স্কয়ার ব্রাঞ্চে টিকিট কিনলে দ্বিতীয় টিকিটে ১০০% ক্যাশব্যাক।',
-      descEn: 'Buy 1 movie ticket with Upay Card and get 100% cashback on second ticket.',
+      descBn: 'রিকার্শন পে কার্ড দিয়ে বসুন্ধরা বা সীমান্ত স্কয়ার ব্রাঞ্চে টিকিট কিনলে দ্বিতীয় টিকিটে ১০০% ক্যাশব্যাক।',
+      descEn: 'Buy 1 movie ticket with Recursion Pay Card and get 100% cashback on second ticket.',
       badgeBn: 'BOGO ফ্রি',
       badgeEn: 'BOGO Free',
-      code: 'CINEUPAY',
+      code: 'CINEREC',
       validityBn: 'প্রতি শুক্রবার ও শনিবার',
       validityEn: 'Fri & Sat only',
       icon: '🎬',
@@ -169,7 +169,7 @@ export const UpayOffersModal: React.FC<UpayOffersModalProps> = ({ onClose }) => 
             </span>
             <div>
               <h2 className="text-sm font-black text-slate-950 leading-tight">
-                {language === 'bn' ? 'উপায় অফার ও ক্যাশব্যাক' : 'Upay Offers & Cashback'}
+                {language === 'bn' ? 'রিকার্শন পে অফার ও ক্যাশব্যাক' : 'Recursion Pay Offers & Cashback'}
               </h2>
               <p className="text-[10px] font-bold text-slate-800">
                 {language === 'bn' ? 'এক্সক্লুসিভ ডিসকাউন্ট ও প্রোমো কোড' : 'Exclusive Deals & Promo Codes'}
@@ -297,7 +297,7 @@ export const UpayOffersModal: React.FC<UpayOffersModalProps> = ({ onClose }) => 
         {/* Footer */}
         <div className="p-3 bg-white border-t border-slate-200 flex items-center justify-between text-xs">
           <span className="text-[11px] text-slate-500 font-medium">
-            {language === 'bn' ? 'শর্ত প্রযোজ্য • উপায় পলিসি' : 'Terms apply • Upay Policy'}
+            {language === 'bn' ? 'শর্ত প্রযোজ্য • রিকার্শন পে পলিসি' : 'Terms apply • Recursion Pay Policy'}
           </span>
           <button
             type="button"
