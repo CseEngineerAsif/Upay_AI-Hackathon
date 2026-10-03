@@ -121,22 +121,7 @@ This platform combines real-time transaction safety checks, Gemini-powered multi
 
 ---
 
-## 📡 Backend API Endpoints
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/risk/evaluate` | Evaluates transaction risk score and fraud flags |
-| `POST` | `/api/risk/explain` | Generates plain-Bangla explainability advice |
-| `POST` | `/api/ai/check-scam` | Analyzes SMS and URLs for phishing and scams |
-| `POST` | `/api/ai/multi-turn-chat` | Multi-turn Bengali customer support chat |
-| `POST` | `/api/voice/dialect-normalize` | Normalizes regional dialects (Chattogram, Sylhet, etc.) |
-| `POST` | `/api/mandate/parse` | Parses natural language mandate instructions into rules |
-| `POST` | `/api/payslip/audit` | Audits payslip consistency under Bangladesh Labor Act 2006 |
-| `POST` | `/api/somiti/payout-order` | Calculates game-theoretic Somiti payout sequences |
-| `POST` | `/api/trustpay/seller-score` | Analyzes P2P merchant reliability and escrow risk |
-| `POST` | `/api/liquidity/forecast` | Predicts agent cash demand and rebalancing alerts |
-| `POST` | `/api/bundle/optimize` | Optimizes telco recharge and data bundle selections |
-| `WS` | `ws://localhost:3000/ws/live` | Bidirectional real-time Gemini Live audio streaming |
 
 ---
 
@@ -151,19 +136,9 @@ This platform combines real-time transaction safety checks, Gemini-powered multi
 npm install
 ```
 
-### 3. Environment Configuration
-Ensure your `.env` contains:
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-PORT=3000
-```
-*(In Google AI Studio Build, the `GEMINI_API_KEY` is provided automatically via runtime secrets).*
-
 ### 4. Run Development Server
 ```bash
 npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### 5. Build for Production
 ```bash
