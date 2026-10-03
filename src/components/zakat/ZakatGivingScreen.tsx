@@ -278,7 +278,7 @@ export const ZakatGivingScreen: React.FC<ZakatGivingScreenProps> = ({ initialTab
                 {/* Annual Wallet Holding */}
                 <div className="space-y-1">
                   <label className="text-[10px] font-bold text-slate-600 block">
-                    উপায় ওয়ালেটের বাৎসরিক গড় ব্যালেন্স (Review Wallet History):
+                    রিকার্শন পে ওয়ালেটের বাৎসরিক গড় ব্যালেন্স (Review Wallet History):
                   </label>
                   <input
                     type="number"
