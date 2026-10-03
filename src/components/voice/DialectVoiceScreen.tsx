@@ -452,7 +452,7 @@ export const DialectVoiceScreen: React.FC = () => {
               </div>
               <div className="flex justify-between text-slate-500">
                 <span>ট্রানজেকশন আইডি:</span>
-                <span className="font-mono font-bold text-slate-900">UPAY-V{Date.now().toString().slice(-6)}</span>
+                <span className="font-mono font-bold text-slate-900">RPAY-V{Date.now().toString().slice(-6)}</span>
               </div>
               <div className="flex justify-between text-slate-500">
                 <span>নিরাপত্তা স্তর:</span>
