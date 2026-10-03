@@ -1,0 +1,8 @@
+{
+  "name": "Remix Upay Safe - AI-Powered MFS Safety \u0026 Intelligence",
+  "description": "An AI-powered financial safety, risk intelligence, and financial wellness layer on top of a Bangladeshi mobile financial service (MFS) styled like Upay.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
