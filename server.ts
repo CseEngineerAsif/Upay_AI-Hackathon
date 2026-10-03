@@ -613,16 +613,15 @@ wss.on('connection', async (clientWs: WebSocket) => {
   }
 });
 
-// Upgrade HTTP to WS for /live
+// Upgrade HTTP to WS for /live (Gemini Live real-time audio)
 server.on('upgrade', (request, socket, head) => {
   const pathname = new URL(request.url || '', `http://${request.headers.host}`).pathname;
   if (pathname === '/live') {
     wss.handleUpgrade(request, socket, head, (ws) => {
       wss.emit('connection', ws, request);
     });
-  } else {
-    socket.destroy();
   }
+  // Allow Vite's HMR WebSocket handler (attached to this HTTP server) to handle all other upgrade requests.
 });
 
 // Fallback for unmatched /api routes to prevent Vite SPA HTML fallback from returning on API requests
@@ -643,7 +642,9 @@ async function startServer() {
     const vite = await createViteServer({
       server: {
         middlewareMode: true,
-        hmr: false
+        hmr: {
+          server
+        }
       },
       appType: 'spa'
     });

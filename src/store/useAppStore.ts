@@ -64,6 +64,7 @@ interface AppState {
   activeSection: SectionId | null;
   currentModal: string | null;
   isSidePanelOpen: boolean;
+  isMoreDrawerOpen: boolean;
   
   // Payment Flow State
   pendingPayment: PendingPayment | null;
@@ -84,6 +85,7 @@ interface AppState {
   openSection: (sectionId: SectionId) => void;
   setCurrentModal: (modal: string | null) => void;
   setSidePanelOpen: (open: boolean) => void;
+  setMoreDrawerOpen: (open: boolean) => void;
 
   // Data Actions
   initData: () => Promise<void>;
@@ -155,6 +157,7 @@ export const useAppStore = create<AppState>((set, get) => {
     activeSection: null,
     currentModal: null,
     isSidePanelOpen: false,
+    isMoreDrawerOpen: false,
 
     pendingPayment: null,
     currentRiskAssessment: null,
@@ -353,6 +356,10 @@ export const useAppStore = create<AppState>((set, get) => {
 
     setSidePanelOpen: (open) => {
       set({ isSidePanelOpen: open });
+    },
+
+    setMoreDrawerOpen: (open) => {
+      set({ isMoreDrawerOpen: open });
     },
 
     startPaymentFlow: (payment) => {

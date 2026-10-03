@@ -8,6 +8,7 @@ import { HomeScreen } from './components/home/HomeScreen';
 import { HistoryScreen } from './components/history/HistoryScreen';
 import { AccountScreen } from './components/account/AccountScreen';
 import { MoreScreen } from './components/more/MoreScreen';
+import { MoreDrawer } from './components/more/MoreDrawer';
 import { BottomNav } from './components/layout/BottomNav';
 import { PaymentFlowModal } from './components/mfs/PaymentFlowModal';
 import { UpayPaymentFlowModal, UpayPaymentSubType } from './components/mfs/UpayPaymentFlowModal';
@@ -68,6 +69,8 @@ export default function App() {
     setCurrentModal,
     isSidePanelOpen,
     setSidePanelOpen,
+    isMoreDrawerOpen,
+    setMoreDrawerOpen,
     simpleMode,
     initData
   } = useAppStore();
@@ -80,6 +83,14 @@ export default function App() {
   const [isCreateTrustPayOpen, setIsCreateTrustPayOpen] = useState(false);
 
   const isFeatureScreen = Boolean(FEATURE_TO_SECTION_MAP[activeTab as FeatureTab]);
+
+  // If activeTab is 'more', open the drawer and reset to home
+  useEffect(() => {
+    if (activeTab === 'more') {
+      setMoreDrawerOpen(true);
+      setActiveTab('home');
+    }
+  }, [activeTab, setMoreDrawerOpen, setActiveTab]);
 
   // Load initial synthetic seed data and verify Firestore connection on mount
   useEffect(() => {
@@ -212,6 +223,12 @@ export default function App() {
         <SmartServicesDrawer
           isOpen={isSidePanelOpen}
           onClose={() => setSidePanelOpen(false)}
+        />
+
+        {/* Slide-In More Side Panel */}
+        <MoreDrawer
+          isOpen={isMoreDrawerOpen}
+          onClose={() => setMoreDrawerOpen(false)}
         />
 
         {/* Home Indicator bar on modern mobile */}

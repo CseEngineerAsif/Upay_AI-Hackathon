@@ -394,21 +394,21 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
-        className={`absolute right-0 top-0 bottom-0 w-[88%] max-w-[340px] h-full bg-slate-50 rounded-l-[28px] shadow-2xl flex flex-col overflow-hidden z-10 transition-transform duration-300 ease-out ${
+        className={`absolute right-0 top-0 bottom-0 w-[75%] max-w-[280px] h-full bg-slate-50 rounded-l-[28px] shadow-2xl flex flex-col overflow-hidden z-10 transition-transform duration-300 ease-out ${
           isVisible ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* Panel Header */}
-        <div className="w-full bg-[#FFD600] px-4 py-3 flex items-center justify-between border-b border-amber-300 shadow-xs shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-full bg-slate-900/10 flex items-center justify-center text-slate-950 text-sm font-black">
+        <div className="w-full bg-[#FFD600] px-3.5 py-2.5 flex items-center justify-between border-b border-amber-300 shadow-xs shrink-0">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="w-7 h-7 rounded-full bg-slate-900/10 flex items-center justify-center text-slate-950 text-xs font-black shrink-0">
               ⚡
             </span>
-            <div>
-              <h2 className="text-sm font-black text-slate-950 leading-tight">
+            <div className="min-w-0">
+              <h2 className="text-xs sm:text-sm font-black text-slate-950 leading-tight truncate">
                 {language === 'bn' ? 'উপায় স্মার্ট সার্ভিস' : 'Upay Smart Services'}
               </h2>
-              <p className="text-[11px] text-slate-800 font-semibold leading-tight">
+              <p className="text-[10px] text-slate-800 font-semibold leading-tight truncate">
                 {language === 'bn' ? 'নতুন ফিচারসমূহ (১৫টি)' : 'New Features (15 total)'}
               </p>
             </div>
@@ -418,10 +418,10 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
             type="button"
             onClick={handleClose}
             aria-label="Close"
-            className="w-8 h-8 rounded-full bg-slate-950/10 hover:bg-slate-950/20 active:scale-90 transition-all flex items-center justify-center text-slate-950 cursor-pointer"
+            className="w-7 h-7 rounded-full bg-slate-950/10 hover:bg-slate-950/20 active:scale-90 transition-all flex items-center justify-center text-slate-950 cursor-pointer shrink-0 ml-1"
           >
             <svg
-              className="w-4 h-4 text-slate-950"
+              className="w-3.5 h-3.5 text-slate-950"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -436,7 +436,7 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
         </div>
 
         {/* Panel Scrollable Body */}
-        <div className="flex-1 overflow-y-auto no-scrollbar p-3.5 space-y-4">
+        <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-3.5">
           {SMART_SECTIONS.map((sec) => (
             <div key={sec.id} className="space-y-2">
               {/* Section Header */}

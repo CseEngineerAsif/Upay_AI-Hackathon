@@ -48,7 +48,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
     if (!success) {
       setErrorMsg(
         user?.id === DEFAULT_DEMO_USER.id
-          ? (language === 'bn' ? 'সঠিক পিন প্রদান করুন (ডেমো পিন: 1234)' : 'Incorrect PIN (Demo PIN: 1234)')
+          ? (language === 'bn' ? 'সঠিক পিন প্রদান করুন' : 'Incorrect PIN ')
           : (language === 'bn' ? 'এই অ্যাকাউন্টের পিন সঠিক নয়' : 'Incorrect PIN for this account')
       );
       setPin('');
@@ -113,40 +113,28 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
           <UpayLogo size="sm" showText={true} />
         </div>
 
-        {/* Language Toggle Pill */}
-        <button
-          onClick={() => setLanguage(language === 'bn' ? 'en' : 'bn')}
-          className="px-4 py-1 rounded-full text-xs font-semibold border border-sky-200 text-[#0B4DA2] bg-sky-50/70 hover:bg-sky-100 transition-colors shadow-2xs"
-        >
-          {language === 'bn' ? 'English' : 'বাংলা'}
-        </button>
+        <div className="flex items-center gap-2">
+          {registeredUsers.length > 1 && (
+            <button
+              type="button"
+              onClick={() => setShowAccountSwitcher(!showAccountSwitcher)}
+              className="px-2.5 py-1 rounded-full text-xs font-semibold border border-blue-200 text-[#0B4DA2] bg-blue-50/80 hover:bg-blue-100 transition-colors"
+            >
+              {language === 'bn' ? 'অ্যাকাউন্ট ▾' : 'Account ▾'}
+            </button>
+          )}
+          {/* Language Toggle Pill */}
+          <button
+            onClick={() => setLanguage(language === 'bn' ? 'en' : 'bn')}
+            className="px-4 py-1 rounded-full text-xs font-semibold border border-sky-200 text-[#0B4DA2] bg-sky-50/70 hover:bg-sky-100 transition-colors shadow-2xs"
+          >
+            {language === 'bn' ? 'English' : 'বাংলা'}
+          </button>
+        </div>
       </div>
 
       {/* Main Body - scrollable if screen is short */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-1 overflow-y-auto no-scrollbar">
-        {/* User preview with Switch Account option */}
-        <div className="mb-2 text-center">
-          <p className="text-[11px] font-semibold tracking-wide text-slate-400 uppercase">
-            {language === 'bn' ? 'স্বাগতম' : 'Welcome'}
-          </p>
-          <p className="text-sm sm:text-base font-extrabold text-slate-800">
-            {user?.name || (language === 'bn' ? 'ব্যবহারকারী' : 'User')}
-          </p>
-          <div className="flex items-center justify-center gap-1.5 mt-0.5">
-            <span className="text-xs text-slate-600 font-mono font-semibold">
-              {user?.phone || '01XXXXXXXXX'}
-            </span>
-            {registeredUsers.length > 1 && (
-              <button
-                type="button"
-                onClick={() => setShowAccountSwitcher(!showAccountSwitcher)}
-                className="text-[10px] text-[#0B4DA2] font-bold px-2 py-0.5 rounded-full bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-colors"
-              >
-                {language === 'bn' ? 'পরিবর্তন ▾' : 'Switch ▾'}
-              </button>
-            )}
-          </div>
-        </div>
 
         {/* Account Switcher dropdown if requested */}
         {showAccountSwitcher && (
@@ -282,7 +270,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
             onClick={quickFillDemoPin}
             className="mt-2 text-xs font-semibold text-[#0B4DA2] hover:underline"
           >
-            {language === 'bn' ? 'পিন ভুলে গিয়েছেন? (ডেমো পিন 1234)' : 'Forgot PIN? (Use demo PIN 1234)'}
+            {language === 'bn' ? 'পিন ভুলে গিয়েছেন? ' : 'Forgot PIN? '}
           </button>
         ) : (
           <p className="mt-2 text-[11px] text-slate-400">
