@@ -509,10 +509,10 @@ export const MoreScreen: React.FC = () => {
         </div>
       </div>
 
-      {/* Group 3: উপায় সাপোর্ট (Upay Support) */}
+      {/* Group 3: রিকার্শন পে সাপোর্ট (Recursion Pay Support) */}
       <div className="w-full">
         <div className="bg-[#F2F2F2] px-5 py-2 text-xs font-bold text-slate-500 tracking-wide">
-          {language === 'bn' ? 'উপায় সাপোর্ট' : 'UPAY SUPPORT'}
+          {language === 'bn' ? 'রিকার্শন পে সাপোর্ট' : 'RECURSION PAY SUPPORT'}
         </div>
 
         <div className="divide-y divide-slate-100">
@@ -585,7 +585,7 @@ export const MoreScreen: React.FC = () => {
                 🎡
               </div>
               <span className="text-sm font-bold text-slate-800">
-                {language === 'bn' ? 'উপায় চাকা (লাকি হুইল)' : 'Upay Wheel'}
+                {language === 'bn' ? 'রিকার্শন পে চাকা (লাকি হুইল)' : 'Recursion Pay Wheel'}
               </span>
             </div>
             <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
