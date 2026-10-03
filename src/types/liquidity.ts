@@ -19,7 +19,7 @@ export interface AgentLiquidityProfile {
 
 export interface CashReservation {
   id: string;
-  referenceCode: string; // e.g. UPAY-CASH-7892-DH
+  referenceCode: string; // e.g. RPAY-CASH-7892-DH
   agentId: string;
   agentName: string;
   agentPhone: string;
