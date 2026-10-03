@@ -50,7 +50,7 @@ export const UpayCardModal: React.FC<UpayCardModalProps> = ({ onClose }) => {
             </span>
             <div>
               <h2 className="text-sm font-black text-white leading-tight">
-                {language === 'bn' ? 'উপায় ভার্চুয়াল ও ডেবিট কার্ড' : 'Upay Virtual & Debit Card'}
+                {language === 'bn' ? 'রিকার্শন পে ভার্চুয়াল ও ডেবিট কার্ড' : 'Recursion Pay Virtual & Debit Card'}
               </h2>
               <p className="text-[10px] text-slate-400">
                 {language === 'bn' ? 'মাস্টারকার্ড ও বাংলা কিউআর সাপোর্টেড' : 'Mastercard & Bangla QR Supported'}
@@ -77,9 +77,9 @@ export const UpayCardModal: React.FC<UpayCardModalProps> = ({ onClose }) => {
             {/* Background watermarks */}
             <div className="absolute -right-8 -bottom-10 w-44 h-44 rounded-full bg-white/5 blur-2xl pointer-events-none" />
             <div className="absolute right-4 top-4 flex items-center gap-1.5 opacity-90">
-              <span className="text-[10px] font-black uppercase tracking-wider text-yellow-300">upay</span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-yellow-300">recursion pay</span>
               <div className="w-6 h-6 rounded-full bg-yellow-400/90 flex items-center justify-center text-[10px] font-black text-slate-950">
-                U
+                R
               </div>
             </div>
 
@@ -110,7 +110,7 @@ export const UpayCardModal: React.FC<UpayCardModalProps> = ({ onClose }) => {
                 </button>
               </div>
               <p className="text-[10px] text-white/60">
-                {language === 'bn' ? 'উপায় ওয়ালেটের সাথে লিংকড' : 'Linked to Upay Main Balance'}
+                {language === 'bn' ? 'রিকার্শন পে ওয়ালেটের সাথে লিংকড' : 'Linked to Recursion Pay Main Balance'}
               </p>
             </div>
 
@@ -306,7 +306,7 @@ export const UpayCardModal: React.FC<UpayCardModalProps> = ({ onClose }) => {
                 {language === 'bn' ? 'ফিজিক্যাল প্লাস্টিক কার্ড' : 'Physical Plastic Card'}
               </span>
               <h4 className="text-xs font-bold text-white">
-                {language === 'bn' ? 'হোম ডেলিভারিতে পান আসল কার্ড' : 'Order Physical Upay Debit Card'}
+                {language === 'bn' ? 'হোম ডেলিভারিতে পান আসল কার্ড' : 'Order Physical Recursion Pay Debit Card'}
               </h4>
               <p className="text-[10px] text-slate-400">
                 {language === 'bn' ? 'যেকোনো বুথ ও এটিএম থেকে ক্যাশ উত্তোলন' : 'ATM withdrawal & POS tap support'}
