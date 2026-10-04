@@ -1,4 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
+import { generateGeminiContentWithFallback } from './geminiHelper';
 
 export interface SellerProfileInput {
   sellerName: string;
@@ -146,8 +147,7 @@ Requirements:
   "riskWarningEn": string
 }`;
 
-    const response = await aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
+    const response = await generateGeminiContentWithFallback(aiClient, {
       contents: prompt,
       config: {
         responseMimeType: 'application/json'
