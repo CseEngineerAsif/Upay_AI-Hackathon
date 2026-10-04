@@ -19,7 +19,7 @@ export interface ZakatGivingScreenProps {
 }
 
 export const ZakatGivingScreen: React.FC<ZakatGivingScreenProps> = ({ initialTab = 'calculator' }) => {
-  const { language } = useAppStore();
+  const { language, setActiveTab: setGlobalActiveTab } = useAppStore();
 
   const [activeTab, setActiveTab] = useState<'calculator' | 'charities' | 'eid_envelope'>(initialTab);
 
@@ -442,6 +442,28 @@ export const ZakatGivingScreen: React.FC<ZakatGivingScreenProps> = ({ initialTab
                 className="px-3 py-1.5 rounded-xl bg-[#0B4DA2] hover:bg-blue-800 text-white font-black text-xs shadow-xs active:scale-95 transition-all cursor-pointer shrink-0"
               >
                 + নতুন খাম
+              </button>
+            </div>
+
+            {/* Quick Switch to Child Wallet Controls */}
+            <div className="p-3 rounded-2xl bg-teal-50 border border-teal-200 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-base">🧒</span>
+                <div>
+                  <span className="font-bold text-teal-950 text-xs block">
+                    শিশুদের ওয়ালেট ও অভিভাবক নিয়ন্ত্রণ
+                  </span>
+                  <span className="text-[10px] text-teal-700">
+                    দৈনিক খরচ সীমা ও মার্চেন্ট ক্যাটাগরি অনুমোদন দেখতে যান
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setGlobalActiveTab('child_wallet')}
+                className="px-3 py-1.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shrink-0 cursor-pointer active:scale-95 transition-all"
+              >
+                কন্ট্রোল প্যানেল ➔
               </button>
             </div>
 
