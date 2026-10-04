@@ -1,4 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
+import { generateGeminiContentWithFallback } from './geminiHelper';
 import { UserHabitsInput, BundleOptimizationResult, OperatorPack } from '../src/types/bundleOptimizer';
 import { MOCK_OPERATOR_PACKS, getClientFallbackRecommendation } from '../src/utils/bundleOptimizerManager';
 
@@ -41,8 +42,7 @@ Respond in strict JSON format:
 }
 `;
 
-    const response = await aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
+    const response = await generateGeminiContentWithFallback(aiClient, {
       contents: prompt,
       config: {
         responseMimeType: 'application/json'
