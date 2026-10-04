@@ -18,9 +18,6 @@ export const SomitiListScreen: React.FC<SomitiListScreenProps> = ({ onOpenCreate
     setSomitis(getSomitis());
   }, []);
 
-  const totalPoolManaged = somitis.reduce((acc, s) => acc + s.poolAmountPerCycle, 0);
-  const activeCount = somitis.filter((s) => s.status === 'active').length;
-
   const filteredSomitis = somitis.filter((s) => {
     if (activeFilter === 'all') return true;
     return s.status === activeFilter;
@@ -59,28 +56,6 @@ export const SomitiListScreen: React.FC<SomitiListScreenProps> = ({ onOpenCreate
               <span className="text-sm font-bold">+</span>
               <span>{language === 'bn' ? 'নতুন সমিতি' : 'New Somiti'}</span>
             </button>
-          </div>
-
-          {/* Metrics Row */}
-          <div className="grid grid-cols-2 gap-2 pt-2">
-            <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/15">
-              <span className="text-[10px] text-blue-200 font-semibold uppercase block">
-                {language === 'bn' ? 'সক্রিয় সমিতি' : 'Active Circles'}
-              </span>
-              <div className="flex items-baseline gap-1 mt-0.5">
-                <span className="text-xl font-black text-white">{activeCount}</span>
-                <span className="text-[10px] text-blue-200 font-medium">{language === 'bn' ? 'টি সার্কেল' : 'Circles'}</span>
-              </div>
-            </div>
-
-            <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-xs border border-white/15">
-              <span className="text-[10px] text-blue-200 font-semibold uppercase block">
-                {language === 'bn' ? 'মাসিক মোট ফান্ড' : 'Monthly Pool Volume'}
-              </span>
-              <div className="flex items-baseline gap-1 mt-0.5">
-                <span className="text-base font-black text-[#FFD600]">৳{totalPoolManaged.toLocaleString()}</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
