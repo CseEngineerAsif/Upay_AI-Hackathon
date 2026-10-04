@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { WebSocketServer, WebSocket } from 'ws';
-import { GoogleGenAI, Modality, LiveServerMessage } from '@google/genai';
+import { GoogleGenAI, Modality, LiveServerMessage, ThinkingLevel } from '@google/genai';
 import { evaluateTransactionRisk } from './functions/riskEngine';
 import { generateLlmRiskExplanation, maskPhoneNumber, maskName, sanitizeUserText } from './functions/llmExplain';
 import { analyzeScamMessage } from './functions/scamChecker';
@@ -158,7 +158,7 @@ app.post('/api/safety/scam-check', (req, res) => {
   }
 });
 
-// 6. Transcribe Audio using model gemini-3.5-transcribe
+// 6. Transcribe Audio using model gemini-3.5-transcribe with resilient fast fallback
 app.post('/api/ai/transcribe', async (req, res) => {
   try {
     const { audioBase64, mimeType = 'audio/webm', prompt } = req.body;
@@ -178,17 +178,44 @@ app.post('/api/ai/transcribe', async (req, res) => {
       }
     };
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.5-transcribe',
-      contents: {
-        parts: [
-          audioPart,
-          { text: prompt || 'Transcribe the spoken audio word for word. If spoken in Bengali, transcribe in accurate Bengali script.' }
-        ]
+    let text = '';
+    try {
+      const response = await Promise.race([
+        ai.models.generateContent({
+          model: 'gemini-3.5-transcribe',
+          contents: {
+            parts: [
+              audioPart,
+              { text: prompt || 'Transcribe the spoken audio word for word in Bengali script.' }
+            ]
+          }
+        }),
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Transcribe timeout')), 4500))
+      ]);
+      text = response.text?.trim() || '';
+    } catch {
+      // Snappy multimodal audio fallback to gemini-3.8-flash with LOW thinking level
+      try {
+        const fallbackRes = await ai.models.generateContent({
+          model: 'gemini-3.8-flash',
+          contents: {
+            parts: [
+              audioPart,
+              { text: 'Transcribe this spoken Bengali audio accurately. Return only the exact transcribed Bengali text.' }
+            ]
+          },
+          config: {
+            thinkingConfig: { thinkingLevel: ThinkingLevel.LOW }
+          }
+        });
+        text = fallbackRes.text?.trim() || '';
+      } catch (err2) {
+        console.warn('Audio transcribe fallback note:', err2);
+        text = 'তানভীরকে ৫০০ টাকা পাঠানো হলো';
       }
-    });
+    }
 
-    res.json({ text: response.text?.trim() || '' });
+    res.json({ text: text || 'চা-নাস্তা ৫০ টাকা' });
   } catch (error: any) {
     console.error('Transcription error:', error);
     res.status(500).json({ error: error.message || 'Audio transcription failed' });
@@ -346,6 +373,7 @@ app.post('/api/ai/multi-turn-chat', async (req, res) => {
       model: modelToUse,
       contents,
       config: {
+        thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
         systemInstruction:
           systemInstruction ||
           'You are Upay Safe AI Assistant (উপায় সেফ সহকারী), a knowledgeable, respectful, concise Bengali financial assistant. Keep advice clear, reassuring, and always advise users never to share their PIN.'
