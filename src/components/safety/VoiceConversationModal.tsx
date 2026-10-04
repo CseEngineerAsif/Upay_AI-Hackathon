@@ -13,6 +13,8 @@ export const VoiceConversationModal: React.FC<{ onClose: () => void }> = ({ onCl
   const playbackContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const processorRef = useRef<ScriptProcessorNode | null>(null);
+  const nextPlayTimeRef = useRef<number>(0);
+  const activeSourcesRef = useRef<AudioBufferSourceNode[]>([]);
 
   // PCM Conversion Helpers
   const pcmToBase64 = (float32Array: Float32Array): string => {
@@ -35,6 +37,10 @@ export const VoiceConversationModal: React.FC<{ onClose: () => void }> = ({ onCl
         playbackContextRef.current = new AudioContext({ sampleRate: 24000 });
       }
       const ctx = playbackContextRef.current;
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
+
       const binary = atob(base64Data);
       const len = binary.length;
       const bytes = new Uint8Array(len);
@@ -53,9 +59,19 @@ export const VoiceConversationModal: React.FC<{ onClose: () => void }> = ({ onCl
       const source = ctx.createBufferSource();
       source.buffer = audioBuffer;
       source.connect(ctx.destination);
-      source.start();
+
+      const startTime = Math.max(ctx.currentTime, nextPlayTimeRef.current);
+      source.start(startTime);
+      nextPlayTimeRef.current = startTime + audioBuffer.duration;
       setIsTalking(true);
-      source.onended = () => setIsTalking(false);
+
+      activeSourcesRef.current.push(source);
+      source.onended = () => {
+        activeSourcesRef.current = activeSourcesRef.current.filter((s) => s !== source);
+        if (activeSourcesRef.current.length === 0) {
+          setIsTalking(false);
+        }
+      };
     } catch (e) {
       console.error('Error playing audio chunk', e);
     }
@@ -71,7 +87,7 @@ export const VoiceConversationModal: React.FC<{ onClose: () => void }> = ({ onCl
 
       ws.onopen = async () => {
         setIsConnected(true);
-        // Start Mic
+        // Start Mic with low latency 2048 buffer
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         mediaStreamRef.current = stream;
 
@@ -79,7 +95,7 @@ export const VoiceConversationModal: React.FC<{ onClose: () => void }> = ({ onCl
         audioContextRef.current = inputCtx;
 
         const source = inputCtx.createMediaStreamSource(stream);
-        const processor = inputCtx.createScriptProcessor(4096, 1, 1);
+        const processor = inputCtx.createScriptProcessor(2048, 1, 1);
         processorRef.current = processor;
 
         processor.onaudioprocess = (e) => {
@@ -97,11 +113,19 @@ export const VoiceConversationModal: React.FC<{ onClose: () => void }> = ({ onCl
       ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
+          if (data.interrupted) {
+            activeSourcesRef.current.forEach((s) => {
+              try { s.stop(); } catch {}
+            });
+            activeSourcesRef.current = [];
+            nextPlayTimeRef.current = playbackContextRef.current?.currentTime || 0;
+            setIsTalking(false);
+          }
           if (data.audio) {
             playPcmChunk(data.audio);
           }
           if (data.text) {
-            setTranscriptText((prev) => prev + ' ' + data.text);
+            setTranscriptText((prev) => (prev ? prev + ' ' : '') + data.text);
           }
           if (data.error) {
             setErrorMsg(data.error);
@@ -227,6 +251,55 @@ export const VoiceConversationModal: React.FC<{ onClose: () => void }> = ({ onCl
               <p>{transcriptText}</p>
             </div>
           )}
+
+          {/* Quick Voice Topic Pills */}
+          <div className="w-full space-y-2">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block text-center">
+              {language === 'bn' ? 'নমুনা ভয়েস প্রশ্ন (ট্যাপ করে শুনুন):' : 'Sample Voice Questions:'}
+            </span>
+            <div className="flex flex-wrap justify-center gap-1.5">
+              {[
+                {
+                  label: '🔒 পিন সুরক্ষা',
+                  q: 'আমার পিন কি নিরাপদ?',
+                  ans: 'আপনার পিন সম্পূর্ণ গোপন রাখুন। রিকার্শন পে বা কোনো ব্যাংক প্রতিনিধি কখনোই আপনার পিন বা ওটিপি চাইবে না।'
+                },
+                {
+                  label: '⚠️ স্ক্যাম কল',
+                  q: 'স্ক্যাম কল থেকে কীভাবে বাঁচবো?',
+                  ans: 'অচেনা নম্বর থেকে জরুরি টাকা পাঠানোর চাপ দিলে বা লটারির কথা বললে সতর্ক হোন এবং তাৎক্ষণিক কল কেটে দিন।'
+                },
+                {
+                  label: '💡 ক্যাশ আউট চার্জ',
+                  q: 'ক্যাশ আউট চার্জ কত?',
+                  ans: 'উপায়ে ইউএসএসডি কোড বা অ্যাপ ব্যবহারে রেগুলার চার্জ মাত্র ১৪ টাকা প্রতি হাজারে এবং প্রিয় এজেন্টে কম।'
+                }
+              ].map((item, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setTranscriptText(item.ans);
+                    setIsTalking(true);
+                    if ('speechSynthesis' in window) {
+                      window.speechSynthesis.cancel();
+                      const utt = new SpeechSynthesisUtterance(item.ans);
+                      utt.lang = 'bn-BD';
+                      utt.rate = 1.0;
+                      utt.onend = () => setIsTalking(false);
+                      utt.onerror = () => setIsTalking(false);
+                      window.speechSynthesis.speak(utt);
+                    } else {
+                      setTimeout(() => setIsTalking(false), 2000);
+                    }
+                  }}
+                  className="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-semibold border border-slate-700 active:scale-95 transition-all cursor-pointer shadow-2xs"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Action Button */}
           <div>
