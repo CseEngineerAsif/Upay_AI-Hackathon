@@ -72,6 +72,9 @@ export const MoreDrawer: React.FC<MoreDrawerProps> = ({ isOpen, onClose }) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('popstate', handlePopState);
+      if (window.history.state?.drawer === 'more_drawer') {
+        window.history.back();
+      }
     };
   }, [isOpen, handleClose]);
 
