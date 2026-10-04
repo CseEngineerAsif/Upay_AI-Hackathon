@@ -334,6 +334,9 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('popstate', handlePopState);
+      if (window.history.state?.drawer === 'smart_services') {
+        window.history.back();
+      }
     };
   }, [isOpen, handleClose]);
 
