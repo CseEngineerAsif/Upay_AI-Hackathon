@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 
 export const FeatureScrollStrip: React.FC = () => {
-  const { language, setCurrentModal, setActiveTab, setSidePanelOpen } = useAppStore();
+  const { language, setCurrentModal, setActiveTab } = useAppStore();
   const navScrollRef = useRef<HTMLDivElement>(null);
 
   // Strip scrolling, dragging and auto-slide states
@@ -186,107 +186,6 @@ export const FeatureScrollStrip: React.FC = () => {
           msOverflowStyle: 'none'
         }}
       >
-        {/* 0. Smart Services Drawer trigger */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setSidePanelOpen(true))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-[#00D492] to-[#00B478] text-slate-950 text-[11px] font-black shadow-xs border border-emerald-300 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap gap-1"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>⚡</span>
-          <span>{language === 'bn' ? 'সার্ভিসেস' : 'Services'}</span>
-        </button>
-
-        {/* Digital Somiti */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setActiveTab('somiti'))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-[#0B4DA2] to-[#125ec2] text-white text-[11px] font-bold shadow-xs border border-white/20 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>🤝 {language === 'bn' ? 'ডিজিটাল সমিতি' : 'Digital Somiti'}</span>
-        </button>
-
-        {/* TrustPay F-Commerce Escrow */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setActiveTab('trustpay'))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-emerald-600 to-teal-700 text-white text-[11px] font-bold shadow-xs border border-white/20 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>🛡️ {language === 'bn' ? 'ট্রাস্টপে' : 'TrustPay'}</span>
-        </button>
-
-        {/* Liquidity Network */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setActiveTab('liquidity'))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white text-[11px] font-bold shadow-xs border border-white/20 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>💧 {language === 'bn' ? 'লিকুইডিটি' : 'Liquidity'}</span>
-        </button>
-
-        {/* Cross-Wallet Federated Risk Exchange */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setActiveTab('crosswallet'))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-indigo-700 to-purple-800 text-white text-[11px] font-bold shadow-xs border border-white/20 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>🌐 {language === 'bn' ? 'ক্রস-ওয়ালেট' : 'Cross-Wallet'}</span>
-        </button>
-
-        {/* Climate Shield Mode */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setActiveTab('climateshield'))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-rose-600 to-red-700 text-white text-[11px] font-bold shadow-xs border border-white/20 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>🌦️ {language === 'bn' ? 'ক্লাইমেট শিল্ড' : 'Climate Shield'}</span>
-        </button>
-
-        {/* Portable Income Passport */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setActiveTab('income_passport'))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-teal-600 to-emerald-700 text-white text-[11px] font-bold shadow-xs border border-white/20 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>📑 {language === 'bn' ? 'ইনকাম পাসপোর্ট' : 'Income Passport'}</span>
-        </button>
-
-        {/* Fee Auditor & Overcharge Radar */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setActiveTab('fee_auditor'))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-blue-700 to-sky-700 text-white text-[11px] font-bold shadow-xs border border-white/20 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>⚖️ {language === 'bn' ? 'ফি অডিটর' : 'Fee Auditor'}</span>
-        </button>
-
-        {/* Bundle Optimizer */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setActiveTab('bundle_optimizer'))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-sky-600 to-blue-700 text-white text-[11px] font-bold shadow-xs border border-white/20 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>🎁 {language === 'bn' ? 'বান্ডেল অপ্টিমাইজার' : 'Bundle Optimizer'}</span>
-        </button>
-
-        {/* Zakat & Giving Assistant */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setActiveTab('zakat_giving'))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-emerald-700 to-teal-800 text-white text-[11px] font-bold shadow-xs border border-white/20 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>🌙 {language === 'bn' ? 'যাকাত ও ঈদ' : 'Zakat & Eid'}</span>
-        </button>
-
         {/* Dialect-aware Voice Pay */}
         <button
           type="button"
@@ -295,26 +194,6 @@ export const FeatureScrollStrip: React.FC = () => {
           style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
         >
           <span>🎙️ {language === 'bn' ? 'ভয়েস পে' : 'Voice Pay'}</span>
-        </button>
-
-        {/* Mandate Wallet */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setActiveTab('mandate_wallet'))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-cyan-800 to-slate-900 text-white text-[11px] font-bold shadow-xs border border-white/20 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>⏱️ {language === 'bn' ? 'ম্যান্ডেট ওয়ালেট' : 'Mandate'}</span>
-        </button>
-
-        {/* Payslip Auditor & Wage-Day */}
-        <button
-          type="button"
-          onClick={() => handleChipClick(() => setActiveTab('payslip_orchestrator'))}
-          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-emerald-800 to-green-900 text-white text-[11px] font-bold shadow-xs border border-white/20 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap"
-          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
-        >
-          <span>💼 {language === 'bn' ? 'পে-স্লিপ ও বেতন' : 'Payslip & Wage'}</span>
         </button>
 
         {/* Live Voice */}
