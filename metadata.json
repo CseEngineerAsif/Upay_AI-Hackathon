@@ -1,6 +1,6 @@
 {
-  "name": "Recursion Pay",
-  "description": "An AI-powered financial safety, risk intelligence, and financial wellness layer on top of a Bangladeshi mobile financial service (MFS) styled like Recursion Pay.",
+  "name": "Upay",
+  "description": "An AI-powered financial safety, risk intelligence, and financial wellness layer on top of a Bangladeshi mobile financial service (MFS) styled like Upay.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
