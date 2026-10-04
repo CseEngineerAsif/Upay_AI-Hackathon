@@ -361,9 +361,15 @@ export const useAppStore = create<AppState>((set, get) => {
       }
 
       if (currentTab !== tab) {
-        const newStack = [...currentStack, { tab: currentTab, section: currentSection }];
+        const lastEntry = currentStack[currentStack.length - 1];
+        const shouldPush = !lastEntry || lastEntry.tab !== currentTab || lastEntry.section !== currentSection;
+        const newStack = shouldPush
+          ? [...currentStack, { tab: currentTab, section: currentSection }]
+          : currentStack;
+
         set({
           activeTab: tab,
+          activeSection: currentTab === 'section' ? currentSection : null,
           historyStack: newStack.slice(-15),
           currentModal: null
         });
@@ -376,7 +382,11 @@ export const useAppStore = create<AppState>((set, get) => {
       const currentTab = get().activeTab;
       const currentSection = get().activeSection;
       const currentStack = get().historyStack || [];
-      const newStack = [...currentStack, { tab: currentTab, section: currentSection }];
+      const lastEntry = currentStack[currentStack.length - 1];
+      const shouldPush = !lastEntry || lastEntry.tab !== currentTab || lastEntry.section !== currentSection;
+      const newStack = shouldPush
+        ? [...currentStack, { tab: currentTab, section: currentSection }]
+        : currentStack;
 
       set({
         activeSection: sectionId,
@@ -401,7 +411,7 @@ export const useAppStore = create<AppState>((set, get) => {
         } else {
           set({
             activeTab: lastEntry.tab || 'home',
-            activeSection: lastEntry.section || null,
+            activeSection: lastEntry.tab === 'section' ? lastEntry.section : null,
             historyStack: newStack,
             currentModal: null
           });
