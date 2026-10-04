@@ -16,10 +16,10 @@ export async function generateGeminiContentWithFallback(
   }
 ): Promise<GenerateContentResponse> {
   const models = options.preferredModel
-    ? [options.preferredModel, options.fallbackModel || 'gemini-3.1-flash-lite', 'gemini-flash-latest']
-    : ['gemini-3.8-flash', 'gemini-3.1-flash-lite', 'gemini-flash-latest'];
+    ? [options.preferredModel, options.fallbackModel || 'gemini-flash-latest']
+    : ['gemini-3.8-flash', 'gemini-flash-latest'];
 
-  const timeoutMs = options.timeoutMs || 18000;
+  const timeoutMs = options.timeoutMs || 4500;
   let lastError: any = null;
 
   for (const model of models) {
