@@ -1,92 +1,211 @@
 # রিকার্শন পে (Recursion Pay) — AI-Powered MFS Super-App
 
-🚀 **Live Demo:** https://recursionpay.vercel.app/
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Live-success" alt="Live Status" />
+  <img src="https://img.shields.io/badge/Platform-Web%20%2F%20AI%20App-blue" alt="Platform" />
+  <img src="https://img.shields.io/badge/Language-Bangla%20%2B%20English-orange" alt="Language" />
+</p>
+
+<div align="center">
+  <a href="https://recursionpay.vercel.app/" target="_blank">
+    <strong>🚀 Live Demo</strong>
+  </a>
+</div>
 
 ---
 
-## 📋 কী আছে এই অ্যাপে?
+## Overview
 
-**রিকার্শন পে** একটি বাংলাদেশ-কেন্দ্রিক মোবাইল ফিনান্সিয়াল সার্ভিস (MFS) অ্যাপ যা AI-চালিত সেফটি, ভয়েস পেমেন্ট এবং স্থানীয় ভাষা সাপোর্ট সহ আসে।
+**রিকার্শন পে (Recursion Pay)** হলো বাংলাদেশের জন্য ডিজাইন করা একটি AI-ভিত্তিক মোবাইল ফিন্যান্সিয়াল সার্ভিস (MFS) সুপার-অ্যাপ।
 
----
-
-## ✨ মূল ফিচারগুলো
-
-| ফিচার | বিবরণ |
-|--------|--------|
-| 🛡️ **AI সেফটি শিল্ড** | রিস্ক স্কোরিং, স্ক্যাম ডিটেকশন, ফিশিং চেকার |
-| ⚡ **কোর MFS সার্ভিস** | সেন্ড মানি, ক্যাশ আউট, মোবাইল রিচার্জ, পে বিল, সেভিংস |
-| 🏛️ **বিশেষায়িত পেমেন্ট** | ট্রাফিক ফাইন, টোল, সরকারি ফি, শিক্ষা, বীমা, দান, যাকাত |
-| 🗣️ **বাংলা ভয়েস পে** | চাটগাঁইয়া, সিলেটি, নোয়াখাইল্লা, রংপুরিয়া ডায়ালেক্ট সাপোর্ট |
-| 🎙️ **রিয়েল-টাইম ভয়েস** | Gemini 3.8 Live সহ ফুল-ডুপ্লেক্স অডিও চ্যাট |
-| 🤖 **AI চ্যাটবট** | সাইবার সিকিউরিটি ও ফিনান্স গাইড (গুগল সার্চ + ম্যাপস ইন্টিগ্রেশন) |
-| 🧒 **চাইল্ড ওয়ালেট** | শিশুদের জন্য পকেটমানি ম্যানেজমেন্ট ও অভিভাবক নিয়ন্ত্রণ |
-| 🤝 **ডিজিটাল সমিতি** | ক্লাউড-বেসড সেভিংস গ্রুপ (ROSCA) |
-| 🔒 **TrustPay এসক্রো** | ফেসবুক/ইনস্টাগ্রাম শপিং প্রোটেকশন |
-| 👔 **পে-স্লিপ অডিটর** | শ্রমিকদের বেতন যাচাইকরণ |
+এই প্ল্যাটফর্মের লক্ষ্য হলো:
+- নিরাপদ ও দ্রুত লেনদেন
+- বাংলা ভাষায় সহজ ব্যবহার
+- AI-চালিত ঝুঁকি বিশ্লেষণ
+- ভয়েস-ভিত্তিক পেমেন্ট
+- ব্যাংক/এজেন্ট/টেলিকম/ফিনটেক ইকোসিস্টেমে সুসংহত UX
 
 ---
 
-## 🏗️ প্রযুক্তি স্ট্যাক
+## Why It Matters
 
-**ফ্রন্টএন্ড:**
-- React 19, TypeScript, Tailwind CSS v4
-- Zustand (স্টেট ম্যানেজমেন্ট), Framer Motion (অ্যানিমেশন)
-- Web Speech API, Web Audio API, SpeechSynthesis
+বাংলাদেশের মুঠোফোন-ভিত্তিক আর্থিক পরিষেবায় ব্যবহারকারীর সবচেয়ে বড় চ্যালেঞ্জ হলো:
+- স্ক্যাম ও ফিশিং
+- ভুল/অস্বাভাবিক লেনদেন
+- ভাষা ও উপভাষার জটিলতা
+- নিরাপত্তা ও গোপনীয়তা
+- সহজ, স্বচ্ছ ও আত্মবিশ্বাসজনক UX
 
-**ব্যাকএন্ড:**
-- Node.js + Express (TypeScript)
-- WebSocket Server (`/live` এন্ডপয়েন্ট)
-- Google GenAI SDK (Gemini API)
+**রিকার্শন পে** এই সমস্যা সমাধানে AI, ভয়েস ইন্টিগ্রেশন, নিরাপত্তা-ফার্স্ট ডিজাইন ও সিম্পল ফিনটেক অভিজ্ঞতা একসাথে নিয়ে এসেছে।
 
-**ডাটা ও অথ:**
+---
+
+## Core Features
+
+| Category | Feature | Description |
+|---|---|---|
+| 🛡️ Security | AI Risk Shield | ডিটারমিনিস্টিক 0–100 স্কোর, অস্বাভাবিক লেনদেন শনাক্তকরণ, ব্যাখ্যাযোগ্য বাংলা সতর্কতা |
+| 🛡️ Security | Scam Detection | SMS, URL, phishing, fraud pattern, scam call simulation |
+| ⚡ Core MFS | Send Money & Cash Out | দ্রুত পেমেন্ট, ক্যাশ আউট, রিচার্জ, বিল পেমেন্ট |
+| ⚡ Core MFS | Savings & Wallet Tools | সঞ্চয়, ফান্ড ট্রান্সফার, উইলেট ব্যবস্থাপনা |
+| 🗣️ Voice | Dialect-Aware Voice Pay | চাটগাঁইয়া, সিলেটি, নোয়াখাইল্লা, রংপুরিয়া ভাষা সমর্থন |
+| 🎙️ AI Voice | Gemini Live Voice Assistant | রিয়েল-টাইম আউডিও চ্যাট, কনটেক্সট-সচেতন ভয়েস কমান্ড |
+| 🤖 AI | Multi-Turn Finance Bot | সাইবার সিকিউরিটি, ব্যাংকিং, বুদ্ধিমান আর্থিক সহায়তা |
+| 🧒 Family Finance | Child Wallet & Parent Controls | শিশুদের জন্য পকেটমানি ও অভিভাবক-নিয়ন্ত্রিত খরচ |
+| 🤝 Community | Digital Somiti | স্মার্ট ROSCA / savings group automation |
+| 🔒 Protection | TrustPay Escrow | ফেসবুক/ইনস্টাগ্রাম শপিংয়ের জন্য নিরাপদ পেমেন্ট | 
+| 👔 Workforce | Payslip Auditor | বেতন ও ওভারটাইম যাচাই, শ্রমিকদের আর্থিক স্বচ্ছতা |
+| 🎁 Commerce | Offer Hub & Telecom Bundles | ক্যাশব্যাক, ডিসকাউন্ট, টেলিকম অফার, কার্ড/উৎসব সমর্থন |
+
+---
+
+## Product Modules
+
+### 1. AI Safety & Pre-Transaction Risk Engine
+- 0–100 deterministic risk scoring
+- anomaly detection on amount, patterns, and transaction context
+- explainable Bengali safety warnings
+- cooling-off period for high-risk transactions
+- mandatory human-in-the-loop policy for critical approvals
+- scam SMS and malicious URL checking
+- practical scam-call simulation for user awareness
+
+### 2. Main MFS Services Grid
+- Send Money
+- Cash Out
+- Mobile Recharge
+- Pay Bill
+- Add Money
+- Savings / Wallet
+- Fund Transfer
+- Refer & Earn
+- NPSB / interoperability
+- Safe Hub and transaction controls
+
+### 3. Specialized Payment & Utility Services
+- Traffic Fine
+- Toll Payment
+- Govt Payment
+- Education Fee
+- NGO Payment
+- Insurance Premium
+- Donation
+- Zakat Direct Contribution
+
+### 4. Regional Voice Pay
+- Browser Speech API integration with `bn-BD`
+- localized voice commands for Bangla dialects
+- audio confirmation before funds are sent
+- pin-protected transaction approval to prevent voice-driven fraud
+
+### 5. Audio Intelligence & Live AI Assistant
+- real-time full-duplex audio interaction
+- automatic speech-to-text transcription
+- interactive AI voice test prompts
+- secure, human-validated transaction workflows
+
+### 6. Search, Maps & Finance Guidance
+- grounded Google Search for recent Bangladesh banking and regulatory updates
+- Google Maps integration for nearby agent locations and banking access points
+- AI assistant for security, spending, and transaction support
+
+---
+
+## Technology Stack
+
+### Frontend
+- React 19
+- TypeScript
+- Tailwind CSS v4
+- Framer Motion
+- Zustand
+- Web Speech API / Web Audio API
+- Lucide icons and UI polish tools
+
+### Backend
+- Node.js
+- Express
+- TypeScript (`tsx`)
+- WebSocket server for live voice streaming
+- Google GenAI SDK
+
+### Data & Auth
 - Google Cloud Firestore
 - Firebase Authentication
 
-**AI মডেলস:**
-- `gemini-3.8-flash` — দ্রুত রিস্ক এক্সপ্লেনেশন
-- `gemini-3.8-live` — রিয়েল-টাইম অডিও স্ট্রিমিং
-- `gemini-3.5-transcribe` — স্পিচ-টু-টেক্সট
+### AI Models
+- `gemini-3.8-flash` — low-latency AI reasoning
+- `gemini-3.8-live` — live voice AI communication
+- `gemini-3.5-transcribe` — speech-to-text transcription
 
 ---
 
-## 📡 API এন্ডপয়েন্টস
+## Architecture Overview
 
-| মেথড | এন্ডপয়েন্ট | কাজ |
-|------|--------|-----|
-| POST | `/api/safety/risk-check` | লেনদেন রিস্ক স্কোরিং |
-| POST | `/api/safety/scam-check` | SMS/URL ফিশিং চেকার |
-| POST | `/api/ai/transcribe` | ভয়েস-টু-টেক্সট ট্রান্সক্রিপশন |
-| POST | `/api/ai/search-grounding` | সার্চ ইন্টিগ্রেটেড চ্যাট |
-| POST | `/api/ai/maps-grounding` | নিকটস্থ এজেন্ট লোকেশন |
-| POST | `/api/ai/multi-turn-chat` | মাল্টি-টার্ন চ্যাটবট |
-| POST | `/api/voice/dialect-normalize` | ডায়ালেক্ট থেকে কমান্ড এক্সট্র্যাকশন |
-| POST | `/api/payslip/audit` | বেতন অডিট (RMG শ্রমিক) |
-| POST | `/api/somiti/ai-payout-order` | সমিতি লটারি নির্ধারণ |
-| WS | `/live` | Gemini লাইভ ভয়েস সংযোগ |
+```text
+Client (React App)
+      │
+      ▼
+   REST / WebSocket APIs
+      │
+      ▼
+   Express Server (Node.js / TS)
+      │
+      ├── Google GenAI SDK
+      ├── Firebase Auth / Firestore
+      ├── Web Speech + Audio APIs
+      └── AI Safety / Finance Logic
+```
 
 ---
 
-## 🚀 সেটআপ ও চালনা
+## API Endpoints
 
-### ১. ডিপেন্ডেন্সি ইনস্টল
+| Method | Endpoint | Purpose |
+|---|---|---|
+| `POST` | `/api/safety/risk-check` | Risk scoring and AI explanation |
+| `POST` | `/api/safety/scam-check` | SMS / URL / phishing validation |
+| `POST` | `/api/ai/transcribe` | Audio-to-text conversion |
+| `POST` | `/api/ai/search-grounding` | Search-grounded AI responses |
+| `POST` | `/api/ai/maps-grounding` | Nearby agent and bank lookup |
+| `POST` | `/api/ai/multi-turn-chat` | Finance and cyber-safety assistant |
+| `POST` | `/api/voice/dialect-normalize` | Convert dialect commands into structured intent |
+| `POST` | `/api/mandate/parse` | Parse natural language mandate rules |
+| `POST` | `/api/payslip/audit` | Wage and overtime audit logic |
+| `POST` | `/api/somiti/ai-payout-order` | Smart ROSCA payout ordering |
+| `POST` | `/api/somiti/early-warning-check` | Risk detection for group contributors |
+| `POST` | `/api/bundle/optimize` | Telecom bundle optimization |
+| `WS` | `/live` | Real-time Gemini live voice stream |
+
+---
+
+## Local Setup
+
+### Prerequisites
+- Node.js 18+
+- npm or pnpm
+
+### Install Dependencies
 ```bash
 npm install
 ```
 
-### ২. `.env` ফাইল তৈরি করুন
+### Environment Variables
+Create a `.env` file in the project root:
+
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 PORT=3000
 ```
 
-### ৩. ডেভেলপমেন্ট মোড
+### Run Development Server
 ```bash
 npm run dev
 ```
-ব্রাউজারে খুলুন: `http://localhost:3000`
 
-### ৪. প্রোডাকশন বিল্ড
+Open: `http://localhost:3000`
+
+### Production Build
 ```bash
 npm run build
 npm start
@@ -94,28 +213,38 @@ npm start
 
 ---
 
-## 🔑 ডেমো অ্যাকাউন্ট
+## Demo Credentials
 
-- **ফোন নম্বর:** `01794809461`
-- **পিন:** `1234`
-- **নাম:** MD. AL-MAYNUL HASAN
-- **ব্যালেন্স:** ৳ ১৮,৪৫০.৫০
+The app includes demo account data for quick testing:
 
----
-
-## 🛡️ নিরাপত্তা প্রোটোকল
-
-✅ **জিরো-পিন এক্সপোজার** — কোনো AI/LLM প্রম্পটে পিন পাঠানো হয় না  
-✅ **ডাটা মাস্কিং** — ফোন নম্বর/নাম সার্ভার-সাইডে মাস্ক করা হয়  
-✅ **লোকাল ফলব্যাক** — নেটওয়ার্ক ড্রপে অ্যাপ চলতে থাকে  
+- Phone Number: `01794809461`
+- PIN: `1234`
+- Account Name: `MD. AL-MAYNUL HASAN`
+- Balance: `৳ ১৮,৪৫০.৫০`
 
 ---
 
-## 📝 লাইসেন্স & যোগাযোগ
+## Security & Privacy Protocols
 
-প্রজেক্ট লিংক: [GitHub](https://github.com/CseEngineerAsif/Upay_AI-Hackathon)  
-লাইভ ডেমো: [recursionpay.vercel.app](https://recursionpay.vercel.app)
+- Zero-pin exposure in LLM prompts
+- Sensitive data masking before processing
+- Human approval for sensitive financial actions
+- Local fallback architecture for offline resilience
+- Secure-by-design flow for voice-triggered transactions
 
 ---
 
-**বাংলাদেশের মানুষের জন্য, AI দ্বারা চালিত, স্থানীয় ভাষায় শক্তিশালী।** 🇧🇩✨
+## Project Links
+
+- GitHub: https://github.com/CseEngineerAsif/Upay_AI-Hackathon
+- Live Demo: https://recursionpay.vercel.app/
+
+---
+
+## Closing Note
+
+**রিকার্শন পে** বাংলাদেশের জন্য একটি নিরাপদ, বুদ্ধিমান, ভাষা-সচেতন, এবং ব্যবহারকারী-কেন্দ্রিক ডিজিটাল ফিনান্স প্ল্যাটফর্ম।
+
+এটি কেবল একটি ওয়ালেট নয় — বরং AI-ভিত্তিক একটি ভবিষ্যত-নির্দেশিত MFS অভিজ্ঞতা।
+
+"বাংলাদেশের মানুষের জন্য, AI দ্বারা চালিত, স্থানীয় ভাষায় শক্তিশালী।" 🇧🇩
