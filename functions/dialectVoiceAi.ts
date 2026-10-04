@@ -1,4 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
+import { generateGeminiContentWithFallback } from './geminiHelper';
 import { DialectVoiceIntent } from '../src/types/dialectVoice';
 import { parseDialectHeuristic } from '../src/utils/dialectVoiceManager';
 
@@ -39,8 +40,7 @@ Respond in strict JSON format:
 }
 `;
 
-    const response = await aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
+    const response = await generateGeminiContentWithFallback(aiClient, {
       contents: prompt,
       config: {
         responseMimeType: 'application/json'
