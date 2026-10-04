@@ -1,4 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
+import { generateGeminiContentWithFallback } from './geminiHelper';
 
 interface MemberInput {
   id: string;
@@ -96,8 +97,7 @@ Guidelines:
 
 Respond strictly with valid JSON. Do not wrap in markdown or backticks.`;
 
-    const response = await aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
+    const response = await generateGeminiContentWithFallback(aiClient, {
       contents: prompt,
       config: {
         responseMimeType: 'application/json'
@@ -172,8 +172,7 @@ Return JSON with:
   "recommendedAction": "add_money" | "pay_installment"
 }`;
 
-    const response = await aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
+    const response = await generateGeminiContentWithFallback(aiClient, {
       contents: prompt,
       config: {
         responseMimeType: 'application/json'
