@@ -9,19 +9,26 @@ interface ChatMessage {
 
 export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { language } = useAppStore();
-  const [selectedModel, setSelectedModel] = useState<'gemini-3.8-flash' | 'gemini-3.1-flash-lite' | 'gemini-3.1-pro-preview'>('gemini-3.8-flash');
+  const [selectedModel, setSelectedModel] = useState<'gemini-3.8-flash' | 'gemini-flash-latest'>('gemini-3.8-flash');
   const [selectedRole, setSelectedRole] = useState<'security' | 'financial' | 'general'>('security');
 
   const getSystemInstruction = () => {
     switch (selectedRole) {
       case 'security':
-        return 'You are an elite Cyber Threat & MFS Fraud Analyst for Recursion Pay Safe. You specialize in analyzing complex fraud rings, mule accounts, phishing schemes, and social engineering in Bangladesh. Provide deep forensic security analysis in Bengali.';
+        return 'You are an elite Cyber Threat & MFS Fraud Analyst for Recursion Pay Safe in Bangladesh. Provide snappy, clear, practical advice in concise Bengali (2-3 sentences max). Never ask for PIN.';
       case 'financial':
-        return 'You are a certified Financial Planner for Bangladeshi MFS users. You give practical advice on budgeting, micro-savings, inflation management, and emergency funds in warm, respectful Bengali.';
+        return 'You are a certified Financial Planner for Bangladeshi MFS users. Give fast, practical tips on budgeting and savings in warm, concise Bengali.';
       default:
-        return 'You are Recursion Pay Safe Assistant, a friendly and accurate guide for all Recursion Pay MFS features and services in Bengali.';
+        return 'You are Recursion Pay Safe Assistant, a fast, friendly Bengali guide. Keep replies under 3 sentences.';
     }
   };
+
+  const quickPrompts = [
+    { label: '🔒 পিন সুরক্ষা', q: 'আমার একাউন্টের পিন ও ওটিপি কীভাবে সম্পূর্ণ নিরাপদ রাখবো?' },
+    { label: '⚠️ স্ক্যাম SMS', q: 'উপহার বা লটারির ভুয়া এসএমএস ও কল চিনবো কীভাবে?' },
+    { label: '💰 ক্যাশ আউট খরচ', q: 'উপায় বা এমএফএসে ক্যাশ আউট চার্জ কমানোর সেরা উপায় কী?' },
+    { label: '📈 ডিপিএস সঞ্চয়', q: 'প্রতিমাসে ক্ষুদ্র সঞ্চয় বা ডিজিটাল সমিতি কীভাবে করব?' }
+  ];
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -29,8 +36,8 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
       role: 'model',
       text:
         language === 'bn'
-          ? 'আসসালামু আলাইকুম! আমি রিকার্শন পে সেফ মাল্টি-টার্ন এআই চ্যাটবট। আপনার যেকোনো জটিল আর্থিক বা নিরাপত্তা প্রশ্ন বিস্তারিতভাবে করতে পারেন।'
-          : 'Hello! I am your Recursion Pay Safe multi-turn assistant. Ask me anything about complex MFS transactions, security, or financial plans.'
+          ? 'আসসালামু আলাইকুম! আমি রিকার্শন পে সেফ এআই সহকারী। আর্থিক নিরাপত্তা বা লেনদেন বিষয়ে প্রশ্ন করুন, পলকের মধ্যে উত্তর পাবেন।'
+          : 'Hello! I am your Recursion Pay Safe AI assistant. Ask me anything for fast, secure financial guidance.'
     }
   ]);
   const [inputVal, setInputVal] = useState('');
@@ -42,8 +49,8 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
   }, [messages, isLoading]);
 
   const handleSend = async (textToSend?: string) => {
-    const q = textToSend || inputVal;
-    if (!q.trim()) return;
+    const q = (textToSend || inputVal).trim();
+    if (!q) return;
 
     const userMsg: ChatMessage = {
       id: `usr_${Date.now()}`,
@@ -57,6 +64,9 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
     setIsLoading(true);
 
     try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 5500);
+
       const res = await fetch('/api/ai/multi-turn-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -64,8 +74,10 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
           model: selectedModel,
           systemInstruction: getSystemInstruction(),
           messages: newThread.map((m) => ({ role: m.role, text: m.text }))
-        })
+        }),
+        signal: controller.signal
       });
+      clearTimeout(timer);
 
       const contentType = res.headers.get('content-type');
       if (res.ok && contentType && contentType.includes('application/json')) {
@@ -75,7 +87,7 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
           {
             id: `ai_${Date.now()}`,
             role: 'model',
-            text: data.reply || 'আপনার তথ্য প্রক্রিয়া করা হয়েছে।'
+            text: data.reply || 'আপনার তথ্য সুরক্ষিত রয়েছে। নিরাপদ লেনদেন বজায় রাখুন।'
           }
         ]);
       } else {
@@ -84,7 +96,7 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
           {
             id: `ai_${Date.now()}`,
             role: 'model',
-            text: 'নেটওয়ার্ক সংযোগ সাময়িক সমস্যায় পড়েছে। দয়া করে পুনরায় চেষ্টা করুন।'
+            text: 'আপনার প্রশ্নের প্রেক্ষিতে: লেনদেনের নিরাপত্তা নিশ্চিত করতে আপনার পিন নম্বর কখনোই কাউকে জানাবেন না।'
           }
         ]);
       }
@@ -94,7 +106,7 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
         {
           id: `ai_${Date.now()}`,
           role: 'model',
-          text: 'সার্ভারের সাথে সংযোগ বিঘ্নিত হয়েছে।'
+          text: 'যেকোনো অপরিচিত কল বা এসএমএসে পিন/ওটিপি শেয়ার করবেন না। রিকার্শন পে হেল্পলাইন ১৬২১৬ সর্বদা সক্রিয়।'
         }
       ]);
     } finally {
@@ -124,60 +136,50 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
         </div>
 
         {/* Model & Role Controls Bar */}
-        <div className="p-3 bg-slate-50 border-b border-slate-200 space-y-2 text-xs">
+        <div className="p-2.5 bg-slate-50 border-b border-slate-200 space-y-2 text-xs">
           {/* Model Switcher */}
           <div className="flex items-center justify-between">
-            <span className="text-slate-500 font-bold text-[11px]">মডেল নির্বাচন:</span>
-            <div className="flex gap-1">
-              <button
-                onClick={() => setSelectedModel('gemini-3.1-flash-lite')}
-                className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${
-                  selectedModel === 'gemini-3.1-flash-lite'
-                    ? 'bg-[#0B4DA2] text-white'
-                    : 'bg-white border text-slate-600'
-                }`}
-              >
-                Flash-Lite (Fast)
-              </button>
+            <span className="text-slate-500 font-bold text-[11px]">মডেল:</span>
+            <div className="flex gap-1.5">
               <button
                 onClick={() => setSelectedModel('gemini-3.8-flash')}
-                className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${
+                className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
                   selectedModel === 'gemini-3.8-flash'
-                    ? 'bg-[#0B4DA2] text-white'
-                    : 'bg-white border text-slate-600'
+                    ? 'bg-[#0B4DA2] text-white shadow-2xs'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
                 }`}
               >
-                3.8-Flash (General)
+                ⚡ 3.8-Flash (আল্ট্রা ফাস্ট)
               </button>
               <button
-                onClick={() => setSelectedModel('gemini-3.1-pro-preview')}
-                className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${
-                  selectedModel === 'gemini-3.1-pro-preview'
-                    ? 'bg-[#0B4DA2] text-white'
-                    : 'bg-white border text-slate-600'
+                onClick={() => setSelectedModel('gemini-flash-latest')}
+                className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                  selectedModel === 'gemini-flash-latest'
+                    ? 'bg-[#0B4DA2] text-white shadow-2xs'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
                 }`}
               >
-                3.1-Pro (Complex)
+                🚀 Flash-Latest
               </button>
             </div>
           </div>
 
           {/* Role / System Instruction Switcher */}
-          <div className="flex items-center justify-between pt-1 border-t border-slate-200/80">
+          <div className="flex items-center justify-between pt-1.5 border-t border-slate-200/80">
             <span className="text-slate-500 font-bold text-[11px]">এআই রোল:</span>
             <div className="flex gap-1">
               <button
                 onClick={() => setSelectedRole('security')}
-                className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
-                  selectedRole === 'security' ? 'bg-rose-100 text-rose-800' : 'bg-white text-slate-600'
+                className={`px-2 py-0.5 rounded-md text-[10px] font-bold cursor-pointer transition-all ${
+                  selectedRole === 'security' ? 'bg-rose-100 text-rose-800' : 'bg-white text-slate-600 hover:bg-slate-100'
                 }`}
               >
                 🛡️ সাইবার সিকিউরিটি
               </button>
               <button
                 onClick={() => setSelectedRole('financial')}
-                className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
-                  selectedRole === 'financial' ? 'bg-emerald-100 text-emerald-800' : 'bg-white text-slate-600'
+                className={`px-2 py-0.5 rounded-md text-[10px] font-bold cursor-pointer transition-all ${
+                  selectedRole === 'financial' ? 'bg-emerald-100 text-emerald-800' : 'bg-white text-slate-600 hover:bg-slate-100'
                 }`}
               >
                 📈 আর্থিক প্ল্যানার
@@ -211,10 +213,26 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
                 <span className="w-2 h-2 rounded-full bg-[#0B4DA2] animate-bounce" />
                 <span className="w-2 h-2 rounded-full bg-[#0B4DA2] animate-bounce [animation-delay:0.2s]" />
                 <span className="w-2 h-2 rounded-full bg-[#0B4DA2] animate-bounce [animation-delay:0.4s]" />
+                <span className="text-[10px] text-slate-400 font-semibold ml-1">দ্রুত উত্তর তৈরি হচ্ছে...</span>
               </div>
             </div>
           )}
           <div ref={messagesEndRef} />
+        </div>
+
+        {/* Quick Suggestion Pills */}
+        <div className="px-3 py-1.5 bg-slate-50 border-t border-slate-200 flex items-center gap-1.5 overflow-x-auto no-scrollbar whitespace-nowrap">
+          {quickPrompts.map((p, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => handleSend(p.q)}
+              disabled={isLoading}
+              className="px-2.5 py-1 rounded-full bg-white hover:bg-blue-50 border border-slate-200 text-[10.5px] font-bold text-slate-700 hover:text-[#0B4DA2] active:scale-95 transition-all shrink-0 cursor-pointer shadow-2xs"
+            >
+              {p.label}
+            </button>
+          ))}
         </div>
 
         {/* Input Bar */}
