@@ -337,7 +337,7 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
     };
   }, [isOpen, handleClose]);
 
-  // Touch swipe to close (swipe right)
+  // Touch swipe to close (swipe right for a right drawer)
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartXRef.current = e.touches[0].clientX;
     touchDeltaXRef.current = 0;
@@ -359,7 +359,7 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
     if (drawerRef.current) {
       drawerRef.current.style.transform = '';
     }
-    if (touchDeltaXRef.current > 70) {
+    if (touchDeltaXRef.current > 60) {
       handleClose();
     }
     touchStartXRef.current = null;
@@ -394,7 +394,7 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
-        className={`absolute right-0 top-0 bottom-0 w-[75%] max-w-[280px] h-full bg-slate-50 rounded-l-[28px] shadow-2xl flex flex-col overflow-hidden z-10 transition-transform duration-300 ease-out ${
+        className={`absolute right-0 top-0 bottom-0 w-[80%] max-w-[310px] h-full bg-slate-50 rounded-l-[28px] shadow-2xl flex flex-col overflow-hidden z-10 transition-transform duration-300 ease-out ${
           isVisible ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
