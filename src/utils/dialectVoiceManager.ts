@@ -129,11 +129,17 @@ export function parseDialectHeuristic(spoken: string): DialectVoiceIntent {
 
 export async function normalizeDialectWithAi(spokenText: string): Promise<DialectVoiceIntent> {
   try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 2800);
+
     const res = await fetch('/api/voice/dialect-normalize', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ spokenText })
+      body: JSON.stringify({ spokenText }),
+      signal: controller.signal
     });
+    clearTimeout(timer);
+
     if (res.ok) {
       const data = await res.json();
       if (data && data.recipientName && data.amount) {
@@ -141,7 +147,7 @@ export async function normalizeDialectWithAi(spokenText: string): Promise<Dialec
       }
     }
   } catch (e) {
-    console.warn('AI Dialect Normalization API error, using heuristic fallback:', e);
+    console.warn('AI Dialect Normalization API error, using fast heuristic fallback:', e);
   }
 
   return parseDialectHeuristic(spokenText);
