@@ -51,6 +51,7 @@ import { IncomePassportScreen } from './components/passport/IncomePassportScreen
 import { FeeAuditorScreen } from './components/feeauditor/FeeAuditorScreen';
 import { BundleOptimizerScreen } from './components/bundle/BundleOptimizerScreen';
 import { ZakatGivingScreen } from './components/zakat/ZakatGivingScreen';
+import { ChildWalletScreen } from './components/childwallet/ChildWalletScreen';
 import { DialectVoiceScreen } from './components/voice/DialectVoiceScreen';
 import { MandateWalletScreen } from './components/mandate/MandateWalletScreen';
 import { PayslipWageScreen } from './components/payslip/PayslipWageScreen';
@@ -65,6 +66,8 @@ export default function App() {
     activeSection,
     openSection,
     setActiveTab,
+    navigateBack,
+    historyStack,
     language,
     currentModal,
     setCurrentModal,
@@ -132,15 +135,10 @@ export default function App() {
                 <div className="w-full bg-gradient-to-r from-[#00D492] to-[#00B478] px-4 py-2.5 flex items-center justify-between border-b border-emerald-400 shadow-xs z-20 shrink-0 sticky top-0 select-none">
                   <button
                     type="button"
-                    onClick={() => {
-                      const parentSection = activeSection || FEATURE_TO_SECTION_MAP[activeTab as FeatureTab];
-                      if (parentSection) {
-                        openSection(parentSection);
-                      } else {
-                        setActiveTab('home');
-                      }
-                    }}
-                    className="flex items-center gap-1.5 text-xs font-black text-slate-950 hover:opacity-85 active:scale-95 transition-all cursor-pointer"
+                    onClick={navigateBack}
+                    className="flex items-center gap-1.5 text-xs font-black text-slate-950 hover:bg-slate-900/10 active:scale-95 transition-all cursor-pointer py-1 px-2.5 rounded-full bg-slate-900/5 border border-slate-950/10 shadow-2xs"
+                    aria-label={language === 'bn' ? 'পূর্ববর্তী পেজে ফিরে যান' : 'Back to Previous'}
+                    title={language === 'bn' ? 'পূর্ববর্তী পেজে ফিরে যান' : 'Back to Previous'}
                   >
                     <svg
                       className="w-4 h-4 text-slate-950"
@@ -153,16 +151,13 @@ export default function App() {
                     >
                       <path d="M15 18l-6-6 6-6" />
                     </svg>
-                    <span>
-                      {language === 'bn'
-                        ? SECTIONS_DATA[activeSection || FEATURE_TO_SECTION_MAP[activeTab as FeatureTab]]?.titleBn || 'ফিরে যান'
-                        : SECTIONS_DATA[activeSection || FEATURE_TO_SECTION_MAP[activeTab as FeatureTab]]?.titleEn || 'Back'}
-                    </span>
+                    <span>{language === 'bn' ? 'পূর্ববর্তী' : 'Previous'}</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab('home')}
-                    className="px-2.5 py-1 rounded-full bg-slate-900/10 hover:bg-slate-900/15 text-slate-950 font-bold text-xs shrink-0 cursor-pointer active:scale-95 transition-all flex items-center gap-1"
+                    className="px-2.5 py-1 rounded-full bg-slate-900/10 hover:bg-slate-900/15 text-slate-950 font-bold text-xs shrink-0 cursor-pointer active:scale-95 transition-all flex items-center gap-1 border border-slate-950/10"
+                    title={language === 'bn' ? 'হোম স্ক্রিনে ফিরে যান' : 'Go to Home'}
                   >
                     <span>{language === 'bn' ? 'হোম' : 'Home'}</span>
                     <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
@@ -179,7 +174,7 @@ export default function App() {
               {activeTab === 'section' && activeSection && (
                 <SectionHubScreen
                   sectionId={activeSection}
-                  onBack={() => setActiveTab('home')}
+                  onBack={navigateBack}
                   onSelectFeature={(tab) => setActiveTab(tab)}
                 />
               )}
@@ -207,9 +202,10 @@ export default function App() {
               {activeTab === 'zakat_charities' && (
                 <ZakatGivingScreen initialTab="charities" />
               )}
-              {(activeTab === 'eid_envelope' || activeTab === 'child_wallet') && (
+              {activeTab === 'eid_envelope' && (
                 <ZakatGivingScreen initialTab="eid_envelope" />
               )}
+              {activeTab === 'child_wallet' && <ChildWalletScreen />}
               {activeTab === 'dialect_voice' && <DialectVoiceScreen />}
               {activeTab === 'mandate_wallet' && <MandateWalletScreen />}
               {activeTab === 'payslip_orchestrator' && <PayslipWageScreen />}
