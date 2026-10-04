@@ -1,4 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
+import { generateGeminiContentWithFallback } from './geminiHelper';
 import { ParsedMandateRule } from '../src/types/mandateWallet';
 import { parseInstructionHeuristic } from '../src/utils/mandateWalletEngine';
 
@@ -43,8 +44,7 @@ Strict JSON format only:
 }
 `;
 
-    const response = await aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
+    const response = await generateGeminiContentWithFallback(aiClient, {
       contents: prompt,
       config: {
         responseMimeType: 'application/json'
