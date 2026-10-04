@@ -1,6 +1,7 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { z } from 'zod';
 import { RiskRuleSignal } from '../src/types';
+import { generateGeminiContentWithFallback } from './geminiHelper';
 
 // Zod schema for validation
 export const RiskExplanationSchema = z.object({
@@ -116,14 +117,9 @@ Return STRICT JSON matching the schema:
   "actionAdviceEn": "Concrete, actionable safety advice in English."
 }`;
 
-    // Add a 5-second timeout to prevent hanging on slow connections
-    const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error('LLM call timeout')), 5000)
-    );
-
-    const generatePromise = ai.models.generateContent({
-      model: 'gemini-3.8-flash',
+    const response = await generateGeminiContentWithFallback(ai, {
       contents: prompt,
+      timeoutMs: 18000,
       config: {
         responseMimeType: 'application/json',
         responseSchema: {
@@ -138,8 +134,6 @@ Return STRICT JSON matching the schema:
         }
       }
     });
-
-    const response = await Promise.race([generatePromise, timeoutPromise]);
 
     const rawText = response.text?.trim() || '';
     const parsed = JSON.parse(rawText);
