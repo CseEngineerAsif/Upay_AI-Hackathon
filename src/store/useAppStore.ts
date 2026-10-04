@@ -62,6 +62,7 @@ interface AppState {
   // Navigation
   activeTab: 'home' | 'account' | 'history' | 'more' | 'safe_ai' | FeatureTab | 'section';
   activeSection: SectionId | null;
+  historyStack: Array<{ tab: 'home' | 'account' | 'history' | 'more' | 'safe_ai' | FeatureTab | 'section'; section: SectionId | null }>;
   currentModal: string | null;
   isSidePanelOpen: boolean;
   isMoreDrawerOpen: boolean;
@@ -83,6 +84,7 @@ interface AppState {
   grantAiConsent: () => void;
   setActiveTab: (tab: 'home' | 'account' | 'history' | 'more' | 'safe_ai' | FeatureTab | 'section') => void;
   openSection: (sectionId: SectionId) => void;
+  navigateBack: () => void;
   setCurrentModal: (modal: string | null) => void;
   setSidePanelOpen: (open: boolean) => void;
   setMoreDrawerOpen: (open: boolean) => void;
@@ -155,6 +157,7 @@ export const useAppStore = create<AppState>((set, get) => {
 
     activeTab: 'home',
     activeSection: null,
+    historyStack: [],
     currentModal: null,
     isSidePanelOpen: false,
     isMoreDrawerOpen: false,
@@ -327,7 +330,7 @@ export const useAppStore = create<AppState>((set, get) => {
     },
 
     logout: () => {
-      set({ isAuthenticated: false, activeTab: 'home', activeSection: null, currentModal: null });
+      set({ isAuthenticated: false, activeTab: 'home', activeSection: null, historyStack: [], currentModal: null });
     },
 
     setLanguage: (lang: Language) => {
@@ -343,11 +346,74 @@ export const useAppStore = create<AppState>((set, get) => {
     },
 
     setActiveTab: (tab) => {
-      set({ activeTab: tab, currentModal: null });
+      const currentTab = get().activeTab;
+      const currentSection = get().activeSection;
+      const currentStack = get().historyStack || [];
+
+      if (tab === 'home') {
+        set({
+          activeTab: 'home',
+          activeSection: null,
+          historyStack: [],
+          currentModal: null
+        });
+        return;
+      }
+
+      if (currentTab !== tab) {
+        const newStack = [...currentStack, { tab: currentTab, section: currentSection }];
+        set({
+          activeTab: tab,
+          historyStack: newStack.slice(-15),
+          currentModal: null
+        });
+      } else {
+        set({ activeTab: tab, currentModal: null });
+      }
     },
 
     openSection: (sectionId: SectionId) => {
-      set({ activeSection: sectionId, activeTab: 'section', currentModal: null });
+      const currentTab = get().activeTab;
+      const currentSection = get().activeSection;
+      const currentStack = get().historyStack || [];
+      const newStack = [...currentStack, { tab: currentTab, section: currentSection }];
+
+      set({
+        activeSection: sectionId,
+        activeTab: 'section',
+        historyStack: newStack.slice(-15),
+        currentModal: null
+      });
+    },
+
+    navigateBack: () => {
+      const { historyStack } = get();
+      if (historyStack && historyStack.length > 0) {
+        const lastEntry = historyStack[historyStack.length - 1];
+        const newStack = historyStack.slice(0, -1);
+        if (lastEntry.tab === 'section' && lastEntry.section) {
+          set({
+            activeTab: 'section',
+            activeSection: lastEntry.section,
+            historyStack: newStack,
+            currentModal: null
+          });
+        } else {
+          set({
+            activeTab: lastEntry.tab || 'home',
+            activeSection: lastEntry.section || null,
+            historyStack: newStack,
+            currentModal: null
+          });
+        }
+      } else {
+        set({
+          activeTab: 'home',
+          activeSection: null,
+          historyStack: [],
+          currentModal: null
+        });
+      }
     },
 
     setCurrentModal: (modal) => {
