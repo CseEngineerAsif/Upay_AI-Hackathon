@@ -86,6 +86,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
   // Risk Check State
   const [isEvaluatingRisk, setIsEvaluatingRisk] = useState(false);
   const [riskAssessment, setRiskAssessment] = useState<RiskAssessment | null>(null);
+  const [showAiAssessmentDetails, setShowAiAssessmentDetails] = useState(false);
   const [showWhyPanel, setShowWhyPanel] = useState(false);
   const [coolingTimer, setCoolingTimer] = useState(0);
 
@@ -960,76 +961,112 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                   </div>
                 </div>
 
-                {/* Embedded Safe AI Pre-Transaction Risk Badge */}
+                {/* Embedded Safe AI Pre-Transaction Risk Badge (Button First, Click to Expand Full Details) */}
                 {riskAssessment && (
                   <div
-                    className={`p-3.5 rounded-2xl border text-xs space-y-2.5 ${
+                    className={`rounded-2xl border text-xs overflow-hidden transition-all duration-300 shadow-2xs ${
                       riskAssessment.riskLevel === 'high'
-                        ? 'bg-rose-50 border-rose-200 text-rose-950'
+                        ? 'bg-rose-50/85 border-rose-200 text-rose-950'
                         : riskAssessment.riskLevel === 'medium'
-                        ? 'bg-amber-50 border-amber-200 text-amber-950'
-                        : 'bg-emerald-50 border-emerald-200 text-emerald-950'
+                        ? 'bg-amber-50/85 border-amber-200 text-amber-950'
+                        : 'bg-emerald-50/85 border-emerald-200 text-emerald-950'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold flex items-center gap-1.5">
-                        <span>🛡️</span>
-                        <span>{language === 'bn' ? 'সেফ এআই রিক্স অ্যাসেসমেন্ট' : 'Safe AI Risk Assessment'}</span>
-                      </span>
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${
-                          riskAssessment.riskLevel === 'high'
-                            ? 'bg-rose-600 text-white'
+                    {/* First: Interactive Safe AI Assessment Button */}
+                    <button
+                      type="button"
+                      onClick={() => setShowAiAssessmentDetails((prev) => !prev)}
+                      className={`w-full p-3 sm:p-3.5 flex items-center justify-between text-left cursor-pointer transition-all active:scale-[0.99] hover:bg-black/[0.03] ${
+                        showAiAssessmentDetails ? 'border-b border-inherit bg-white/40' : ''
+                      }`}
+                      aria-expanded={showAiAssessmentDetails}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span className="w-8 h-8 rounded-xl bg-white shadow-2xs flex items-center justify-center text-sm shrink-0 border border-slate-100">
+                          🛡️
+                        </span>
+                        <div className="min-w-0">
+                          <span className="font-extrabold text-xs block text-slate-900 truncate">
+                            {language === 'bn' ? 'সেফ এআই রিক্স অ্যাসেসমেন্ট' : 'Safe AI Risk Assessment'}
+                          </span>
+                          <span className="text-[10px] text-slate-500 font-semibold block truncate">
+                            {showAiAssessmentDetails
+                              ? (language === 'bn' ? 'সংক্ষিপ্ত করতে ক্লিক করুন ▲' : 'Click to collapse details ▲')
+                              : (language === 'bn' ? 'সম্পূর্ণ বিবরণ দেখতে এখানে ক্লিক করুন ▼' : 'Click here to view full details ▼')}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0 ml-2">
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase shadow-2xs ${
+                            riskAssessment.riskLevel === 'high'
+                              ? 'bg-rose-600 text-white'
+                              : riskAssessment.riskLevel === 'medium'
+                              ? 'bg-amber-500 text-white'
+                              : 'bg-emerald-600 text-white'
+                          }`}
+                        >
+                          {riskAssessment.riskLevel === 'high'
+                            ? (language === 'bn' ? 'উচ্চ ঝুঁকি' : 'High Risk')
                             : riskAssessment.riskLevel === 'medium'
-                            ? 'bg-amber-500 text-white'
-                            : 'bg-emerald-600 text-white'
-                        }`}
-                      >
-                        {riskAssessment.riskLevel === 'high'
-                          ? (language === 'bn' ? 'উচ্চ ঝুঁকি' : 'High Risk')
-                          : riskAssessment.riskLevel === 'medium'
-                          ? (language === 'bn' ? 'মাঝারি ঝুঁকি' : 'Medium')
-                          : (language === 'bn' ? 'ভেরিফাইড ও নিরাপদ' : 'Verified & Safe')}
-                      </span>
-                    </div>
+                            ? (language === 'bn' ? 'মাঝারি ঝুঁকি' : 'Medium')
+                            : (language === 'bn' ? 'ভেরিফাইড ও নিরাপদ' : 'Verified & Safe')}
+                        </span>
+                        <div
+                          className={`w-6 h-6 rounded-full bg-white shadow-2xs flex items-center justify-center transition-transform duration-200 border border-slate-200/60 ${
+                            showAiAssessmentDetails ? 'rotate-180' : ''
+                          }`}
+                        >
+                          <svg className="w-3.5 h-3.5 text-slate-600" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                    </button>
 
-                    <p className="text-[11px] leading-relaxed bg-white/80 p-2.5 rounded-xl text-slate-800">
-                      {language === 'bn' ? riskAssessment.explanationBn : riskAssessment.explanationEn}
-                    </p>
+                    {/* Full Details Revealed When Button is Clicked */}
+                    {showAiAssessmentDetails && (
+                      <div className="p-3.5 space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                        <p className="text-[11px] leading-relaxed bg-white/90 p-2.5 rounded-xl text-slate-800 shadow-2xs border border-white">
+                          {language === 'bn' ? riskAssessment.explanationBn : riskAssessment.explanationEn}
+                        </p>
 
-                    <p className="text-[11px] font-bold text-[#1F4FB5] flex items-center gap-1">
-                      <span>💡</span>
-                      <span>{language === 'bn' ? riskAssessment.actionAdviceBn : riskAssessment.actionAdviceEn}</span>
-                    </p>
+                        <p className="text-[11px] font-bold text-[#1F4FB5] flex items-center gap-1.5 bg-blue-50/70 p-2 rounded-xl border border-blue-100">
+                          <span>💡</span>
+                          <span>{language === 'bn' ? riskAssessment.actionAdviceBn : riskAssessment.actionAdviceEn}</span>
+                        </p>
 
-                    {/* "কেন?" (Why) button */}
-                    <div className="pt-1 flex items-center justify-between">
-                      <button
-                        type="button"
-                        onClick={() => setShowWhyPanel(!showWhyPanel)}
-                        className="text-[11px] font-bold text-[#1F4FB5] hover:underline flex items-center gap-1 bg-white px-3 py-1 rounded-full shadow-2xs border border-blue-100"
-                      >
-                        <span>{showWhyPanel ? 'সংক্ষিপ্ত করুন ▲' : 'কেন ঝুঁকি? বিস্তারিত জানুন (কেন?) ▼'}</span>
-                      </button>
-                      <span className="text-[10px] font-mono text-slate-500">
-                        স্কোর: {toBanglaNumber(riskAssessment.riskScore)}/১০০
-                      </span>
-                    </div>
+                        {/* Signals breakdown & score */}
+                        <div className="pt-1 flex items-center justify-between">
+                          <button
+                            type="button"
+                            onClick={() => setShowWhyPanel(!showWhyPanel)}
+                            className="text-[11px] font-bold text-[#1F4FB5] hover:underline flex items-center gap-1 bg-white px-3 py-1 rounded-full shadow-2xs border border-blue-100 cursor-pointer"
+                          >
+                            <span>{showWhyPanel ? 'প্যারামিটার লুকান ▲' : 'প্যারামিটারের বিস্তারিত (কেন?) ▼'}</span>
+                          </button>
+                          <span className="text-[10px] font-mono font-bold text-slate-600 bg-white/80 px-2 py-0.5 rounded-md border border-slate-200">
+                            স্কোর: {toBanglaNumber(riskAssessment.riskScore)}/১০০
+                          </span>
+                        </div>
 
-                    {showWhyPanel && (
-                      <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1.5 text-[11px] text-slate-800 animate-fade-in shadow-2xs">
-                        <span className="font-bold text-slate-900 block">চিহ্নিত প্যারামিটারসমূহ:</span>
-                        {riskAssessment.signals && riskAssessment.signals.length > 0 ? (
-                          riskAssessment.signals.map((sig, sIdx) => (
-                            <div key={sIdx} className="flex items-start gap-1.5 text-[11px]">
-                              <span className="text-emerald-600 font-bold">✓</span>
-                              <span>
-                                <strong>{sig.labelBn}:</strong> {sig.detailsBn}
-                              </span>
-                            </div>
-                          ))
-                        ) : (
-                          <p className="text-slate-500">কোনো অনিয়ম পাওয়া যায়নি। প্রতিষ্ঠানটি ভেরিফাইড।</p>
+                        {showWhyPanel && (
+                          <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1.5 text-[11px] text-slate-800 animate-fade-in shadow-2xs">
+                            <span className="font-bold text-slate-900 block">চিহ্নিত প্যারামিটারসমূহ:</span>
+                            {riskAssessment.signals && riskAssessment.signals.length > 0 ? (
+                              riskAssessment.signals.map((sig, sIdx) => (
+                                <div key={sIdx} className="flex items-start gap-1.5 text-[11px]">
+                                  <span className="text-emerald-600 font-bold">✓</span>
+                                  <span>
+                                    <strong>{sig.labelBn}:</strong> {sig.detailsBn}
+                                  </span>
+                                </div>
+                              ))
+                            ) : (
+                              <p className="text-slate-500">কোনো অনিয়ম পাওয়া যায়নি। প্রতিষ্ঠানটি ভেরিফাইড।</p>
+                            )}
+                          </div>
                         )}
                       </div>
                     )}
