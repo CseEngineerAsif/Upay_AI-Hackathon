@@ -1,4 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
+import { generateGeminiContentWithFallback } from './geminiHelper';
 import { MockPayslip, PayslipAuditResult } from '../src/types/payslipWageOrchestrator';
 import { auditPayslipHeuristic } from '../src/utils/payslipWageManager';
 
@@ -49,8 +50,7 @@ Respond in strict JSON format:
 }
 `;
 
-    const response = await aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
+    const response = await generateGeminiContentWithFallback(aiClient, {
       contents: prompt,
       config: {
         responseMimeType: 'application/json'
