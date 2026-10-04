@@ -6,7 +6,7 @@ import { formatCurrency, formatDate } from '../../utils/formatters';
 import { OperatorLogo, detectOperator } from '../brand/OperatorConfig';
 
 export const HomeScreen: React.FC = () => {
-  const { language, setCurrentModal, setActiveTab, transactions } = useAppStore();
+  const { language, setCurrentModal, setActiveTab, transactions, setSidePanelOpen } = useAppStore();
   const [activeBanner, setActiveBanner] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const touchStartXRef = useRef<number | null>(null);
