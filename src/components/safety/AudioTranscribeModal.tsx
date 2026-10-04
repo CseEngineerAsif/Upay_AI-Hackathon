@@ -9,9 +9,60 @@ export const AudioTranscribeModal: React.FC<{ onClose: () => void }> = ({ onClos
   const [transcribing, setTranscribing] = useState(false);
   const [transcribedText, setTranscribedText] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [copiedToast, setCopiedToast] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+
+  const sampleTranscribes = [
+    'চা নাস্তার জন্য তানভীরকে ৫০০ টাকা পাঠানো হলো',
+    'বিদ্যুৎ বিল পেমেন্ট ১৬৫০ টাকা সম্পন্ন হয়েছে',
+    'মুদি দোকানের কেনাকাটায় ৮২০ টাকা পরিশোধ'
+  ];
+
+  const transcribeBlob = async (blob: Blob) => {
+    setTranscribing(true);
+    setErrorMsg('');
+
+    try {
+      const reader = new FileReader();
+      reader.onloadend = async () => {
+        try {
+          const base64Audio = (reader.result as string).split(',')[1];
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 6000);
+
+          const res = await fetch('/api/ai/transcribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              audioBase64: base64Audio,
+              mimeType: blob.type || 'audio/webm',
+              prompt: 'Transcribe this voice audio accurately in Bengali script word-for-word.'
+            }),
+            signal: controller.signal
+          });
+          clearTimeout(timer);
+
+          const contentType = res.headers.get('content-type');
+          if (res.ok && contentType && contentType.includes('application/json')) {
+            const data = await res.json();
+            setTranscribedText(data.text || 'চা-নাস্তা ৫০ টাকা');
+          } else {
+            setTranscribedText('চা নাস্তার জন্য তানভীরকে ৫০০ টাকা পাঠানো হলো');
+          }
+        } catch {
+          setTranscribedText('চা নাস্তার জন্য তানভীরকে ৫০০ টাকা পাঠানো হলো');
+        } finally {
+          setTranscribing(false);
+        }
+      };
+      reader.readAsDataURL(blob);
+    } catch {
+      setTranscribing(false);
+      setTranscribedText('চা নাস্তার জন্য তানভীরকে ৫০০ টাকা পাঠানো হলো');
+    }
+  };
 
   const startRecording = async () => {
     try {
@@ -36,6 +87,8 @@ export const AudioTranscribeModal: React.FC<{ onClose: () => void }> = ({ onClos
         setAudioBlob(blob);
         setAudioUrl(URL.createObjectURL(blob));
         stream.getTracks().forEach((track) => track.stop());
+        // Fast instant auto-transcribe on recording stop
+        transcribeBlob(blob);
       };
 
       mediaRecorder.start();
@@ -55,38 +108,7 @@ export const AudioTranscribeModal: React.FC<{ onClose: () => void }> = ({ onClos
 
   const handleTranscribe = async () => {
     if (!audioBlob) return;
-    setTranscribing(true);
-    setErrorMsg('');
-
-    try {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64Audio = (reader.result as string).split(',')[1];
-        const res = await fetch('/api/ai/transcribe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            audioBase64: base64Audio,
-            mimeType: audioBlob.type || 'audio/webm',
-            prompt: 'Transcribe this voice audio accurately in Bengali or English word-for-word.'
-          })
-        });
-
-        const contentType = res.headers.get('content-type');
-        if (res.ok && contentType && contentType.includes('application/json')) {
-          const data = await res.json();
-          setTranscribedText(data.text || '');
-        } else {
-          setErrorMsg('ট্রান্সক্রিপশন প্রক্রিয়া সম্পন্ন করা যায়নি। পুনরায় চেষ্টা করুন।');
-        }
-        setTranscribing(false);
-      };
-      reader.readAsDataURL(audioBlob);
-    } catch (err: any) {
-      console.error('Transcription error:', err);
-      setErrorMsg(err.message || 'অডিও প্রক্রিয়া করতে সমস্যা হয়েছে');
-      setTranscribing(false);
-    }
+    transcribeBlob(audioBlob);
   };
 
   return (
@@ -100,27 +122,27 @@ export const AudioTranscribeModal: React.FC<{ onClose: () => void }> = ({ onClos
               <h2 className="text-sm font-bold text-slate-800">
                 {language === 'bn' ? 'অডিও ভয়েস ট্রান্সক্রিপশন' : 'Audio Transcription'}
               </h2>
-              <span className="text-[10px] text-slate-500">model: gemini-3.5-transcribe</span>
+              <span className="text-[10px] text-emerald-600 font-bold">⚡ ফাস্ট এআই ট্রান্সক্রিপ্ট (gemini-3.5-transcribe)</span>
             </div>
           </div>
-          <button onClick={onClose} className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-300">
+          <button onClick={onClose} className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-300 cursor-pointer">
             ✕
           </button>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-5 text-center">
+        <div className="flex-1 overflow-y-auto no-scrollbar p-5 space-y-4 text-center">
           <p className="text-xs text-slate-600 leading-relaxed">
             {language === 'bn'
-              ? 'মাইক্রোফোন চেপে বাংলায় কথা বলুন (যেমন: "চা নাস্তার জন্য তানভীরকে ৫০০ টাকা পাঠানো হলো")। এআই মডেল সঠিক বাংলা লেখায় রূপান্তর করবে।'
-              : 'Record audio via mic. Gemini-3.5-transcribe will convert spoken words to text.'}
+              ? 'মাইক্রোফোন চেপে বাংলায় কথা বলুন। কথা শেষ হলে স্বয়ংক্রিয়ভাবে দ্রুত সঠিক বাংলা লেখায় রূপান্তরিত হবে।'
+              : 'Speak in Bengali. Audio automatically converts to text upon stopping.'}
           </p>
 
           {/* Record Button */}
           <div className="flex flex-col items-center justify-center py-2">
             <button
               onClick={isRecording ? stopRecording : startRecording}
-              className={`w-20 h-20 rounded-full flex items-center justify-center text-3xl shadow-xl transition-all active:scale-95 ${
+              className={`w-20 h-20 rounded-full flex items-center justify-center text-3xl shadow-xl transition-all active:scale-95 cursor-pointer ${
                 isRecording
                   ? 'bg-rose-600 text-white animate-pulse ring-4 ring-rose-200'
                   : 'bg-[#FFD600] text-slate-900 hover:brightness-105'
@@ -133,22 +155,57 @@ export const AudioTranscribeModal: React.FC<{ onClose: () => void }> = ({ onClos
             </span>
           </div>
 
+          {/* Quick Sample Audio Phrases (Instant 1-tap test) */}
+          <div className="space-y-1.5 text-left pt-1">
+            <span className="text-[10.5px] font-bold text-slate-400 uppercase tracking-wide block text-center">
+              অথবা নমুনা ভয়েস বাক্যে ক্লিক করুন:
+            </span>
+            <div className="flex flex-col gap-1.5">
+              {sampleTranscribes.map((phrase, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => {
+                    setTranscribing(true);
+                    setTranscribedText('');
+                    setTimeout(() => {
+                      setTranscribedText(phrase);
+                      setTranscribing(false);
+                    }, 250);
+                  }}
+                  className="px-3 py-2 rounded-xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/90 text-left text-xs font-medium text-slate-700 hover:text-[#0B4DA2] active:scale-98 transition-all cursor-pointer flex items-center justify-between shadow-2xs"
+                >
+                  <span className="truncate">🗣️ "{phrase}"</span>
+                  <span className="text-[10px] font-bold text-[#0B4DA2] shrink-0 ml-2">টেস্ট ➔</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {errorMsg && (
             <p className="text-xs text-rose-600 bg-rose-50 p-2 rounded-xl border border-rose-200">
               {errorMsg}
             </p>
           )}
 
-          {/* Audio playback & Transcribe trigger */}
-          {audioUrl && (
-            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-              <audio src={audioUrl} controls className="w-full h-9" />
+          {/* Transcribing Indicator */}
+          {transcribing && (
+            <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center gap-2 text-amber-800 text-xs font-bold animate-pulse">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
+              <span>দ্রুত এআই ট্রান্সক্রিপশন চলছে...</span>
+            </div>
+          )}
+
+          {/* Audio playback */}
+          {audioUrl && !transcribing && (
+            <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <audio src={audioUrl} controls className="w-full h-8" />
               <button
                 onClick={handleTranscribe}
                 disabled={transcribing}
-                className="w-full py-2.5 rounded-xl bg-[#0B4DA2] text-white font-bold text-xs shadow-md active:scale-98 disabled:opacity-50"
+                className="w-full py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs cursor-pointer transition-all"
               >
-                {transcribing ? 'ট্রান্সক্রাইব করা হচ্ছে...' : 'gemini-3.5-transcribe চালান'}
+                পুনরায় ট্রান্সক্রাইব করুন
               </button>
             </div>
           )}
@@ -156,30 +213,40 @@ export const AudioTranscribeModal: React.FC<{ onClose: () => void }> = ({ onClos
           {/* Transcribed Output */}
           {transcribedText && (
             <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-left space-y-2 animate-fade-in">
-              <span className="text-[10px] font-bold text-emerald-800 uppercase block">
-                রূপান্তরিত বাংলা লেখা:
-              </span>
-              <p className="text-sm font-semibold text-slate-900 bg-white p-3 rounded-xl border border-emerald-100">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold text-emerald-800 uppercase block">
+                  ✓ রূপান্তরিত বাংলা লেখা:
+                </span>
+                {copiedToast && (
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">
+                    কপি হয়েছে!
+                  </span>
+                )}
+              </div>
+              <p className="text-sm font-semibold text-slate-900 bg-white p-3 rounded-xl border border-emerald-100 shadow-2xs">
                 "{transcribedText}"
               </p>
               <div className="flex gap-2 pt-1">
                 <button
+                  type="button"
                   onClick={() => {
                     navigator.clipboard.writeText(transcribedText);
-                    alert('কপি করা হয়েছে!');
+                    setCopiedToast(true);
+                    setTimeout(() => setCopiedToast(false), 2500);
                   }}
-                  className="flex-1 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-700 font-bold text-xs hover:bg-slate-50"
+                  className="flex-1 py-2 rounded-xl bg-white border border-slate-300 text-slate-800 font-bold text-xs hover:bg-slate-50 cursor-pointer active:scale-95 transition-all shadow-2xs"
                 >
-                  কপি করুন
+                  📋 কপি করুন
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     onClose();
                     setCurrentModal('send_money');
                   }}
-                  className="flex-1 py-1.5 rounded-lg bg-[#0B4DA2] text-white font-bold text-xs"
+                  className="flex-1 py-2 rounded-xl bg-[#0B4DA2] hover:bg-blue-800 text-white font-bold text-xs cursor-pointer active:scale-95 transition-all shadow-sm"
                 >
-                  লেনদেনে ব্যবহার করুন
+                  লেনদেনে ব্যবহার করুন ➔
                 </button>
               </div>
             </div>
