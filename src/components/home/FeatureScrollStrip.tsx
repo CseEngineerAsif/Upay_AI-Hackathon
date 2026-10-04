@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 
 export const FeatureScrollStrip: React.FC = () => {
-  const { language, setCurrentModal, setActiveTab } = useAppStore();
+  const { language, setCurrentModal, setActiveTab, setSidePanelOpen } = useAppStore();
   const navScrollRef = useRef<HTMLDivElement>(null);
 
   // Strip scrolling, dragging and auto-slide states
@@ -186,6 +186,17 @@ export const FeatureScrollStrip: React.FC = () => {
           msOverflowStyle: 'none'
         }}
       >
+        {/* 0. Smart Services Drawer trigger */}
+        <button
+          type="button"
+          onClick={() => handleChipClick(() => setSidePanelOpen(true))}
+          className="h-7.5 px-3 rounded-full bg-gradient-to-r from-[#00D492] to-[#00B478] text-slate-950 text-[11px] font-black shadow-xs border border-emerald-300 active:scale-95 transition-all shrink-0 snap-start cursor-pointer inline-flex items-center justify-center whitespace-nowrap gap-1"
+          style={{ minHeight: '30px', height: '30px', scrollSnapAlign: 'start', flexShrink: 0 }}
+        >
+          <span>⚡</span>
+          <span>{language === 'bn' ? 'সার্ভিসেস' : 'Services'}</span>
+        </button>
+
         {/* Digital Somiti */}
         <button
           type="button"
