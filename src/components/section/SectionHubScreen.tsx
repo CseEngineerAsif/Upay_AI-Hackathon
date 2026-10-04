@@ -13,7 +13,7 @@ export const SectionHubScreen: React.FC<SectionHubScreenProps> = ({
   onBack,
   onSelectFeature
 }) => {
-  const { language } = useAppStore();
+  const { language, setActiveTab } = useAppStore();
   const section = SECTIONS_DATA[sectionId] || SECTIONS_DATA.fraud_prevention;
 
   return (
@@ -26,7 +26,7 @@ export const SectionHubScreen: React.FC<SectionHubScreenProps> = ({
             type="button"
             onClick={onBack}
             className="w-9 h-9 rounded-full bg-white/90 hover:bg-white text-slate-900 flex items-center justify-center shadow-xs active:scale-90 transition-transform cursor-pointer shrink-0 border border-amber-300"
-            aria-label="Back to Home"
+            aria-label={language === 'bn' ? 'পূর্ববর্তী পেজে ফিরে যান' : 'Back'}
           >
             <svg
               className="w-5 h-5 text-slate-900"
@@ -55,10 +55,14 @@ export const SectionHubScreen: React.FC<SectionHubScreenProps> = ({
           {/* Quick Home action */}
           <button
             type="button"
-            onClick={onBack}
-            className="px-2.5 py-1 rounded-full bg-slate-900/10 hover:bg-slate-900/15 text-slate-950 font-bold text-xs shrink-0 cursor-pointer active:scale-95 transition-all"
+            onClick={() => setActiveTab('home')}
+            className="px-2.5 py-1 rounded-full bg-slate-900/10 hover:bg-slate-900/15 text-slate-950 font-bold text-xs shrink-0 cursor-pointer active:scale-95 transition-all flex items-center gap-1 border border-slate-950/10"
+            title={language === 'bn' ? 'হোম স্ক্রিনে ফিরে যান' : 'Go to Home'}
           >
-            {language === 'bn' ? 'হোম' : 'Home'}
+            <span>{language === 'bn' ? 'হোম' : 'Home'}</span>
+            <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+            </svg>
           </button>
         </div>
       </header>
