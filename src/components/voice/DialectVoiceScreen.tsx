@@ -38,16 +38,30 @@ export const DialectVoiceScreen: React.FC = () => {
       const recognition = new SpeechRecognition();
       recognition.lang = 'bn-BD';
       recognition.continuous = false;
-      recognition.interimResults = false;
+      recognition.interimResults = true;
 
       recognition.onstart = () => {
         setIsListening(true);
       };
 
       recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setSpokenText(transcript);
-        handleProcessSpeech(transcript);
+        let interim = '';
+        let finalTranscript = '';
+        for (let i = 0; i < event.results.length; i++) {
+          const res = event.results[i];
+          if (res.isFinal) {
+            finalTranscript += res[0].transcript;
+          } else {
+            interim += res[0].transcript;
+          }
+        }
+        const textToDisplay = finalTranscript || interim;
+        if (textToDisplay) {
+          setSpokenText(textToDisplay);
+        }
+        if (finalTranscript.trim()) {
+          handleProcessSpeech(finalTranscript.trim());
+        }
       };
 
       recognition.onerror = (event: any) => {
