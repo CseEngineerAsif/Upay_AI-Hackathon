@@ -195,7 +195,7 @@ app.post('/api/ai/transcribe', async (req, res) => {
   }
 });
 
-// 7. Search Grounding using gemini-3.5-flash with googleSearch tool
+// 7. Search Grounding using gemini-3.8-flash with googleSearch tool
 app.post('/api/ai/search-grounding', async (req, res) => {
   try {
     const { query } = req.body;
@@ -212,7 +212,7 @@ app.post('/api/ai/search-grounding', async (req, res) => {
     }
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
+      model: 'gemini-3.8-flash',
       contents: `You are Upay Safe Intelligence. Answer this financial security or MFS query accurately in Bengali using up-to-date Google Search: "${query}"`,
       config: {
         tools: [{ googleSearch: {} }]
@@ -231,7 +231,7 @@ app.post('/api/ai/search-grounding', async (req, res) => {
   }
 });
 
-// 8. Maps Grounding using gemini-3.5-flash with googleMaps tool
+// 8. Maps Grounding using gemini-3.8-flash with googleMaps tool
 app.post('/api/ai/maps-grounding', async (req, res) => {
   try {
     const { locationQuery } = req.body;
@@ -248,7 +248,7 @@ app.post('/api/ai/maps-grounding', async (req, res) => {
     }
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
+      model: 'gemini-3.8-flash',
       contents: `Find nearby Upay cash-out agent points, ATM booths, or UCB bank branches for this location in Bangladesh: "${locationQuery}". Provide exact address, operating hours, and helpful landmarks in Bengali.`,
       config: {
         tools: [{ googleMaps: {} }]
@@ -320,7 +320,7 @@ app.post('/api/payslip/audit', async (req, res) => {
 // 9. Multi-Turn Gemini Chatbot with selectable models
 app.post('/api/ai/multi-turn-chat', async (req, res) => {
   try {
-    const { messages, model = 'gemini-3.5-flash', systemInstruction } = req.body;
+    const { messages, model = 'gemini-3.8-flash', systemInstruction } = req.body;
     if (!Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: 'Messages array is required' });
     }
@@ -338,30 +338,19 @@ app.post('/api/ai/multi-turn-chat', async (req, res) => {
       parts: [{ text: m.text }]
     }));
 
-    let modelToUse = model || 'gemini-3.5-flash';
-    let response;
-    try {
-      response = await ai.models.generateContent({
-        model: modelToUse,
-        contents,
-        config: {
-          systemInstruction:
-            systemInstruction ||
-            'You are Upay Safe AI Assistant (উপায় সেফ সহকারী), a knowledgeable, respectful, concise Bengali financial assistant. Keep advice clear, reassuring, and always advise users never to share their PIN.'
-        }
-      });
-    } catch (modelErr) {
-      console.warn(`Model ${modelToUse} failed, falling back to gemini-3.8-flash`);
-      response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
-        contents,
-        config: {
-          systemInstruction:
-            systemInstruction ||
-            'You are Upay Safe AI Assistant (উপায় সেফ সহকারী), a knowledgeable, respectful, concise Bengali financial assistant. Keep advice clear, reassuring, and always advise users never to share their PIN.'
-        }
-      });
+    let modelToUse = model || 'gemini-3.8-flash';
+    if (modelToUse === 'gemini-3.5-flash') {
+      modelToUse = 'gemini-3.8-flash';
     }
+    const response = await ai.models.generateContent({
+      model: modelToUse,
+      contents,
+      config: {
+        systemInstruction:
+          systemInstruction ||
+          'You are Upay Safe AI Assistant (উপায় সেফ সহকারী), a knowledgeable, respectful, concise Bengali financial assistant. Keep advice clear, reassuring, and always advise users never to share their PIN.'
+      }
+    });
 
     res.json({
       reply: response.text?.trim() || ''
@@ -384,7 +373,7 @@ app.post('/api/ai/chat', async (req, res) => {
     }
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
+      model: 'gemini-3.8-flash',
       contents: `You are Upay Safe Assistant in Bengali. Balance: ৳${userContext?.balance || 18450}. User Question: "${question}". Answer politely in 2-3 sentences. Never ask for PIN.`
     });
 
