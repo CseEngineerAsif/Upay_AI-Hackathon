@@ -9,7 +9,7 @@ interface ChatMessage {
 
 export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { language } = useAppStore();
-  const [selectedModel, setSelectedModel] = useState<'gemini-3.5-flash' | 'gemini-3.1-flash-lite' | 'gemini-3.1-pro-preview'>('gemini-3.5-flash');
+  const [selectedModel, setSelectedModel] = useState<'gemini-3.8-flash' | 'gemini-3.1-flash-lite' | 'gemini-3.1-pro-preview'>('gemini-3.8-flash');
   const [selectedRole, setSelectedRole] = useState<'security' | 'financial' | 'general'>('security');
 
   const getSystemInstruction = () => {
@@ -140,14 +140,14 @@ export const GeminiChatbotModal: React.FC<{ onClose: () => void }> = ({ onClose 
                 Flash-Lite (Fast)
               </button>
               <button
-                onClick={() => setSelectedModel('gemini-3.5-flash')}
+                onClick={() => setSelectedModel('gemini-3.8-flash')}
                 className={`px-2 py-0.5 rounded-md text-[10px] font-bold transition-all ${
-                  selectedModel === 'gemini-3.5-flash'
+                  selectedModel === 'gemini-3.8-flash'
                     ? 'bg-[#0B4DA2] text-white'
                     : 'bg-white border text-slate-600'
                 }`}
               >
-                3.5-Flash (General)
+                3.8-Flash (General)
               </button>
               <button
                 onClick={() => setSelectedModel('gemini-3.1-pro-preview')}
