@@ -133,11 +133,6 @@
 - Google Cloud Firestore
 - Firebase Authentication
 
-### AI Models
-- `gemini-3.8-flash` — low-latency AI reasoning
-- `gemini-3.8-live` — live voice AI communication
-- `gemini-3.5-transcribe` — speech-to-text transcription
-
 ---
 
 ## Architecture Overview
@@ -158,25 +153,6 @@ Client (React App)
 ```
 
 ---
-
-## API Endpoints
-
-| Method | Endpoint | Purpose |
-|---|---|---|
-| `POST` | `/api/safety/risk-check` | Risk scoring and AI explanation |
-| `POST` | `/api/safety/scam-check` | SMS / URL / phishing validation |
-| `POST` | `/api/ai/transcribe` | Audio-to-text conversion |
-| `POST` | `/api/ai/search-grounding` | Search-grounded AI responses |
-| `POST` | `/api/ai/maps-grounding` | Nearby agent and bank lookup |
-| `POST` | `/api/ai/multi-turn-chat` | Finance and cyber-safety assistant |
-| `POST` | `/api/voice/dialect-normalize` | Convert dialect commands into structured intent |
-| `POST` | `/api/mandate/parse` | Parse natural language mandate rules |
-| `POST` | `/api/payslip/audit` | Wage and overtime audit logic |
-| `POST` | `/api/somiti/ai-payout-order` | Smart ROSCA payout ordering |
-| `POST` | `/api/somiti/early-warning-check` | Risk detection for group contributors |
-| `POST` | `/api/bundle/optimize` | Telecom bundle optimization |
-| `WS` | `/live` | Real-time Gemini live voice stream |
-
 ---
 
 ## Local Setup
