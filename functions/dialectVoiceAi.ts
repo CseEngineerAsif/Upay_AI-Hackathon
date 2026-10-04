@@ -42,6 +42,7 @@ Respond in strict JSON format:
 
     const response = await generateGeminiContentWithFallback(aiClient, {
       contents: prompt,
+      timeoutMs: 3500,
       config: {
         responseMimeType: 'application/json'
       }
