@@ -245,6 +245,21 @@ export const HomeScreen: React.FC = () => {
           NPSB
         </span>
       )
+    },
+    {
+      id: 'safe_hub',
+      labelBn: 'সেফ হাব',
+      labelEn: 'Safe Hub',
+      iconColor: 'bg-gradient-to-br from-amber-50 to-yellow-100/90 text-amber-700 border-amber-300/80 shadow-amber-100',
+      action: () => setCurrentModal('safe_ai_hub'),
+      icon: (
+        <div className="relative flex items-center justify-center">
+          <svg className="w-5.5 h-5.5 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          <span className="absolute -top-1 -right-1 text-[10px]">✨</span>
+        </div>
+      )
     }
   ];
 
