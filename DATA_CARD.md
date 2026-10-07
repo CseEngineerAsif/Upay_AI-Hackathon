@@ -36,10 +36,14 @@ This dataset is a synthetic simulation of Mobile Financial Service (MFS) transac
 - **Human-in-the-Loop Decision Boundary**: The AI model and rule engine advise only with confidence scores and explainability factors. It never automatically denies or blocks user funds; the human user maintains final agency.
 
 ## 5. Evaluation & Fairness Distribution
-- 120 benchmark cases evaluated for precision, recall, and false-positive rate across:
-  - Regions: Dhaka, Chittagong, Sylhet, Rajshahi, Khulna, Barisal.
-  - Age Demographics: 18-25, 26-40, 41-60, 60+.
-  - Account Tenure: New accounts (<30 days) vs Established accounts (>1 year).
+- **6,000-Sample Seeded Evaluation Benchmark (`scripts/evaluate.ts`)**:
+  - Deterministic PRNG: Mulberry32 seeded with `Seed: 42` for 100% reproducible replication.
+  - Fraud Prevalence: 4.2% (253 fraud scenarios vs 5,747 legitimate transactions).
+  - Geographic Representation: Dhaka (58%), Chattogram (18%), Sylhet (10%), Rajshahi (6%), Khulna (5%), Barishal (3%).
+  - Hard Negative Modeling: Includes legitimate late-night workers (2 AM transfers), high-value periodic payments (tuition/rent 4x-8x baseline), and legitimate new contact remittances.
+  - Model Results Saved: `reports/impact_eval.json` — **SIMULATED (synthetic data)** (Precision: 61.6%, Recall: 74.7%, F1: 67.5%, PR-AUC: 0.713, FPR: 2.1%, Recall@5% FPR: 89.3%, Recall@1% FPR: 58.9%).
+- **120 Qualitative Scenario Cases**:
+  - Manual stress-testing across age demographics (18-25, 26-40, 41-60, 60+) and account tenures (new <30 days vs established >1 year).
 
 ## 6. Limitations & Known Boundaries
 
