@@ -19,6 +19,7 @@ import { ScamCallSimulatorModal } from './components/safety/ScamCallSimulatorMod
 import { AiChatAssistantModal } from './components/safety/AiChatAssistantModal';
 import { GuardianInviteModal } from './components/safety/GuardianInviteModal';
 import { AnalystDashboardModal } from './components/admin/AnalystDashboardModal';
+import { ImpactDashboardModal } from './components/admin/ImpactDashboardModal';
 import { AdminMonitoringModal } from './components/admin/AdminMonitoringModal';
 import { SafeAiHubModal } from './components/safety/SafeAiHubModal';
 import { VoiceConversationModal } from './components/safety/VoiceConversationModal';
@@ -320,6 +321,9 @@ export default function App() {
         )}
         {currentModal === 'analyst_dashboard' && (
           <AnalystDashboardModal onClose={() => setCurrentModal(null)} />
+        )}
+        {currentModal === 'impact_dashboard' && (
+          <ImpactDashboardModal onClose={() => setCurrentModal(null)} />
         )}
         {currentModal === 'admin_monitoring' && (
           <AdminMonitoringModal onClose={() => setCurrentModal(null)} />
