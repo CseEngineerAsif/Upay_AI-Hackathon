@@ -1,5 +1,6 @@
 import { RiskAssessment, RiskRuleSignal, Transaction } from '../src/types';
 import { buildFeatures, mlRisk, MlRiskResult } from './mlRiskModel';
+import { isPhoneHashBlocklisted } from './fraudBlocklist';
 
 export interface RiskInputParams {
   transactionId?: string;
@@ -19,15 +20,8 @@ export interface RiskInputParams {
 const SUSPICIOUS_NOTE_WORDS = [
   'লটারি', 'উপহার', 'ট্যাক্স', 'ভেরিফিকেশন', 'পিন', 'ওটিপি', 'জরুরি টাকা',
   'আটকে গেছে', 'বোনাস', 'ডিপোজিট', 'ইনভেস্টমেন্ট', 'ডাবল', 'সুযোগ',
-  'lottery', 'winner', 'gift', 'prize', 'invest', 'double', 'urgent', 'tax', 'fee'
-];
-
-// Known suspicious demo numbers for test scenarios
-const KNOWN_FLAGGED_NUMBERS = [
-  '01700000000',
-  '01999999999',
-  '01812345678',
-  '01300001111'
+  'lottery', 'winner', 'gift', 'prize', 'invest', 'double', 'urgent', 'tax', 'fee',
+  'ignore previous', 'system prompt', 'mark this', '[security_filtered]', 'override'
 ];
 
 export function evaluateTransactionRisk(params: RiskInputParams): {
@@ -69,18 +63,19 @@ export function evaluateTransactionRisk(params: RiskInputParams): {
     recipientTrustScore = Math.min(100, 50 + prevTxToRecipient.length * 10);
   }
 
-  // Known flagged recipient check
-  if (KNOWN_FLAGGED_NUMBERS.includes(normalizedPhone)) {
+  // Governed SHA-256 fraud_blocklist check
+  const blocklistCheck = isPhoneHashBlocklisted(normalizedPhone);
+  if (blocklistCheck.listed) {
     const pts = 40;
     totalScore += pts;
     recipientTrustScore = 5;
     signals.push({
       rule: 'FLAGGED_RECIPIENT_DATABASE',
-      labelBn: 'সন্দেহজনক নম্বর ডাটাবেজ',
-      labelEn: 'Reported / Flagged Account',
+      labelBn: 'সন্দেহজনক নম্বর ডাটাবেজ (SHA-256 ব্লকলিস্ট)',
+      labelEn: 'Governed Fraud Blocklist (SHA-256)',
       points: pts,
       severity: 'high',
-      detailsBn: 'এই নম্বরটি পূর্বে একাধিক প্রতারণার অভিযোগে চিহ্নিত করা হয়েছে।'
+      detailsBn: `এই নম্বরের SHA-256 হ্যাশ অনুমোদিত প্রতারণা তালিকায় (উৎস: ${blocklistCheck.entry?.source || 'analyst_escalation'}, সংস্করণ v${blocklistCheck.blocklistVersion}) চিহ্নিত করা হয়েছে।`
     });
   }
 
@@ -219,6 +214,8 @@ export interface MlEvaluatedRisk {
   probability: number;
   topFactors: MlRiskResult['topFactors'];
   modelType: 'LightGBM';
+  modelVersion: string;
+  blocklistVersion: number;
   signals: RiskRuleSignal[];
   baselineDiffPct: number;
   recipientTrustScore: number;
@@ -258,8 +255,9 @@ export function evaluateWithMl(params: RiskInputParams): MlEvaluatedRisk {
   const combinedText = `${params.note || ''} ${params.recipientName || ''}`.toLowerCase();
   const noteFlag = SUSPICIOUS_NOTE_WORDS.some(w => combinedText.includes(w.toLowerCase()));
 
-  // Fraud reports check
-  const isBlacklisted = KNOWN_FLAGGED_NUMBERS.includes(normalizedPhone);
+  // Governed SHA-256 fraud_blocklist check
+  const blocklistCheck = isPhoneHashBlocklisted(normalizedPhone);
+  const isBlacklisted = blocklistCheck.listed;
   const recipientReports = isBlacklisted ? 5 : 0;
 
   const balance = params.userBalance ?? 18450;
@@ -289,6 +287,10 @@ export function evaluateWithMl(params: RiskInputParams): MlEvaluatedRisk {
   if (isBlacklisted) {
     finalScore = Math.max(finalScore, 90);
     finalLevel = 'high';
+  } else if (noteFlag && newRecipient && params.amount >= baseline * 5) {
+    // Adversarial injection or scam keyword with high amount anomaly to new recipient
+    finalScore = Math.max(finalScore, 75);
+    finalLevel = 'high';
   }
 
   const signals: RiskRuleSignal[] = mlResult.topFactors.map(factor => ({
@@ -303,11 +305,11 @@ export function evaluateWithMl(params: RiskInputParams): MlEvaluatedRisk {
   if (isBlacklisted) {
     signals.unshift({
       rule: 'FLAGGED_RECIPIENT_DATABASE',
-      labelBn: 'সন্দেহজনক নম্বর ডাটাবেজ',
-      labelEn: 'Reported / Flagged Account',
+      labelBn: 'সন্দেহজনক নম্বর ডাটাবেজ (SHA-256 ব্লকলিস্ট)',
+      labelEn: 'Governed Fraud Blocklist (SHA-256)',
       points: 40,
       severity: 'high',
-      detailsBn: 'এই প্রাপকের অ্যাকাউন্টের বিরুদ্ধে একাধিক প্রতারণার অভিযোগ রেকর্ড আছে।'
+      detailsBn: `এই প্রাপকের অ্যাকাউন্টের SHA-256 হ্যাশ গভর্নড ফ্রড ব্লকলিস্টে (উৎস: ${blocklistCheck.entry?.source || 'analyst_escalation'}, v${blocklistCheck.blocklistVersion}) রেকর্ড আছে।`
     });
   }
 
@@ -322,6 +324,8 @@ export function evaluateWithMl(params: RiskInputParams): MlEvaluatedRisk {
     probability: mlResult.probability,
     topFactors: mlResult.topFactors,
     modelType: 'LightGBM',
+    modelVersion: 'lgbm-fraud-v1.2.0',
+    blocklistVersion: blocklistCheck.blocklistVersion,
     signals,
     baselineDiffPct,
     recipientTrustScore,
