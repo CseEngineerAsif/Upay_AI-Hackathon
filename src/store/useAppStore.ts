@@ -15,6 +15,7 @@ import {
   TransactionCategory
 } from '../types';
 import { SectionId, FeatureTab } from '../types/sections';
+import { readPinApiResponse } from '../utils/pinApi';
 import {
   getRegisteredUsers,
   findUserByPhone,
@@ -284,7 +285,7 @@ export const useAppStore = create<AppState>((set, get) => {
             userId: targetUser.id
           })
         });
-        const data = await res.json();
+        const data = await readPinApiResponse(res, 'PIN verification');
         if (!res.ok || !data.valid) {
           set({ lastPinError: data.error || 'Incorrect PIN' });
           return false;
@@ -328,7 +329,7 @@ export const useAppStore = create<AppState>((set, get) => {
             newPin
           })
         });
-        const data = await res.json();
+        const data = await readPinApiResponse(res, 'PIN update');
         if (!res.ok || !data.success) {
           return { success: false, error: data.error || 'Failed to update PIN' };
         }
@@ -542,7 +543,7 @@ export const useAppStore = create<AppState>((set, get) => {
             userId: user.id
           })
         });
-        const pinData = await pinRes.json();
+        const pinData = await readPinApiResponse(pinRes, 'PIN verification');
         if (!pinRes.ok || !pinData.valid) {
           return {
             success: false,
