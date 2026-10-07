@@ -20,7 +20,6 @@ export function generateSeedData() {
     phone: '01794809461',
     avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&h=120&q=80',
     balance: 18450,
-    pin: '1234',
     isBiometricEnabled: true,
     role: 'user',
     guardianPhone: '01819234567',
