@@ -21,6 +21,13 @@ import { normalizeDialectWithGemini } from './functions/dialectVoiceAi';
 import { parseMandateInstructionWithGemini } from './functions/mandateParserAi';
 import { auditPayslipWithGemini } from './functions/payslipAuditorAi';
 import { authenticateToken, requireRole } from './middleware/auth';
+import { verifyServerPin, setServerPin, initServerPinSeed } from './functions/pinSecurity';
+import {
+  listBlocklistEntries,
+  addBlocklistEntry,
+  removeBlocklistEntry,
+  getBlocklistVersion
+} from './functions/fraudBlocklist';
 import {
   validateBody,
   RiskCheckBodySchema,
@@ -41,7 +48,10 @@ import {
   SomitiEarlyWarningBodySchema,
   TrustPaySellerTrustBodySchema,
   LiquidityForecastBodySchema,
-  SeedResetBodySchema
+  SeedResetBodySchema,
+  VerifyPinBodySchema,
+  SetPinBodySchema,
+  BlocklistAddBodySchema
 } from './middleware/validation';
 import { sanitizePrivacyText, formatUntrustedUserInput, safeLogger } from './functions/privacyGuardrails';
 
@@ -62,18 +72,46 @@ app.use(
   })
 );
 
-// 2. Configurable CORS Allowlist
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim())
-  : ['http://localhost:3000', 'http://127.0.0.1:3000', process.env.APP_URL].filter(Boolean);
+// 2. Configurable CORS Allowlist (supports localhost, APP_URL, Cloud Run *.run.app preview origins, and ALLOWED_ORIGINS)
+const configuredOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(s => s.trim()).filter(Boolean)
+  : [];
+
+const allowedOrigins = new Set(
+  [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    process.env.APP_URL,
+    ...configuredOrigins
+  ].filter(Boolean) as string[]
+);
+
+function isOriginAllowed(origin?: string): boolean {
+  if (!origin) return true;
+  if (allowedOrigins.has('*') || allowedOrigins.has(origin)) return true;
+  try {
+    const parsed = new URL(origin);
+    if (
+      parsed.hostname === 'localhost' ||
+      parsed.hostname === '127.0.0.1' ||
+      parsed.hostname.endsWith('.run.app') ||
+      parsed.hostname.endsWith('.aistudio.google.com')
+    ) {
+      return true;
+    }
+  } catch {
+    // ignore malformed origin
+  }
+  return false;
+}
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+      if (isOriginAllowed(origin)) {
         callback(null, true);
       } else {
-        callback(new Error('CORS policy: origin not allowed'));
+        callback(null, false);
       }
     },
     credentials: true
@@ -94,25 +132,27 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   next(err);
 });
 
-// 4. Rate Limiting: General API limiter
+// 4. Rate Limiting: Global API limiter (100 requests per 15 minutes per IP)
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 300,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests, please try again later.' }
 });
 app.use('/api/', generalLimiter);
 
-// Stricter Rate Limiter for Gemini AI Endpoints
-const aiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 50,
+// Strict 10/min Rate Limiter for sensitive endpoints (/api/ai/*, /api/auth/*, /api/safety/risk-check)
+const strictMinuteLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { error: 'Too many AI requests. Rate limit exceeded, please wait.' }
+  message: { error: 'Rate limit exceeded (max 10 requests/minute). Please wait.' }
 });
-app.use('/api/ai/', aiLimiter);
+app.use('/api/ai/', strictMinuteLimiter);
+app.use('/api/auth/', strictMinuteLimiter);
+app.use('/api/safety/risk-check', strictMinuteLimiter);
 
 // 5. Authentication Guard for all /api routes (except public health check and seed GET)
 app.use('/api', (req: Request, res: Response, next: NextFunction) => {
@@ -139,9 +179,80 @@ const getAiClient = () => {
   });
 };
 
-// 1. Health check
+// 1. Health check (includes model, dataset, and governed blocklist versioning)
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', service: 'Upay Safe API', timestamp: new Date().toISOString() });
+  res.json({
+    status: 'ok',
+    service: 'Recursion Pay Safe API',
+    modelVersion: 'lgbm-fraud-v1.2.0',
+    datasetVersion: 'synth-bd-mfs-v2.0-seed42',
+    blocklistVersion: getBlocklistVersion(),
+    timestamp: new Date().toISOString()
+  });
+});
+
+// 1b. Server-Side Salted Scrypt PIN Verification (lockout after 5 failures for 15 min)
+app.post('/api/auth/verify-pin', validateBody(VerifyPinBodySchema), (req, res) => {
+  const { pin, phone, userId } = req.body;
+  const targetKey = phone || userId || req.user?.uid || 'user_01794809461';
+  const result = verifyServerPin(targetKey, pin);
+
+  if (result.locked) {
+    return res.status(423).json({
+      valid: false,
+      locked: true,
+      remainingAttempts: 0,
+      retryAfterSeconds: result.retryAfterSeconds,
+      error: result.error
+    });
+  }
+
+  if (!result.valid) {
+    return res.status(401).json({
+      valid: false,
+      locked: false,
+      remainingAttempts: result.remainingAttempts,
+      error: result.error || 'Invalid PIN'
+    });
+  }
+
+  return res.json({
+    valid: true,
+    locked: false,
+    remainingAttempts: result.remainingAttempts
+  });
+});
+
+// 1c. Server-Side Salted Scrypt PIN Set / Change
+app.post('/api/auth/set-pin', validateBody(SetPinBodySchema), (req, res) => {
+  const { newPin, currentPin, phone, userId } = req.body;
+  const result = setServerPin({
+    userId: userId || req.user?.uid,
+    phone,
+    currentPin,
+    newPin
+  });
+
+  if (result.locked) {
+    return res.status(423).json({
+      success: false,
+      locked: true,
+      retryAfterSeconds: result.retryAfterSeconds,
+      error: result.error
+    });
+  }
+
+  if (!result.success) {
+    return res.status(400).json({
+      success: false,
+      error: result.error || 'Failed to set PIN'
+    });
+  }
+
+  return res.json({
+    success: true,
+    message: 'PIN securely hashed with salted scrypt and stored server-side'
+  });
 });
 
 // 2. Initial seed data fetch
@@ -152,6 +263,7 @@ app.get('/api/seed', (req, res) => {
 // 3. Reset seed data
 app.post('/api/seed/reset', validateBody(SeedResetBodySchema), (req, res) => {
   seedStorage = generateSeedData();
+  initServerPinSeed();
   res.json({ success: true, message: 'Data reset to fresh synthetic baseline' });
 });
 
@@ -238,6 +350,8 @@ app.post('/api/safety/risk-check', validateBody(RiskCheckBodySchema), async (req
       probability: evaluation.probability,
       topFactors: evaluation.topFactors,
       modelType: evaluation.modelType,
+      modelVersion: evaluation.modelVersion,
+      blocklistVersion: evaluation.blocklistVersion,
       signals: evaluation.signals,
       explanationBn: explanation.explanationBn,
       explanationEn: explanation.explanationEn,
@@ -535,7 +649,14 @@ app.post('/api/safety/categorize', validateBody(CategorizeBodySchema), (req, res
   res.json(result);
 });
 
-// 12. Analyst Queue Actions (Strictly requires analyst or admin role)
+// 12. Analyst Queue Read & Actions (Strictly requires analyst or admin role)
+app.get('/api/analyst/queue', requireRole(['analyst', 'admin']), (req, res) => {
+  res.json({
+    items: seedStorage.analystQueue,
+    blocklistVersion: getBlocklistVersion()
+  });
+});
+
 app.post('/api/analyst/queue-action', requireRole(['analyst', 'admin']), validateBody(AnalystQueueActionBodySchema), (req, res) => {
   const { queueId, action, notes } = req.body;
   const item = seedStorage.analystQueue.find(q => q.id === queueId);
@@ -549,6 +670,42 @@ app.post('/api/analyst/queue-action', requireRole(['analyst', 'admin']), validat
   if (notes) item.analystNotes = sanitizePrivacyText(notes);
 
   res.json({ success: true, item });
+});
+
+// 12b. Governed Fraud Blocklist Endpoints (SHA-256 phone hashes; admin-only add/remove)
+app.get('/api/admin/blocklist', requireRole(['analyst', 'admin']), (req, res) => {
+  res.json({
+    version: getBlocklistVersion(),
+    entries: listBlocklistEntries()
+  });
+});
+
+app.post('/api/admin/blocklist', requireRole(['admin']), validateBody(BlocklistAddBodySchema), async (req, res) => {
+  try {
+    const { phone, phoneHash, source, reason } = req.body;
+    const entry = await addBlocklistEntry({
+      phone,
+      phoneHash,
+      source,
+      addedBy: req.user?.uid || 'admin',
+      reason: reason ? sanitizePrivacyText(reason) : undefined
+    });
+    res.status(201).json({ success: true, entry });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message || 'Failed to add blocklist entry' });
+  }
+});
+
+app.delete('/api/admin/blocklist/:phoneHash', requireRole(['admin']), async (req, res) => {
+  try {
+    const result = await removeBlocklistEntry(req.params.phoneHash, req.user?.uid || 'admin');
+    if (!result.removed) {
+      return res.status(404).json({ error: 'Blocklist entry not found or already revoked' });
+    }
+    res.json({ success: true, ...result });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message || 'Failed to remove blocklist entry' });
+  }
 });
 
 // 13. Alert Feedback & Scam Confirmation
@@ -770,6 +927,9 @@ async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
+      optimizeDeps: {
+        force: true
+      },
       server: {
         middlewareMode: true,
         hmr: {
