@@ -170,12 +170,12 @@
 ## 🚀 লোকাল সেটআপ ও রান করার নিয়ম
 
 ### ১. রিকোয়ারমেন্টস
-- Node.js (v18 বা তদূর্ধ্ব)
-- npm বা pnpm
+- Node.js (v22 বা তদূর্ধ্ব)
+- Bun (v1.4 বা তদূর্ধ্ব)
 
 ### ২. ডিপেন্ডেন্সি ইনস্টলেশন
 ```bash
-npm install
+bun install --frozen-lockfile
 ```
 
 ### ৩. এনভায়রনমেন্ট কনফিগারেশন (`.env`)
@@ -187,14 +187,14 @@ PORT=3000
 
 ### ৪. ডেভেলপমেন্ট সার্ভার চালুকরণ
 ```bash
-npm run dev
+bun run dev
 ```
 ব্রাউজারে [http://localhost:3000](http://localhost:3000) ওপেন করুন।
 
 ### ৫. প্রোডাকশন বিল্ড ও রান
 ```bash
-npm run build
-npm start
+bun run build
+bun start
 ```
 
 ---
@@ -223,16 +223,16 @@ npm start
 
 ```bash
 # ১. ডিপেনডেন্সি ইনস্টলেশন
-npm install
+bun install --frozen-lockfile
 
 # ২. টাইপচেক ও লিন্টার যাচাই
-npm run lint
+bun run lint
 
 # ৩. সমস্ত সিকিউরিটি ও ইন্টিগ্রেশন টেস্ট রান
-npm test
+bun test
 
 # ৪. টেস্ট কভারেজ রিপোর্টসহ রান (LCOV এবং সামারি রিপোর্ট)
-npm run test:coverage
+bun run test:coverage
 ```
 
 ### ২. টেস্ট সুইটস তালিকা (Test Suites & Scope)
@@ -285,7 +285,7 @@ npm run test:coverage
 ## 📈 Results — মডেল মূল্যায়ন ও ব্যবসায়িক প্রভাব ফলাফল [SIMULATED (synthetic data)]
 
 > **⚠️ SIMULATED (synthetic data):**  
-> নিচের প্রতিটি সংখ্যা `npm run evaluate` (`scripts/evaluate.ts`) স্ক্রিপ্ট দ্বারা ৬,০০০টি সিডেড সিন্থেটিক ট্রানজ্যাকশন (Seed: 42) এবং `functions/mlRiskModel.ts`-এর প্রশিক্ষিত LightGBM মডেলের ওপর প্রোগ্রাম্যাটিকভাবে হিসাবকৃত। কোনো পরিসংখ্যান অনুমান বা কাল্পনিকভাবে বসানো হয়নি; প্রতিটি সংখ্যা হুবহু `reports/impact_eval.json` থেকে সংকলিত।
+> নিচের প্রতিটি সংখ্যা `bun run evaluate` (`scripts/evaluate.ts`) স্ক্রিপ্ট দ্বারা ৬,০০০টি সিডেড সিন্থেটিক ট্রানজ্যাকশন (Seed: 42) এবং `functions/mlRiskModel.ts`-এর প্রশিক্ষিত LightGBM মডেলের ওপর প্রোগ্রাম্যাটিকভাবে হিসাবকৃত। কোনো পরিসংখ্যান অনুমান বা কাল্পনিকভাবে বসানো হয়নি; প্রতিটি সংখ্যা হুবহু `reports/impact_eval.json` থেকে সংকলিত।
 
 ### ১. মডেল পারফরম্যান্স মেট্রিক্স (Model Evaluation Metrics — `reports/impact_eval.json`)
 
@@ -344,5 +344,4 @@ npm run test:coverage
 3. **False-Alert Support Ticket Incidence:** অযথা সতর্কবার্তা (False Positives) পাওয়ার পর কল সেন্টার বা চ্যাট সাপোর্টে আসা প্রকৃত ইনকোয়ারির হার এবং প্রতি টিকিটের বাস্তব অপারেশনাল খরচ।
 4. **Live Acoustic Dialect WER & Intent Accuracy:** হাট-বাজার ও গণপরিবহনের বাস্তব শব্দদূষণের (Ambient Noise) মধ্যে চাটগাঁইয়া, সিলেটি, নোয়াখাইল্লা ও রংপুরিয়া ভয়েস কমান্ডের প্রকৃত সফলতার হার এবং টিটিএস (TTS) শোনার পর পিন কনফার্মেশন ড্রপ-অফ।
 5. **Security & Governance Hardening:** সার্ভার-সাইড সল্টেড `scrypt` পিন ভেরিফিকেশন (`/api/auth/verify-pin`, `/api/auth/set-pin` — ৫ বার ভুল পিনে ১৫ মিনিট লকআউট), SHA-256 ফোন হ্যাশ ভিত্তিক গভর্নড `fraud_blocklist` (`/api/admin/blocklist`), এবং জিরো-ট্রাস্ট `firestore.rules` (যেখানে ক্লায়েন্ট কখনোই `balance`, `pin`, বা `riskScore` লিখতে পারে না)।
-
 
