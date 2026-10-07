@@ -77,6 +77,9 @@ export async function generateLlmRiskExplanation(params: {
   riskLevel: 'low' | 'medium' | 'high';
   signals: RiskRuleSignal[];
   sanitizedNote?: string;
+  probability?: number;
+  topFactors?: { feature: string; value: number; impact: number; labelBn?: string }[];
+  modelType?: string;
 }): Promise<RiskExplanation> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
@@ -97,12 +100,19 @@ export async function generateLlmRiskExplanation(params: {
       .map(s => `- [${s.rule}] ${s.labelBn} (${s.points} pts): ${s.detailsBn}`)
       .join('\n');
 
-    const prompt = `You are "Upay Safe AI", a trusted financial guardian for a Bangladeshi mobile financial service (MFS).
-Analyze the structured risk evidence below and produce a clear, warm, plain-language Bangla warning and advice for the user, plus an English translation.
-REMEMBER: YOU NEVER BLOCK OR APPROVE TRANSACTIONS. The human user always makes the final decision. You only advise objectively.
+    const topFactorsSummary = params.topFactors && params.topFactors.length > 0
+      ? params.topFactors.map(f => `${f.labelBn || f.feature} (Impact +${f.impact.toFixed(2)})`).join(', ')
+      : 'None';
 
-Structured Evidence:
-- Risk Score: ${params.riskScore} / 100 (${params.riskLevel.toUpperCase()})
+    const prompt = `You are "Upay Safe AI", a trusted financial guardian for a Bangladeshi mobile financial service (MFS).
+Our trained machine learning fraud model (${params.modelType || 'LightGBM'}) evaluated this transaction.
+Explain the model's top risk factors objectively in clear, warm, plain-language Bangla, plus an English translation.
+REMEMBER: YOU NEVER BLOCK OR APPROVE TRANSACTIONS. The human user always makes the final decision. You only explain the ML model's factors and advise objectively.
+
+Structured ML Evidence:
+- ML Model: ${params.modelType || 'LightGBM'} (Calibrated Fraud Probability: ${params.probability !== undefined ? (params.probability * 100).toFixed(1) + '%' : params.riskScore + '/100'})
+- Final Risk Decision: ${params.riskScore} / 100 (${params.riskLevel.toUpperCase()})
+- Top Predictive ML Factors: ${topFactorsSummary}
 - Amount: BDT ${params.amount}
 - Masked Recipient: ${params.maskedRecipient} (${params.maskedRecipientName || 'Unknown'})
 - Sanitized Note: "${params.sanitizedNote || 'None'}"
@@ -111,7 +121,7 @@ ${signalSummary}
 
 Return STRICT JSON matching the schema:
 {
-  "explanationBn": "Short, clear Bangla explanation (2-3 sentences) why this transaction was flagged or why it is safe.",
+  "explanationBn": "Short, clear Bangla explanation (2-3 sentences) explaining the model's top factors and why this transaction was flagged or is safe.",
   "explanationEn": "Short, clear English equivalent explanation.",
   "actionAdviceBn": "Concrete, actionable safety advice in Bengali (e.g., call recipient, test payment 10 tk, verify offline).",
   "actionAdviceEn": "Concrete, actionable safety advice in English."
