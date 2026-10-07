@@ -278,6 +278,23 @@ export const HomeScreen: React.FC = () => {
   // Recent 4 transactions for dashboard
   const recentTransactions = transactions.slice(0, 4);
 
+  // User Personal Safety Impact Stats (Computed directly from actual user transactions)
+  const userSafetyStats = React.useMemo(() => {
+    const warnedTxs = transactions.filter(
+      (t) => t.riskLevel === 'medium' || t.riskLevel === 'high' || (t.riskScore && t.riskScore >= 40)
+    );
+    const riskyCancelledTxs = transactions.filter(
+      (t) => t.status === 'blocked' || t.status === 'flagged' || t.isScamConfirmed
+    );
+    const amountProtectedBdt = riskyCancelledTxs.reduce((sum, t) => sum + (t.amount || 0), 0);
+
+    return {
+      warningsCount: warnedTxs.length,
+      riskyCancelledCount: riskyCancelledTxs.length,
+      amountProtectedBdt
+    };
+  }, [transactions]);
+
   return (
     <div className="w-full flex-1 flex flex-col bg-slate-50/40 overflow-y-auto no-scrollbar pb-24">
       {/* Modern Glass Header with Energetic Yellow & Royal Blue */}
@@ -305,6 +322,70 @@ export const HomeScreen: React.FC = () => {
               </span>
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* Customer-Impact Card: "আপনার সুরক্ষা" (Computed from user's transaction history) */}
+      <div className="mx-3.5 mt-3.5">
+        <div className="p-3 rounded-2xl bg-gradient-to-r from-slate-900 via-[#0B2545] to-[#0B4DA2] text-white border border-blue-500/30 shadow-md">
+          <div className="flex items-center justify-between mb-2 gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="w-7 h-7 rounded-xl bg-amber-400/20 text-amber-300 border border-amber-400/30 flex items-center justify-center text-sm shadow-xs shrink-0">
+                🛡️
+              </span>
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <h4 className="text-xs font-black text-white">
+                    {language === 'bn' ? 'আপনার সুরক্ষা' : 'আপনার সুরক্ষা (Your Protection)'}
+                  </h4>
+                  <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-amber-400/20 text-amber-300 border border-amber-400/30">
+                    SIMULATED (synthetic data)
+                  </span>
+                </div>
+                <p className="text-[9.5px] text-blue-200/80 truncate">
+                  {language === 'bn'
+                    ? 'আপনার লেনদেন ইতিহাস থেকে স্বয়ংক্রিয়ভাবে হিসাবকৃত'
+                    : 'Computed live from your local/Firestore transaction history'}
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setCurrentModal('impact_dashboard')}
+              className="text-[10px] font-bold text-amber-300 hover:text-amber-200 underline shrink-0 cursor-pointer"
+            >
+              {language === 'bn' ? 'ইমপ্যাক্ট ড্যাশবোর্ড ›' : 'Impact ROI ›'}
+            </button>
+          </div>
+
+          <div className="grid grid-cols-3 gap-1.5 pt-1.5 border-t border-white/10 text-center">
+            <div className="p-1.5 rounded-xl bg-white/5 border border-white/10">
+              <span className="text-[9px] text-slate-300 block">
+                {language === 'bn' ? 'প্রদর্শিত সতর্কতা' : 'Warnings Shown'}
+              </span>
+              <span className="text-sm font-black font-mono text-amber-300">
+                {userSafetyStats.warningsCount}
+              </span>
+            </div>
+
+            <div className="p-1.5 rounded-xl bg-white/5 border border-white/10">
+              <span className="text-[9px] text-slate-300 block">
+                {language === 'bn' ? 'ঝুঁকিপূর্ণ বাতিল' : 'Risky Cancelled'}
+              </span>
+              <span className="text-sm font-black font-mono text-emerald-300">
+                {userSafetyStats.riskyCancelledCount}
+              </span>
+            </div>
+
+            <div className="p-1.5 rounded-xl bg-white/5 border border-white/10">
+              <span className="text-[9px] text-slate-300 block">
+                {language === 'bn' ? 'সুরক্ষিত টাকা (BDT)' : 'Protected (BDT)'}
+              </span>
+              <span className="text-sm font-black font-mono text-white">
+                {formatCurrency(userSafetyStats.amountProtectedBdt, language)}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
