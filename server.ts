@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { WebSocketServer, WebSocket } from 'ws';
 import { GoogleGenAI, Modality, LiveServerMessage, ThinkingLevel } from '@google/genai';
-import { evaluateTransactionRisk } from './functions/riskEngine';
+import { evaluateTransactionRisk, evaluateWithMl } from './functions/riskEngine';
 import { generateLlmRiskExplanation, maskPhoneNumber, maskName, sanitizeUserText } from './functions/llmExplain';
 import { analyzeScamMessage } from './functions/scamChecker';
 import { categorizeTransaction } from './functions/categorizer';
@@ -80,7 +80,7 @@ app.post('/api/safety/risk-check', async (req, res) => {
 
     const sanitizedNote = sanitizeUserText(note);
 
-    const evaluation = evaluateTransactionRisk({
+    const evaluation = evaluateWithMl({
       transactionId,
       userId,
       amount: Number(amount) || 0,
@@ -89,6 +89,7 @@ app.post('/api/safety/risk-check', async (req, res) => {
       note: sanitizedNote,
       userBaselineAvgAmount: userBaselineAvgAmount || 1200,
       userRecentTransactions: recentTransactions || seedStorage.transactions,
+      userBalance: seedStorage.primaryUser?.balance ?? 18450,
       isNewDevice,
       isNewLocation
     });
@@ -103,7 +104,10 @@ app.post('/api/safety/risk-check', async (req, res) => {
       riskScore: evaluation.score,
       riskLevel: evaluation.level,
       signals: evaluation.signals,
-      sanitizedNote
+      sanitizedNote,
+      probability: evaluation.probability,
+      topFactors: evaluation.topFactors,
+      modelType: evaluation.modelType
     });
 
     if (evaluation.level === 'high') {
@@ -128,6 +132,9 @@ app.post('/api/safety/risk-check', async (req, res) => {
       transactionId,
       riskScore: evaluation.score,
       riskLevel: evaluation.level,
+      probability: evaluation.probability,
+      topFactors: evaluation.topFactors,
+      modelType: evaluation.modelType,
       signals: evaluation.signals,
       explanationBn: explanation.explanationBn,
       explanationEn: explanation.explanationEn,
