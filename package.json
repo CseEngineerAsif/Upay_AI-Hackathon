@@ -11,7 +11,8 @@
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
     "test": "NODE_ENV=test tsx --test tests/security/**/*.test.ts",
-    "test:coverage": "mkdir -p coverage && NODE_ENV=test node --test --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/lcov.info --import tsx tests/security/**/*.test.ts"
+    "test:coverage": "mkdir -p coverage && NODE_ENV=test node --test --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/lcov.info --import tsx tests/security/**/*.test.ts",
+    "evaluate": "tsx scripts/evaluate.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
