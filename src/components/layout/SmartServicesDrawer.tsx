@@ -279,6 +279,7 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
   const { language, setActiveTab } = useAppStore();
   const [isRendered, setIsRendered] = useState(isOpen);
   const [isVisible, setIsVisible] = useState(isOpen);
+  const [showExtendedLabs, setShowExtendedLabs] = useState(true);
 
   // Touch swipe handling
   const touchStartXRef = useRef<number | null>(null);
@@ -440,7 +441,83 @@ export const SmartServicesDrawer: React.FC<SmartServicesDrawerProps> = ({ isOpen
 
         {/* Panel Scrollable Body */}
         <div className="flex-1 overflow-y-auto no-scrollbar p-3 space-y-3.5">
-          {SMART_SECTIONS.map((sec) => (
+          {/* Priority Tier 1: Core Validated Differentiators */}
+          <div className="p-2.5 rounded-2xl bg-slate-900 text-white border border-slate-800 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-black text-amber-400">
+                {language === 'bn' ? '⭐ মূল অগ্রাধিকারপ্রাপ্ত উদ্ভাবন (Core Pillars)' : '⭐ Core Validated Differentiators'}
+              </span>
+              <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                PRIORITY 1
+              </span>
+            </div>
+            <div className="grid grid-cols-1 gap-1.5">
+              {[
+                {
+                  tab: 'dialect_voice' as FeatureTab,
+                  icon: '🎙️',
+                  titleBn: 'আঞ্চলিক ভাষা ভয়েস পে (Dialect Voice Pay)',
+                  titleEn: 'Dialect-Aware Voice Pay',
+                  metric: '93.0% vs 35.0% [SIMULATED]'
+                },
+                {
+                  tab: 'trustpay' as FeatureTab,
+                  icon: '🤝',
+                  titleBn: 'ট্রাস্টপে F-Commerce এসক্রো (TrustPay)',
+                  titleEn: 'TrustPay F-Commerce Escrow',
+                  metric: 'Milestone Escrow + AI Badge'
+                },
+                {
+                  tab: 'somiti' as FeatureTab,
+                  icon: '👥',
+                  titleBn: 'ডিজিটাল সমিতি (Digital Somiti ROSCA)',
+                  titleEn: 'Digital Somiti ROSCA',
+                  metric: 'Fair Payout + Early Warning'
+                }
+              ].map((core) => (
+                <button
+                  key={core.tab}
+                  type="button"
+                  onClick={() => handleSelectFeature(core.tab)}
+                  className="w-full p-2 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 flex items-center justify-between text-left transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-sm">{core.icon}</span>
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-bold text-white truncate">
+                        {language === 'bn' ? core.titleBn : core.titleEn}
+                      </p>
+                      <p className="text-[9px] font-mono text-amber-300 truncate">{core.metric}</p>
+                    </div>
+                  </div>
+                  <span className="text-xs text-white/70">›</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Priority Tier 2 Toggle: Extended Ecosystem Labs (SIMULATED) */}
+          <div className="flex items-center justify-between px-1 pt-1 border-t border-slate-200">
+            <div>
+              <span className="text-[10.5px] font-black text-slate-700 block">
+                {language === 'bn' ? '🧪 সম্প্রসারিত ইকোসিস্টেম মডিউল (SIMULATED)' : '🧪 Extended Ecosystem Labs (SIMULATED)'}
+              </span>
+              <span className="text-[9px] text-slate-500">
+                {language === 'bn' ? 'আর্কিটেকচারাল প্রোটোটাইপসমূহ' : 'Architectural & simulated ecosystem modules'}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowExtendedLabs(!showExtendedLabs)}
+              className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 cursor-pointer"
+            >
+              {showExtendedLabs
+                ? (language === 'bn' ? 'সংক্ষিপ্ত করুন' : 'Collapse')
+                : (language === 'bn' ? 'সব দেখুন (১৫)' : 'Show All (15)')}
+            </button>
+          </div>
+
+          {showExtendedLabs && SMART_SECTIONS.map((sec) => (
             <div key={sec.id} className="space-y-2">
               {/* Section Header */}
               <div className="flex items-center justify-between px-1">
