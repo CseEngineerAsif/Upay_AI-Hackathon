@@ -46,10 +46,12 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onBack }) => {
     setIsVerifying(false);
 
     if (!success) {
+      const serverErr = useAppStore.getState().lastPinError;
       setErrorMsg(
-        user?.id === DEFAULT_DEMO_USER.id
-          ? (language === 'bn' ? 'সঠিক পিন প্রদান করুন' : 'Incorrect PIN ')
-          : (language === 'bn' ? 'এই অ্যাকাউন্টের পিন সঠিক নয়' : 'Incorrect PIN for this account')
+        serverErr ||
+          (user?.id === DEFAULT_DEMO_USER.id
+            ? (language === 'bn' ? 'সঠিক পিন প্রদান করুন' : 'Incorrect PIN')
+            : (language === 'bn' ? 'এই অ্যাকাউন্টের পিন সঠিক নয়' : 'Incorrect PIN for this account'))
       );
       setPin('');
     }
