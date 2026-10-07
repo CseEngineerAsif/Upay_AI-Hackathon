@@ -1,0 +1,238 @@
+{
+  "generatedAt": "2026-10-07T05:00:00.000Z",
+  "dataset": {
+    "totalSamples": 6000,
+    "fraudCount": 253,
+    "legitimateCount": 5747,
+    "fraudRatePercent": 4.2,
+    "totalAttemptedFraudLossBdt": 1125088,
+    "randomSeed": 42,
+    "regions": [
+      "Dhaka",
+      "Chattogram",
+      "Sylhet",
+      "Rajshahi",
+      "Khulna",
+      "Barishal"
+    ],
+    "syntheticNotice": "SIMULATED (synthetic data generated with seeded RNG for reproducible benchmark)"
+  },
+  "metrics": {
+    "precision": 61.6,
+    "recall": 74.7,
+    "f1Score": 67.5,
+    "prAuc": 0.713,
+    "fpr": 2.1,
+    "recallAt1Fpr": 58.9,
+    "recallAt5Fpr": 89.3,
+    "confusionMatrix": {
+      "tp": 189,
+      "fp": 118,
+      "tn": 5629,
+      "fn": 64
+    }
+  },
+  "comparison": {
+    "baseline": {
+      "systemName": "Generic Warning (Baseline)",
+      "description": "Static \"Are you sure?\" confirmation dialog without risk scoring or contextual explanations",
+      "precision": 21.5,
+      "recall": 32,
+      "recallAt1Fpr": 7.9,
+      "fpr": 5.2,
+      "totalLossPreventedBdt": 91507,
+      "lossPreventedRatePercent": 8.1,
+      "falseAlertsCount": 296,
+      "userCancellationRateOnFraud": 14,
+      "completionRateAfterWarningPercent": 63.2,
+      "userFrictionRateOnLegitimate": 5.2
+    },
+    "ours": {
+      "systemName": "Recursion Pay Safe AI (Ours)",
+      "description": "Trained LightGBM model with Bengali explainability factors and 15s cooling-off period",
+      "precision": 61.6,
+      "recall": 74.7,
+      "recallAt1Fpr": 58.9,
+      "fpr": 2.1,
+      "totalLossPreventedBdt": 801599,
+      "lossPreventedRatePercent": 71.2,
+      "falseAlertsCount": 123,
+      "userCancellationRateOnFraud": 78.5,
+      "completionRateAfterWarningPercent": 92.7,
+      "userFrictionRateOnLegitimate": 2.1,
+      "lossPreventedDeltaBdt": 710092,
+      "reductionInFalseFrictionPercent": 58
+    }
+  },
+  "voicePayBenchmark": {
+    "totalUtterances": 200,
+    "baselineSuccessRatePercent": 19.5,
+    "oursSuccessRatePercent": 88.5
+  },
+  "regions": {
+    "Dhaka": {
+      "totalTransactions": 3427,
+      "fraudTransactions": 128,
+      "precision": 60.5,
+      "recall": 71.9,
+      "f1Score": 65.7,
+      "lossPreventedBdt": 366355,
+      "baselineLossPreventedBdt": 43534
+    },
+    "Chattogram": {
+      "totalTransactions": 1110,
+      "fraudTransactions": 49,
+      "precision": 59.4,
+      "recall": 77.6,
+      "f1Score": 67.3,
+      "lossPreventedBdt": 143860,
+      "baselineLossPreventedBdt": 15206
+    },
+    "Sylhet": {
+      "totalTransactions": 600,
+      "fraudTransactions": 36,
+      "precision": 69.8,
+      "recall": 83.3,
+      "f1Score": 75.9,
+      "lossPreventedBdt": 116795,
+      "baselineLossPreventedBdt": 14267
+    },
+    "Rajshahi": {
+      "totalTransactions": 388,
+      "fraudTransactions": 18,
+      "precision": 70,
+      "recall": 77.8,
+      "f1Score": 73.7,
+      "lossPreventedBdt": 72732,
+      "baselineLossPreventedBdt": 10499
+    },
+    "Khulna": {
+      "totalTransactions": 282,
+      "fraudTransactions": 13,
+      "precision": 55,
+      "recall": 84.6,
+      "f1Score": 66.7,
+      "lossPreventedBdt": 46457,
+      "baselineLossPreventedBdt": 5890
+    },
+    "Barishal": {
+      "totalTransactions": 193,
+      "fraudTransactions": 9,
+      "precision": 50,
+      "recall": 44.4,
+      "f1Score": 47.1,
+      "lossPreventedBdt": 15231,
+      "baselineLossPreventedBdt": 2111
+    }
+  },
+  "rocCurveSampled": [
+    {
+      "fprPercent": 0,
+      "recallPercent": 12.6,
+      "baselineRecallPercent": 0,
+      "threshold": 1
+    },
+    {
+      "fprPercent": 0.5,
+      "recallPercent": 47,
+      "baselineRecallPercent": 3.2,
+      "threshold": 1
+    },
+    {
+      "fprPercent": 1,
+      "recallPercent": 59.3,
+      "baselineRecallPercent": 8.7,
+      "threshold": 1
+    },
+    {
+      "fprPercent": 1.5,
+      "recallPercent": 60.1,
+      "baselineRecallPercent": 11.5,
+      "threshold": 1
+    },
+    {
+      "fprPercent": 2.1,
+      "recallPercent": 84.2,
+      "baselineRecallPercent": 15,
+      "threshold": 0.17
+    },
+    {
+      "fprPercent": 3,
+      "recallPercent": 87,
+      "baselineRecallPercent": 20.6,
+      "threshold": 0.01
+    },
+    {
+      "fprPercent": 4,
+      "recallPercent": 88.5,
+      "baselineRecallPercent": 28.5,
+      "threshold": 0
+    },
+    {
+      "fprPercent": 5,
+      "recallPercent": 89.3,
+      "baselineRecallPercent": 31.6,
+      "threshold": 0
+    },
+    {
+      "fprPercent": 7.5,
+      "recallPercent": 89.7,
+      "baselineRecallPercent": 38.7,
+      "threshold": 0
+    },
+    {
+      "fprPercent": 10,
+      "recallPercent": 90.1,
+      "baselineRecallPercent": 46.6,
+      "threshold": 0
+    },
+    {
+      "fprPercent": 15,
+      "recallPercent": 90.9,
+      "baselineRecallPercent": 54.9,
+      "threshold": 0
+    },
+    {
+      "fprPercent": 20,
+      "recallPercent": 92.5,
+      "baselineRecallPercent": 64.8,
+      "threshold": 0
+    },
+    {
+      "fprPercent": 30,
+      "recallPercent": 96,
+      "baselineRecallPercent": 79.1,
+      "threshold": 0
+    },
+    {
+      "fprPercent": 40,
+      "recallPercent": 96.8,
+      "baselineRecallPercent": 86.6,
+      "threshold": 0
+    },
+    {
+      "fprPercent": 50,
+      "recallPercent": 97.2,
+      "baselineRecallPercent": 92.1,
+      "threshold": 0
+    },
+    {
+      "fprPercent": 65,
+      "recallPercent": 98.8,
+      "baselineRecallPercent": 97.6,
+      "threshold": 0
+    },
+    {
+      "fprPercent": 80,
+      "recallPercent": 99.2,
+      "baselineRecallPercent": 98.4,
+      "threshold": 0
+    },
+    {
+      "fprPercent": 100,
+      "recallPercent": 100,
+      "baselineRecallPercent": 100,
+      "threshold": 0
+    }
+  ]
+}
