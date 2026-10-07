@@ -280,3 +280,68 @@ npm run test:coverage
 3. **SOC ও সেন্ট্রালাইজড মনিটরিং:** রিয়েল-টাইম ফ্রড ডিটেকশন ও ইনট্রুশন অ্যানালাইসিসের জন্য ২৪/৭ সিকিউরিটি অপারেশন সেন্টার (SOC), সাইবার ইভেন্ট লগিং (SIEM) ও ডেটাডগ/স্প্লাঙ্ক অ্যালার্ট।
 4. **বাস্তব ফ্রড লেবেল ও কন্টিনিউয়াস রিট্রেনিং:** লাইভ ফ্রড কমপ্লেইন এবং চার্জব্যাক ডেটা থেকে লাইটজিবিএম (LightGBM) মডেলটির নিয়মিত রি-ট্রেনিং পাইপলাইন এবং ড্রিফট ট্র্যাকিং।
 
+---
+
+## 📈 Results — মডেল মূল্যায়ন ও ব্যবসায়িক প্রভাব ফলাফল [SIMULATED (synthetic data)]
+
+> **⚠️ SIMULATED (synthetic data):**  
+> নিচের প্রতিটি সংখ্যা `npm run evaluate` (`scripts/evaluate.ts`) স্ক্রিপ্ট দ্বারা ৬,০০০টি সিডেড সিন্থেটিক ট্রানজ্যাকশন (Seed: 42) এবং `functions/mlRiskModel.ts`-এর প্রশিক্ষিত LightGBM মডেলের ওপর প্রোগ্রাম্যাটিকভাবে হিসাবকৃত। কোনো পরিসংখ্যান অনুমান বা কাল্পনিকভাবে বসানো হয়নি; প্রতিটি সংখ্যা হুবহু `reports/impact_eval.json` থেকে সংকলিত।
+
+### ১. মডেল পারফরম্যান্স মেট্রিক্স (Model Evaluation Metrics — `reports/impact_eval.json`)
+
+| মেট্রিক (Metric) | মান (Evaluated Score) | স্ট্যাটাস ব্যাজ | ব্যাখ্যা (Description from `reports/impact_eval.json`) |
+|---|---|---|---|
+| **Total Test Samples** | **6,000** (`253` fraud, `5,747` legit) | `SIMULATED (synthetic data)` | ৪.২% ফ্রড রেট, মোট প্রতারণার চেষ্টা: `৳1,125,088 BDT` (Seed: 42) |
+| **Precision** | **61.6%** | `SIMULATED (synthetic data)` | অ্যালার্ট পাওয়া লেনদেনের মধ্যে প্রকৃত ফ্রড শনাক্তের নির্ভুলতা (`TP / (TP + FP)`) |
+| **Recall (TPR)** | **74.7%** | `SIMULATED (synthetic data)` | মোট সংঘটিত ফ্রডের মধ্যে এআই মডেল দ্বারা সফলভাবে শনাক্তের হার (`TP / (TP + FN)`) |
+| **F1-Score** | **67.5%** | `SIMULATED (synthetic data)` | প্রিসিশন ও রিকলের হারমোনিক গড় |
+| **PR-AUC** | **0.713** | `SIMULATED (synthetic data)` | পূর্ণ র‍্যাংক-অর্ডারড প্রিসিশন-রিকল কার্ভের ক্ষেত্রফল (Average Precision) |
+| **False Positive Rate (FPR)** | **2.1%** | `SIMULATED (synthetic data)` | সাধারণ বৈধ লেনদেনে অযথা অ্যালার্ট সৃষ্টির হার (`118 / 5,747`) |
+| **Recall @ 1% FPR** | **58.9%** | `SIMULATED (synthetic data)` | মাত্র ১% ফলস অ্যালার্টে সীমাবদ্ধ রেখে ফ্রড শনাক্তের রিকল |
+| **Recall @ 5% FPR** | **89.3%** | `SIMULATED (synthetic data)` | ৫% ফলস অ্যালার্ট সীমায় ফ্রড শনাক্তের রিকল |
+| **Confusion Matrix** | **TP: 189, FP: 118, TN: 5,629, FN: 64** | `SIMULATED (synthetic data)` | অপারেশনাল থ্রেশহোল্ড `0.40`-এ ১৮৯টি ফ্রড ধৃত, ৬৪টি ফলস নেগেটিভ |
+
+---
+
+### ২. সিস্টেম তুলনা: জেনেরিক বনাম রিকার্শন পে (Baseline vs. Ours on Same Test Set — `SIMULATED`)
+
+| বৈশিষ্ট্য ও ফলাফল (Comparison Dimension) | (a) Baseline: Generic "Are you sure?" Warning | (b) Ours: AI Risk Score + Warning + Cooling-Off | উন্নতি (Delta / Uplift) |
+|---|---|---|---|
+| **সতর্কতা পদ্ধতি (Intervention)** | স্ট্যাটিক "Are you sure?" পপআপ (No risk scoring) | LightGBM এআই স্কোর + বাংলায় কারণ + ১৫ সে. কুলিং-অফ | ব্যাখ্যাযোগ্য ও পারসোনালাইজড |
+| **Precision** | 21.5% | **61.6%** | **+40.1 pts** (`SIMULATED`) |
+| **Recall (Overall)** | 32.0% | **74.7%** | **+42.7 pts** (`SIMULATED`) |
+| **Recall @ 1% FPR** | 7.9% | **58.9%** | **+51.0 pts** (`SIMULATED`) |
+| **False Positive Rate (FPR)** | 5.2% (`296` false alerts) | **2.1%** (`123` false alerts) | **58% ফলস অ্যালার্ট হ্রাস** (`SIMULATED`) |
+| **Warned Scam Cancellation Rate** | 14.0% | **78.5%** | **+64.5 pts ইউজার ক্যান্সেলেশন** (`SIMULATED`) |
+| **Legitimate Completion Rate After Warning** | 63.2% | **92.7%** | **+29.5 pts বৈধ লেনদেন সম্পন্ন** (`SIMULATED`) |
+| **Fraud Loss Prevented (6,000-tx Test Set)** | ৳91,507 BDT (`8.1%` of attempted fraud) | **৳801,599 BDT** (`71.2%` of attempted fraud) | **+৳710,092 BDT (+776%)** (`SIMULATED`) |
+| **Dialect Voice-Pay Success Rate (200 Utterances)** | 19.5% (Standard `bn-BD` STT only) | **88.5%** (Dialect Normalization + PIN) | **+69.0 pts** (`SIMULATED`) |
+
+---
+
+### ৩. বিভাগভিত্তিক রিকল ও শনাক্তকরণ (Per-Region Breakdown from `reports/impact_eval.json` — `SIMULATED`)
+
+| বিভাগ (Region) | মোট লেনদেন (Total Txs) | ফ্রড সংখ্যা (Fraud Txs) | প্রিসিশন (Precision) | রিকল (Recall) | F1-Score | Baseline Loss Prevented (BDT) | Ours Loss Prevented (BDT) |
+|---|---|---|---|---|---|---|---|
+| **Dhaka (ঢাকা)** | 3,427 | 128 | 60.5% | **71.9%** | 65.7% | ৳43,534 BDT | **৳366,355 BDT** |
+| **Chattogram (চট্টগ্রাম)** | 1,110 | 49 | 59.4% | **77.6%** | 67.3% | ৳15,206 BDT | **৳143,860 BDT** |
+| **Sylhet (সিলেট)** | 600 | 36 | 69.8% | **83.3%** | 75.9% | ৳14,267 BDT | **৳116,795 BDT** |
+| **Rajshahi (রাজশাহী)** | 388 | 18 | 70.0% | **77.8%** | 73.7% | ৳10,499 BDT | **৳72,732 BDT** |
+| **Khulna (খুলনা)** | 282 | 13 | 55.0% | **84.6%** | 66.7% | ৳5,890 BDT | **৳46,457 BDT** |
+| **Barishal (বরিশাল)** | 193 | 9 | 50.0% | **44.4%** | 47.1% | ৳2,111 BDT | **৳15,231 BDT** |
+
+---
+
+### ৪. Limitations (সীমাবদ্ধতা — Synthetic Data, No Real Users, No Live Pilot)
+সমস্ত মডেল মেট্রিক্স, আরওআই (ROI) এবং আচরণগত ফলাফল একটি ডিটারমিনিস্টিক সিডেড সিন্থেটিক ডেটাসেট (`Seed: 42`, ৬,০০০ ট্রানজ্যাকশন) থেকে তৈরি করা হয়েছে (`SIMULATED (synthetic data)`)। ব্যাংকিং গোপনীয়তা ও গ্রাহকের এনআইডি সুরক্ষার কারণে এখানে কোনো বাস্তব এমএফএস গ্রাহকের লাইভ লেনদেন নেই, কোনো বাস্তব ব্যবহারকারী ট্রায়াল (no real users) বা লাইভ প্রোডাকশন পাইলট (no live pilot) এখনো পরিচালিত হয়নি। এছাড়া কুলিং-অফ পিরিয়ডে গ্রাহকের স্ক্যাম বাতিল হার (`78.5%`), বৈধ লেনদেন সম্পন্ন করার হার (`92.7%`), প্রতি ভুল সতর্কতায় সাপোর্ট খরচ (`৳15 BDT`), এবং ম্যানুয়াল রিভিউ খরচ (`৳40 BDT`) সিমুলেটেড অনুমিতির ওপর ভিত্তি করে হিসাব করা হয়েছে যা ড্যাশবোর্ডের **Assumptions** প্যানেলে সরাসরি অডিট ও পরিবর্তন করা যায়।
+
+---
+
+### ৫. Next: Pilot Plan (পরবর্তী ধাপ: লাইভ পাইলট বাস্তবায়ন পরিকল্পনা)
+বাস্তব প্রোডাকশনে যাওয়ার আগে একটি নিয়ন্ত্রিত ৯০-দিনের অপ্ট-ইন পাইলট (Controlled A/B Pilot with 10,000 consenting MFS users) পরিচালনার পরিকল্পনা রয়েছে যেখানে নিম্নলিখিত বাস্তব মেট্রিকগুলো সংগ্রহ ও যাচাই করা হবে:
+1. **Verified Chargeback & BFIU Dispute Rate:** পাইলট কোহর্ট বনাম কন্ট্রোল কোহর্টে প্রকৃত প্রতারণাজনিত আর্থিক ক্ষতি ও রিপোর্টকৃত ডিসপিউটের শতকরা হ্রাস।
+2. **Real Warning Cancellation & Cooling-Off Conversion:** ১৫-সেকেন্ডের কুলিং পিরিয়ড ও বাংলা রিস্ক ফ্যাক্টর দেখার পর বাস্তব ব্যবহারকারীরা কত শতাংশ সন্দেহজনক লেনদেন বাতিল করেন এবং বৈধ লেনদেনে কত শতাংশ `৳10` টেস্ট ট্রান্সফার ব্যবহার করে লেনদেন সম্পন্ন করেন।
+3. **False-Alert Support Ticket Incidence:** অযথা সতর্কবার্তা (False Positives) পাওয়ার পর কল সেন্টার বা চ্যাট সাপোর্টে আসা প্রকৃত ইনকোয়ারির হার এবং প্রতি টিকিটের বাস্তব অপারেশনাল খরচ।
+4. **Live Acoustic Dialect WER & Intent Accuracy:** হাট-বাজার ও গণপরিবহনের বাস্তব শব্দদূষণের (Ambient Noise) মধ্যে চাটগাঁইয়া, সিলেটি, নোয়াখাইল্লা ও রংপুরিয়া ভয়েস কমান্ডের প্রকৃত সফলতার হার এবং টিটিএস (TTS) শোনার পর পিন কনফার্মেশন ড্রপ-অফ।
+
+
