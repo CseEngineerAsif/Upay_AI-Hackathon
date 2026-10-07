@@ -45,6 +45,19 @@ interface PendingPayment {
   roundUpAmount: number;
 }
 
+async function getAuthHeaders(): Promise<Record<string, string>> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  try {
+    if (auth.currentUser) {
+      const token = await auth.currentUser.getIdToken();
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+  } catch {
+    // Fallback for local/demo mode when no Firebase session token is active
+  }
+  return headers;
+}
+
 interface AppState {
   user: UserProfile | null;
   registeredUsers: UserProfile[];
@@ -71,11 +84,13 @@ interface AppState {
   pendingPayment: PendingPayment | null;
   currentRiskAssessment: RiskAssessment | null;
   lastCompletedTx: Transaction | null;
+  lastPinError: string | null;
 
   // Actions
   registerUser: (params: NewRegistrationParams) => Promise<UserProfile>;
   switchUser: (phoneOrId: string) => boolean;
   loginWithPin: (pin: string, phoneOrId?: string) => Promise<boolean>;
+  changePin: (currentPin: string, newPin: string) => Promise<{ success: boolean; error?: string }>;
   loginWithBiometric: () => Promise<boolean>;
   loginWithGoogle: () => Promise<boolean>;
   logout: () => void;
@@ -166,6 +181,7 @@ export const useAppStore = create<AppState>((set, get) => {
     pendingPayment: null,
     currentRiskAssessment: null,
     lastCompletedTx: null,
+    lastPinError: null,
 
     initData: async () => {
       // Re-sync from account manager
@@ -190,6 +206,21 @@ export const useAppStore = create<AppState>((set, get) => {
 
     registerUser: async (params: NewRegistrationParams) => {
       const newUser = registerNewAccount(params);
+      try {
+        const headers = await getAuthHeaders();
+        await fetch('/api/auth/set-pin', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            userId: newUser.id,
+            phone: newUser.phone,
+            newPin: params.pin
+          })
+        });
+      } catch (err) {
+        console.warn('Server PIN registration notice:', err);
+      }
+
       const userTxs = getUserTransactions(newUser.id);
       const userGoals = getUserGoals(newUser.id);
       const userAlerts = getUserAlerts(newUser.id);
@@ -241,9 +272,26 @@ export const useAppStore = create<AppState>((set, get) => {
       }
       if (!targetUser) return false;
 
-      // Strictly verify that the PIN matches this specific account's PIN
-      const isCorrectPin = pin === targetUser.pin || (targetUser.id === DEFAULT_DEMO_USER.id && pin === '1234');
-      if (!isCorrectPin) {
+      // Strictly verify PIN server-side via salted scrypt hash (with 5-failure 15-min lockout)
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch('/api/auth/verify-pin', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            pin,
+            phone: targetUser.phone,
+            userId: targetUser.id
+          })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.valid) {
+          set({ lastPinError: data.error || 'Incorrect PIN' });
+          return false;
+        }
+        set({ lastPinError: null });
+      } catch (err: any) {
+        set({ lastPinError: err?.message || 'PIN verification service unavailable' });
         return false;
       }
 
@@ -263,6 +311,31 @@ export const useAppStore = create<AppState>((set, get) => {
         simpleMode: targetUser.simpleMode || false
       });
       return true;
+    },
+
+    changePin: async (currentPin: string, newPin: string) => {
+      const { user } = get();
+      if (!user) return { success: false, error: 'User not loaded' };
+      try {
+        const headers = await getAuthHeaders();
+        const res = await fetch('/api/auth/set-pin', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            userId: user.id,
+            phone: user.phone,
+            currentPin,
+            newPin
+          })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          return { success: false, error: data.error || 'Failed to update PIN' };
+        }
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err?.message || 'Network error while updating PIN' };
+      }
     },
 
     loginWithBiometric: async () => {
@@ -287,7 +360,6 @@ export const useAppStore = create<AppState>((set, get) => {
             email: result.user.email || undefined,
             avatar: result.user.photoURL || undefined,
             balance: 18450,
-            pin: '1234',
             isBiometricEnabled: true,
             role: 'user',
             guardianPhone: '01819234567',
@@ -458,8 +530,30 @@ export const useAppStore = create<AppState>((set, get) => {
         return { success: false, error: 'লেনদেনের বিবরণ পাওয়া যায়নি (Invalid transaction state)' };
       }
 
-      if (pin !== user.pin && pin !== '1234') {
-        return { success: false, error: 'ভুল পিন প্রদান করেছেন (Invalid PIN)' };
+      // Strictly verify PIN server-side via salted scrypt hash (no client-side plain PIN or fallback)
+      try {
+        const headers = await getAuthHeaders();
+        const pinRes = await fetch('/api/auth/verify-pin', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            pin,
+            phone: user.phone,
+            userId: user.id
+          })
+        });
+        const pinData = await pinRes.json();
+        if (!pinRes.ok || !pinData.valid) {
+          return {
+            success: false,
+            error: pinData.error || 'ভুল পিন প্রদান করেছেন (Invalid PIN)'
+          };
+        }
+      } catch {
+        return {
+          success: false,
+          error: 'পিন যাচাইকরণ সার্ভারে সংযোগ করা যায়নি (PIN verification failed)'
+        };
       }
 
       const totalDeduction = pendingPayment.amount + pendingPayment.fee + (pendingPayment.roundUpAmount || 0);
