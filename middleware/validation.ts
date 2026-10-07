@@ -233,3 +233,36 @@ export const LiquidityForecastBodySchema = z
 
 // 19. Seed Reset Schema
 export const SeedResetBodySchema = z.object({}).strict();
+
+// 20. Server-Side PIN Verification Schema
+export const VerifyPinBodySchema = z
+  .object({
+    pin: z.string().regex(/^\d{4,6}$/, 'PIN must be 4 to 6 numeric digits'),
+    phone: z.string().min(5).max(20).optional(),
+    userId: z.string().max(128).optional()
+  })
+  .strict();
+
+// 21. Server-Side PIN Setup / Change Schema
+export const SetPinBodySchema = z
+  .object({
+    newPin: z.string().regex(/^\d{4,6}$/, 'New PIN must be 4 to 6 numeric digits'),
+    currentPin: z.string().regex(/^\d{4,6}$/, 'Current PIN must be 4 to 6 numeric digits').optional(),
+    phone: z.string().min(5).max(20).optional(),
+    userId: z.string().max(128).optional()
+  })
+  .strict();
+
+// 22. Admin Fraud Blocklist Addition Schema (SHA-256 governed blocklist)
+export const BlocklistAddBodySchema = z
+  .object({
+    phone: z.string().min(5).max(20).optional(),
+    phoneHash: z.string().regex(/^[a-fA-F0-9]{64}$/, 'phoneHash must be a valid 64-character SHA-256 hex digest').optional(),
+    source: z.enum(['bangladesh_bank_alert', 'analyst_escalation', 'community_verified', 'mfs_federated_feed']),
+    reason: z.string().max(300).optional()
+  })
+  .strict()
+  .refine(data => Boolean(data.phone || data.phoneHash), {
+    message: 'Either phone or phoneHash must be provided'
+  });
+
