@@ -4,7 +4,7 @@ import { useAppStore } from '../../store/useAppStore';
 import { RiskAssessment } from '../../types';
 import { formatCurrency, toBanglaNumber, formatDate } from '../../utils/formatters';
 import { CustomKeypad } from '../brand/UpayIcons';
-import { evaluateTransactionRisk } from '../../../functions/riskEngine';
+import { evaluateTransactionRisk, evaluateWithMl } from '../../../functions/riskEngine';
 import { getFallbackExplanation } from '../../../functions/llmExplain';
 import { AIVerificationLoading } from './AIVerificationLoading';
 
@@ -234,7 +234,7 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
     }
 
     if (!assessment) {
-      const evalResult = evaluateTransactionRisk({
+      const evalResult = evaluateWithMl({
         transactionId: `tx_${Date.now()}`,
         userId: user?.id || 'user_main_maynul',
         amount: numAmount,
@@ -242,7 +242,8 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
         recipientName: info.name,
         note: info.sub,
         userBaselineAvgAmount: 1200,
-        userRecentTransactions: transactions
+        userRecentTransactions: transactions,
+        userBalance: user?.balance ?? 18450
       });
 
       const explanation = getFallbackExplanation(evalResult.level, evalResult.signals, numAmount);
@@ -251,6 +252,9 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
         transactionId: `tx_${Date.now()}`,
         riskScore: evalResult.score,
         riskLevel: evalResult.level,
+        probability: evalResult.probability,
+        modelType: evalResult.modelType,
+        topFactors: evalResult.topFactors,
         signals: evalResult.signals,
         explanationBn: explanation.explanationBn,
         explanationEn: explanation.explanationEn,
@@ -1028,6 +1032,49 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
                     {/* Full Details Revealed When Button is Clicked */}
                     {showAiAssessmentDetails && (
                       <div className="p-3.5 space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                        {/* LightGBM Trained Fraud Model Badge */}
+                        <div className="bg-indigo-50/90 border border-indigo-200/90 rounded-xl p-2.5 flex flex-col gap-1.5 shadow-2xs">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-1.5">
+                              <span className="px-2 py-0.5 rounded-md bg-indigo-600 text-white font-black text-[9px] tracking-wider uppercase flex items-center gap-1">
+                                <span>⚡</span> ML model
+                              </span>
+                              <span className="text-[10.5px] font-bold text-indigo-950">
+                                {language === 'bn' ? 'প্রশিক্ষিত LightGBM ফ্রড মডেল' : 'Trained LightGBM Fraud Model'}
+                              </span>
+                            </div>
+                            <span className="text-[10px] font-black font-mono px-2 py-0.5 rounded-full bg-white text-indigo-700 border border-indigo-200 shadow-2xs">
+                              {language === 'bn' ? 'ঝুঁকির সম্ভাবনা: ' : 'Fraud Prob: '}
+                              {riskAssessment.probability !== undefined
+                                ? `${toBanglaNumber(Math.round(riskAssessment.probability * 100))}%`
+                                : `${toBanglaNumber(riskAssessment.riskScore)}%`}
+                            </span>
+                          </div>
+
+                          {/* Top 3 Predictive Factors */}
+                          {riskAssessment.topFactors && riskAssessment.topFactors.length > 0 && (
+                            <div className="space-y-1 pt-1 border-t border-indigo-100">
+                              <span className="text-[9.5px] font-bold text-indigo-950 block">
+                                {language === 'bn' ? 'মডেলের শীর্ষ ৩টি রিস্ক ফ্যাক্টর:' : 'Top 3 ML Risk Factors:'}
+                              </span>
+                              <div className="flex flex-wrap gap-1">
+                                {riskAssessment.topFactors.slice(0, 3).map((factor, fIdx) => (
+                                  <span
+                                    key={fIdx}
+                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white/95 border border-indigo-200/80 text-[9.5px] text-indigo-900 font-semibold"
+                                  >
+                                    <span className="text-indigo-500 font-bold">•</span>
+                                    <span>{factor.labelBn || factor.feature}</span>
+                                    <span className="text-[8.5px] font-mono text-indigo-600 font-bold">
+                                      (+{toBanglaNumber(Math.round(factor.impact * 10) / 10)})
+                                    </span>
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
                         <p className="text-[11px] leading-relaxed bg-white/90 p-2.5 rounded-xl text-slate-800 shadow-2xs border border-white">
                           {language === 'bn' ? riskAssessment.explanationBn : riskAssessment.explanationEn}
                         </p>
