@@ -9,7 +9,7 @@ export interface UserProfile {
   email?: string;
   avatar?: string;
   balance: number;
-  pin: string; // "1234" for demo / hashed
+  pin?: string; // Deprecated on client: PINs are verified exclusively via server-side salted scrypt
   isBiometricEnabled: boolean;
   role: UserRole;
   guardianPhone?: string;
