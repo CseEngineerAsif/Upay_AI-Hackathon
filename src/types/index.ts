@@ -77,6 +77,9 @@ export interface RiskAssessment {
   transactionId: string;
   riskScore: number; // 0 - 100
   riskLevel: 'low' | 'medium' | 'high';
+  probability?: number;
+  modelType?: string;
+  topFactors?: { feature: string; value: number; impact: number; labelBn?: string }[];
   signals: RiskRuleSignal[];
   explanationBn: string;
   explanationEn: string;
