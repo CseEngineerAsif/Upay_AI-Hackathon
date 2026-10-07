@@ -40,3 +40,24 @@ This dataset is a synthetic simulation of Mobile Financial Service (MFS) transac
   - Regions: Dhaka, Chittagong, Sylhet, Rajshahi, Khulna, Barisal.
   - Age Demographics: 18-25, 26-40, 41-60, 60+.
   - Account Tenure: New accounts (<30 days) vs Established accounts (>1 year).
+
+## 6. Limitations & Known Boundaries
+
+### 6.1 Synthetic Simulation vs. Live Banking Data
+- **Privacy-Preserving Synthetic Generation**: Due to banking privacy regulations, customer NID confidentiality, and PCI-DSS requirements, this dataset was generated using behavioral distributions and verified MFS fraud typologies rather than raw exported customer records.
+- **Novel Attack Vectors**: While 11 core features (velocity, amount-to-baseline ratio, odd hours, account age, balance drain ratio, recipient reports, note flags) reflect established fraud topologies, novel adversarial tactics (e.g., evolving voice deepfakes or distributed mule ring coordination) may require continuous retraining with live fraud labels.
+
+### 6.2 Cold-Start & Short-Tenure Profiles
+- **Sparse Historical Footprint**: For newly activated accounts (<14 days old or with <3 completed transfers), the behavioral baseline defaults to synthetic population median values (৳1,200 baseline). This can temporarily elevate false-positive friction for legitimate first-time high-value transfers.
+- **Safety Boundary**: The system never denies or freezes funds autonomously; high-risk alerts trigger educational checklists and optional ৳10 test transaction recommendations, keeping agency with the user.
+
+### 6.3 Linguistic & Dialectal Boundaries
+- **Supported Regional Variants**: The dialect normalization model covers Standard Bengali, Chattagonian (চাটগাঁইয়া), Sylheti (সিলেটি), Noakhali (নোয়াখাইল্লা), and Rangpuri (রংপুরিয়া).
+- **Acoustic Conditions**: Dense ambient acoustic noise (e.g., wet markets, public transport) and rapid hybrid Banglish or localized slang can challenge raw speech transcription. Mandatory PIN verification and audible TTS summaries protect against incorrect executions.
+
+### 6.4 Seasonal & Festival Surges
+- **Festival Seasonality**: Spending patterns during religious festivals (Eid-ul-Fitr, Eid-ul-Adha, Durga Puja) exhibit legitimate 3x–6x velocity spikes and late-night activity. A production deployment requires calendar-aware seasonal baselines to mitigate false alarms during holiday shopping windows.
+
+### 6.5 Regulatory & Advisory Scope
+- **Consumer Advisory Interface**: All AI and ML scores serve as explainable decision-support for end-users and compliance analysts. They do not substitute for official regulatory Suspicious Transaction Reports (STR/SAR) governed by the Bangladesh Financial Intelligence Unit (BFIU).
+
