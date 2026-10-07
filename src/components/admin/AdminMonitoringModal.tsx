@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { formatCurrency, toBanglaNumber } from '../../utils/formatters';
 import { generateSeedData } from '../../../functions/seedData';
+import { EVAL_REPORT } from '../../utils/impactModel';
 
 interface BenchmarkCase {
   id: string;
@@ -16,7 +17,7 @@ interface BenchmarkCase {
 }
 
 export const AdminMonitoringModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { language } = useAppStore();
+  const { language, setCurrentModal } = useAppStore();
   const [cases, setCases] = useState<BenchmarkCase[]>(() => generateSeedData().benchmarkCases || []);
   const [activeTab, setActiveTab] = useState<'metrics' | 'fairness'>('metrics');
 
@@ -38,66 +39,43 @@ export const AdminMonitoringModal: React.FC<{ onClose: () => void }> = ({ onClos
     fetchCases();
   }, []);
 
-  // Compute Metrics
-  let tp = 0; // Actual fraud & Predicted High/Med
-  let fp = 0; // Not fraud & Predicted High
-  let tn = 0; // Not fraud & Predicted Low
-  let fn = 0; // Actual fraud & Predicted Low
-  let totalSaved = 0;
-  let totalLatency = 0;
+  // Compute Metrics directly from reports/impact_eval.json & deterministic seed cases
+  const precision = EVAL_REPORT.metrics.precision;
+  const recall = EVAL_REPORT.metrics.recall;
+  const fpr = EVAL_REPORT.metrics.fpr;
+  const totalSaved = EVAL_REPORT.comparison.ours.totalLossPreventedBdt;
+  const totalTp = EVAL_REPORT.metrics.confusionMatrix.tp;
+  const totalLatency = cases.reduce((acc, c) => acc + c.latencyMs, 0);
+  const avgLatency = cases.length > 0 ? Math.round(totalLatency / cases.length) : 0;
 
-  cases.forEach((c) => {
-    totalLatency += c.latencyMs;
-    const isPredictedPositive = c.predictedRiskScore >= 60;
+  // Regional stats from reports/impact_eval.json
+  const regionStats = Object.entries(EVAL_REPORT.regions).map(([name, stat]) => ({
+    name,
+    recall: stat.recall,
+    count: stat.totalTransactions
+  }));
 
-    if (c.isActualFraud && isPredictedPositive) {
-      tp++;
-      totalSaved += c.amount;
-    } else if (!c.isActualFraud && isPredictedPositive) {
-      fp++;
-    } else if (!c.isActualFraud && !isPredictedPositive) {
-      tn++;
-    } else if (c.isActualFraud && !isPredictedPositive) {
-      fn++;
-    }
-  });
-
-  const precision = (tp + fp) > 0 ? Math.round((tp / (tp + fp)) * 100) : 92;
-  const recall = (tp + fn) > 0 ? Math.round((tp / (tp + fn)) * 100) : 95;
-  const fpr = (fp + tn) > 0 ? (fp / (fp + tn) * 100).toFixed(1) : '2.1';
-  const avgLatency = cases.length > 0 ? Math.round(totalLatency / cases.length) : 124;
-
-  // Fairness calculations by Region
-  const regions = ['Dhaka', 'Chittagong', 'Sylhet', 'Rajshahi', 'Khulna', 'Barisal'];
-  const regionStats = regions.map((reg) => {
-    const subset = cases.filter((c) => c.region === reg);
-    const subTp = subset.filter((c) => c.isActualFraud && c.predictedRiskScore >= 60).length;
-    const subActual = subset.filter((c) => c.isActualFraud).length;
-    const recallRate = subActual > 0 ? Math.round((subTp / subActual) * 100) : 95;
-    return { name: reg, recall: recallRate, count: subset.length };
-  });
-
-  // Fairness by Age Group
+  // Fairness by Age Group (deterministic 120 seed cases)
   const ageGroups = ['18-25', '26-40', '41-60', '60+'];
   const ageStats = ageGroups.map((ag) => {
     const subset = cases.filter((c) => c.ageGroup === ag);
     const subTp = subset.filter((c) => c.isActualFraud && c.predictedRiskScore >= 60).length;
     const subActual = subset.filter((c) => c.isActualFraud).length;
-    const recallRate = subActual > 0 ? Math.round((subTp / subActual) * 100) : 94;
+    const recallRate = subActual > 0 ? Math.round((subTp / subActual) * 100) : 0;
     return { name: ag, recall: recallRate, count: subset.length };
   });
 
-  // Fairness by Tenure
+  // Fairness by Tenure (deterministic 120 seed cases)
   const newUsers = cases.filter((c) => c.userTenure === 'new');
   const oldUsers = cases.filter((c) => c.userTenure === 'established');
   const newRecall = Math.round(
     (newUsers.filter((c) => c.isActualFraud && c.predictedRiskScore >= 60).length /
-      (newUsers.filter((c) => c.isActualFraud).length || 1)) *
+      Math.max(newUsers.filter((c) => c.isActualFraud).length, 1)) *
       100
   );
   const oldRecall = Math.round(
     (oldUsers.filter((c) => c.isActualFraud && c.predictedRiskScore >= 60).length /
-      (oldUsers.filter((c) => c.isActualFraud).length || 1)) *
+      Math.max(oldUsers.filter((c) => c.isActualFraud).length, 1)) *
       100
   );
 
@@ -109,10 +87,19 @@ export const AdminMonitoringModal: React.FC<{ onClose: () => void }> = ({ onClos
           <div className="flex items-center gap-2">
             <span className="text-xl">📈</span>
             <div>
-              <h2 className="text-sm font-bold">
-                {language === 'bn' ? 'মডেল মনিটরিং ও ফেয়ারনেস' : 'Model Monitoring & Impact'}
-              </h2>
-              <span className="text-[10px] text-teal-400">সিন্থেটিক বেঞ্চমার্ক অডিট (১২০ কেস)</span>
+              <div className="flex items-center gap-1.5">
+                <h2 className="text-sm font-bold">
+                  {language === 'bn' ? 'মডেল মনিটরিং ও ফেয়ারনেস' : 'Model Monitoring & Fairness'}
+                </h2>
+                <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  SIMULATED (synthetic data)
+                </span>
+              </div>
+              <span className="text-[10px] text-teal-400">
+                {language === 'bn'
+                  ? 'reports/impact_eval.json (৬,০০০ স্যাম্পল) ও ১২০ কেস অডিট'
+                  : 'Evaluated on reports/impact_eval.json (6,000 samples) & 120 cases'}
+              </span>
             </div>
           </div>
           <button
@@ -149,14 +136,21 @@ export const AdminMonitoringModal: React.FC<{ onClose: () => void }> = ({ onClos
             <div className="space-y-4">
               {/* Estimated Money Saved Hero */}
               <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-800 to-teal-700 text-white text-center space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-200">
-                  {language === 'bn' ? 'প্রতারণা রোধে সংরক্ষিত আনুমানিক অর্থ' : 'Estimated Fraud Prevented'}
-                </span>
+                <div className="flex items-center justify-center gap-1.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-200">
+                    {language === 'bn' ? 'বেঞ্চমার্কে প্রতিরোধকৃত ফ্রড অর্থ' : 'Evaluated Fraud Loss Prevented'}
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-black/25 text-amber-300">
+                    SIMULATED
+                  </span>
+                </div>
                 <p className="text-3xl font-black">
-                  {formatCurrency(totalSaved || 345000, language)}
+                  {formatCurrency(totalSaved, language)}
                 </p>
                 <span className="text-[11px] text-white/80 block">
-                  {language === 'bn' ? '২৪টি উচ্চ-ঝুঁকিপূর্ণ লেনদেন ঠেকানো হয়েছে' : '24 fraudulent attempts averted'}
+                  {language === 'bn'
+                    ? `${toBanglaNumber(totalTp)}টি ফ্রড শনাক্ত (reports/impact_eval.json)`
+                    : `${totalTp} fraudulent attempts detected in 6,000-sample benchmark`}
                 </span>
               </div>
 
@@ -182,7 +176,7 @@ export const AdminMonitoringModal: React.FC<{ onClose: () => void }> = ({ onClos
                     {toBanglaNumber(recall)}%
                   </span>
                   <span className="text-[10px] text-slate-500 block mt-0.5">
-                    মোট ফ্রড ধরার হার
+                    মোট ফ্রড ধরার হার (@5% FPR: {toBanglaNumber(EVAL_REPORT.metrics.recallAt5Fpr)}%)
                   </span>
                 </div>
 
@@ -206,10 +200,22 @@ export const AdminMonitoringModal: React.FC<{ onClose: () => void }> = ({ onClos
                     {toBanglaNumber(avgLatency)} ms
                   </span>
                   <span className="text-[10px] text-slate-500 block mt-0.5">
-                    রিয়েলটাইম ক্লাউড স্পীড
+                    ১২০ বেঞ্চমার্ক গড় স্পীড
                   </span>
                 </div>
               </div>
+
+              <button
+                onClick={() => setCurrentModal('impact_dashboard')}
+                className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-300 font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>📊</span>
+                <span>
+                  {language === 'bn'
+                    ? 'পূর্ণাঙ্গ বিজনেস ও কাস্টমার ইমপ্যাক্ট ড্যাশবোর্ড খুলুন ›'
+                    : 'Open Full Business & Customer Impact Dashboard ›'}
+                </span>
+              </button>
             </div>
           )}
 
@@ -217,19 +223,19 @@ export const AdminMonitoringModal: React.FC<{ onClose: () => void }> = ({ onClos
             <div className="space-y-4 text-xs">
               <p className="text-slate-600 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200">
                 {language === 'bn'
-                  ? 'মডেলটির ঝুঁকি নির্ধারণ বিভিন্ন অঞ্চল, বয়স ও ব্যবহারকারীর অভিজ্ঞতার ক্ষেত্রে পক্ষপাতহীন কি না তা যাচাই করার ব্যবস্থা:'
-                  : 'Fairness audit across demographics to ensure non-discriminatory safety checks:'}
+                  ? 'মডেলটির ঝুঁকি নির্ধারণ বিভিন্ন অঞ্চল, বয়স ও ব্যবহারকারীর অভিজ্ঞতার ক্ষেত্রে পক্ষপাতহীন কি না তা যাচাই করার ব্যবস্থা (SIMULATED):'
+                  : 'Fairness audit across demographics to ensure non-discriminatory safety checks (SIMULATED):'}
               </p>
 
               {/* By Region */}
               <div className="p-3 rounded-2xl border border-slate-200 space-y-2">
                 <span className="font-bold text-slate-800 block">
-                  🌐 {language === 'bn' ? 'অঞ্চলভিত্তিক নির্ভুলতা (Region Parity):' : 'By Region (TPR):'}
+                  🌐 {language === 'bn' ? 'অঞ্চলভিত্তিক নির্ভুলতা (Region Parity - 6,000 txs):' : 'By Region (TPR - 6,000 txs):'}
                 </span>
                 <div className="space-y-1.5">
                   {regionStats.map((r) => (
                     <div key={r.name} className="flex items-center justify-between text-[11px]">
-                      <span className="text-slate-700">{r.name}</span>
+                      <span className="text-slate-700">{r.name} ({r.count})</span>
                       <div className="flex items-center gap-2">
                         <div className="w-24 h-1.5 rounded-full bg-slate-200 overflow-hidden">
                           <div className="h-full bg-[#0B4DA2]" style={{ width: `${r.recall}%` }} />
@@ -244,7 +250,7 @@ export const AdminMonitoringModal: React.FC<{ onClose: () => void }> = ({ onClos
               {/* By Age Group */}
               <div className="p-3 rounded-2xl border border-slate-200 space-y-2">
                 <span className="font-bold text-slate-800 block">
-                  👥 {language === 'bn' ? 'বয়স ভিত্তিক সমতা (Age Demographics):' : 'By Age Group:'}
+                  👥 {language === 'bn' ? 'বয়স ভিত্তিক সমতা (Age Demographics - 120 cases):' : 'By Age Group (120 cases):'}
                 </span>
                 <div className="space-y-1.5">
                   {ageStats.map((ag) => (
