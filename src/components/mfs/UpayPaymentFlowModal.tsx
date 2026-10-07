@@ -212,13 +212,10 @@ export const UpayPaymentFlowModal: React.FC<UpayPaymentFlowModalProps> = ({ subT
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: user?.id || 'user_main_maynul',
           amount: numAmount,
           recipientPhone: info.phone,
           recipientName: info.name,
-          note: info.sub,
-          userBaselineAvgAmount: 1200,
-          recentTransactions: transactions
+          note: info.sub
         })
       });
 
