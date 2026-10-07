@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { useAppStore } from '../../store/useAppStore';
 import { formatCurrency, formatDate, toBanglaNumber } from '../../utils/formatters';
+import { ImpactDashboardModal } from './ImpactDashboardModal';
 
 export const AnalystDashboardModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { analystQueue, analystAction, language } = useAppStore();
+  const [mainTab, setMainTab] = useState<'queue' | 'impact'>('queue');
   const [filter, setFilter] = useState<'all' | 'pending' | 'reviewed' | 'escalated'>('all');
   const [activeItemNotes, setActiveItemNotes] = useState<{ [id: string]: string }>({});
+
+  if (mainTab === 'impact') {
+    return <ImpactDashboardModal onClose={onClose} onSwitchToQueue={() => setMainTab('queue')} />;
+  }
 
   const filteredQueue = analystQueue.filter((item) => {
     if (filter === 'all') return true;
@@ -26,7 +32,7 @@ export const AnalystDashboardModal: React.FC<{ onClose: () => void }> = ({ onClo
             <span className="text-xl">🕵️‍♂️</span>
             <div>
               <h2 className="text-sm font-bold">
-                {language === 'bn' ? 'অ্যানালিস্ট রিস্ক কিউ ড্যাশবোর্ড' : 'Analyst Fraud Queue'}
+                {language === 'bn' ? 'অ্যানালিস্ট ড্যাশবোর্ড' : 'Analyst Dashboard'}
               </h2>
               <span className="text-[10px] text-amber-400">রোল-বেসড কাস্টম ক্লেইম ভিউ</span>
             </div>
@@ -37,6 +43,28 @@ export const AnalystDashboardModal: React.FC<{ onClose: () => void }> = ({ onClo
           >
             ✕
           </button>
+        </div>
+
+        {/* Primary Tab Switcher: Queue vs Impact */}
+        <div className="px-4 py-2 bg-slate-950 flex items-center justify-between border-b border-slate-800 text-xs">
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setMainTab('queue')}
+              className="px-3 py-1 rounded-full font-bold transition-all bg-[#0B4DA2] text-white shadow-xs cursor-pointer"
+            >
+              {language === 'bn' ? 'ফ্রড কিউ' : 'Fraud Queue'}
+            </button>
+            <button
+              onClick={() => setMainTab('impact')}
+              className="px-3 py-1 rounded-full font-bold transition-all flex items-center gap-1 text-amber-400 hover:text-amber-300 bg-slate-900/80 border border-amber-500/30 cursor-pointer"
+            >
+              <span>📊</span>
+              <span>{language === 'bn' ? 'বিজনেস ইমপ্যাক্ট' : 'Business Impact'}</span>
+            </button>
+          </div>
+          <span className="text-[8.5px] text-amber-400 font-mono px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">
+            SIMULATED (synthetic data)
+          </span>
         </div>
 
         {/* Filter Pills */}
