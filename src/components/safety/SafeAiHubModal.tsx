@@ -126,6 +126,16 @@ export const SafeAiHubModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
       action: () => setCurrentModal('guardian_invite')
     },
     {
+      id: 'impact',
+      titleBn: 'বিজনেস ও কাস্টমার ইমপ্যাক্ট ড্যাশবোর্ড',
+      titleEn: 'Business & Customer Impact Dashboard',
+      descBn: 'আর্থিক ক্ষতি প্রতিরোধ, ROI, FPR কার্ভ ও বিভাগভিত্তিক বিশ্লেষণ (SIMULATED)',
+      descEn: 'Loss prevented, false-positive cost, ROI & ROC curve metrics',
+      icon: '📊',
+      color: 'bg-amber-50 text-amber-800 border-amber-300',
+      action: () => setCurrentModal('impact_dashboard')
+    },
+    {
       id: 'analyst',
       titleBn: 'অ্যানালিস্ট ড্যাশবোর্ড (রিস্ক কিউ)',
       titleEn: 'Analyst Queue Dashboard',
