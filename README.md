@@ -1,187 +1,197 @@
-# রিকার্শন পে (Recursion Pay) — AI-Powered MFS Super-App
+# রিকার্শন পে (Recursion Pay / Upay pay) — AI-Powered MFS Super-App
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Status-Live-success" alt="Live Status" />
-  <img src="https://img.shields.io/badge/Platform-Web%20%2F%20AI%20App-blue" alt="Platform" />
-  <img src="https://img.shields.io/badge/Language-Bangla%20%2B%20English-orange" alt="Language" />
-</p>
-
-<div align="center">
-  <a href="https://recursionpay.vercel.app/" target="_blank">
-    <strong>🚀 Live Demo</strong>
-  </a>
-</div>
+**রিকার্শন পে (Recursion Pay)** হলো বাংলাদেশের মোবাইল ফিন্যান্সিয়াল সার্ভিস (MFS) ইকোসিস্টেমের ওপর নির্মিত একটি অত্যাধুনিক, কৃত্রিম বুদ্ধিমত্তা-চালিত (AI-Powered) এবং ফ্রড-রেজিলিয়েন্ট সুপার-অ্যাপ। এটি বিশ্বস্ত ফিনটেক ব্র্যান্ড আইডেন্টিটির সাথে সর্বাধুনিক জেমিনাই এআই মডেল (`@google/genai`), প্যারামেট্রিক মাইক্রো-ইনস্যুরেন্স, পি২পি এসক্রো, কমিউনিটি রোস্কা (ডিজিটাল সমিতি), আঞ্চলিক ভাষার ভয়েস ব্যাংকিং, চাইল্ড ওয়ালেট প্যারেন্টাল কন্ট্রোল এবং বাংলাদেশ শ্রম আইন ২০০৬ অনুযায়ী আরএমজি শ্রমিকদের মজুরি সুরক্ষাকে একত্রিত করেছে।
 
 ---
 
-## Overview
+## 🌟 পূর্ণাঙ্গ ফিচার ক্যাটালগ (Comprehensive Feature Catalog)
 
-**রিকার্শন পে (Recursion Pay)** হলো বাংলাদেশের জন্য ডিজাইন করা একটি AI-ভিত্তিক মোবাইল ফিন্যান্সিয়াল সার্ভিস (MFS) সুপার-অ্যাপ।
-
-এই প্ল্যাটফর্মের লক্ষ্য হলো:
-- নিরাপদ ও দ্রুত লেনদেন
-- বাংলা ভাষায় সহজ ব্যবহার
-- AI-চালিত ঝুঁকি বিশ্লেষণ
-- ভয়েস-ভিত্তিক পেমেন্ট
-- ব্যাংক/এজেন্ট/টেলিকম/ফিনটেক ইকোসিস্টেমে সুসংহত UX
-
----
-
-## Why It Matters
-
-বাংলাদেশের মুঠোফোন-ভিত্তিক আর্থিক পরিষেবায় ব্যবহারকারীর সবচেয়ে বড় চ্যালেঞ্জ হলো:
-- স্ক্যাম ও ফিশিং
-- ভুল/অস্বাভাবিক লেনদেন
-- ভাষা ও উপভাষার জটিলতা
-- নিরাপত্তা ও গোপনীয়তা
-- সহজ, স্বচ্ছ ও আত্মবিশ্বাসজনক UX
-
-**রিকার্শন পে** এই সমস্যা সমাধানে AI, ভয়েস ইন্টিগ্রেশন, নিরাপত্তা-ফার্স্ট ডিজাইন ও সিম্পল ফিনটেক অভিজ্ঞতা একসাথে নিয়ে এসেছে।
+### ১. 🛡️ সেফ এআই শিল্ড ও প্রি-ট্রানজ্যাকশন রিস্ক ইঞ্জিন (Pre-Transaction Risk Check)
+- **ডিটারমিনিস্টিক ০–১০০ রিস্ক স্কোরিং**: লেনদেনের অস্বাভাবিক পরিমাণ (Anomaly), ঘনঘন লেনদেন (Velocity), অপরিচিত প্রাপক, অস্বাভাবিক গভীর রাতের লেনদেন এবং ক্রস-ওয়ালেট মিউল সিন্ডিকেট বিশ্লেষণ।
+- **ব্যাখ্যাযোগ্য বাংলা পরামর্শ**: সংবেদনশীল তথ্য মাস্কিং (`০১৭**-***৯৮২`) বজায় রেখে জেমিনাই এআই দ্বারা বোধগম্য বাংলায় তাৎক্ষণিক নিরাপত্তা ব্যাখ্যা।
+- **কুলিং-অফ পিরিয়ড (Cooling-Off Period)**: উচ্চ-ঝুঁকিপূর্ণ লেনদেনে স্বয়ংক্রিয় ১৫-সেকেন্ডের কাউন্টডাউন, ৩-দফার চেকলিস্ট এবং ৳১০ টাকার একটি ক্ষুদ্র টেস্ট লেনদেনের সুপারিশ।
+- **হিউম্যান-ইন-দ্য-লুপ পলিসি**: এআই কখনোই স্বয়ংক্রিয়ভাবে লেনদেন অনুমোদন বা ব্লক করে না; চূড়ান্ত সিদ্ধান্ত সর্বদা গ্রাহকের হাতে থাকে।
+- **স্ক্যাম এসএমএস ও লিংক চেকার**: যেকোনো টেক্সট বা ইউআরএল পেস্ট করে ফিশিং, লটারি বা ভুয়া চাকরির প্রতারণা শনাক্তকরণ।
+- **স্ক্যাম কল সিমুলেটর**: প্রতারকদের বিভিন্ন কৌশলের (ওটিপি চাওয়া, পুলিশ সেজে ভয় দেখানো) বাস্তবধর্মী ইন্টারেক্টিভ অডিও সিমুলেশন গেম।
 
 ---
 
-## Core Features
-
-| Category | Feature | Description |
-|---|---|---|
-| 🛡️ Security | AI Risk Shield | ডিটারমিনিস্টিক 0–100 স্কোর, অস্বাভাবিক লেনদেন শনাক্তকরণ, ব্যাখ্যাযোগ্য বাংলা সতর্কতা |
-| 🛡️ Security | Scam Detection | SMS, URL, phishing, fraud pattern, scam call simulation |
-| ⚡ Core MFS | Send Money & Cash Out | দ্রুত পেমেন্ট, ক্যাশ আউট, রিচার্জ, বিল পেমেন্ট |
-| ⚡ Core MFS | Savings & Wallet Tools | সঞ্চয়, ফান্ড ট্রান্সফার, উইলেট ব্যবস্থাপনা |
-| 🗣️ Voice | Dialect-Aware Voice Pay | চাটগাঁইয়া, সিলেটি, নোয়াখাইল্লা, রংপুরিয়া ভাষা সমর্থন |
-| 🎙️ AI Voice | Gemini Live Voice Assistant | রিয়েল-টাইম আউডিও চ্যাট, কনটেক্সট-সচেতন ভয়েস কমান্ড |
-| 🤖 AI | Multi-Turn Finance Bot | সাইবার সিকিউরিটি, ব্যাংকিং, বুদ্ধিমান আর্থিক সহায়তা |
-| 🧒 Family Finance | Child Wallet & Parent Controls | শিশুদের জন্য পকেটমানি ও অভিভাবক-নিয়ন্ত্রিত খরচ |
-| 🤝 Community | Digital Somiti | স্মার্ট ROSCA / savings group automation |
-| 🔒 Protection | TrustPay Escrow | ফেসবুক/ইনস্টাগ্রাম শপিংয়ের জন্য নিরাপদ পেমেন্ট | 
-| 👔 Workforce | Payslip Auditor | বেতন ও ওভারটাইম যাচাই, শ্রমিকদের আর্থিক স্বচ্ছতা |
-| 🎁 Commerce | Offer Hub & Telecom Bundles | ক্যাশব্যাক, ডিসকাউন্ট, টেলিকম অফার, কার্ড/উৎসব সমর্থন |
+### ২. ⚡ মূল এমএফএস সার্ভিসেস ও সেফ হাব (Primary Services Grid)
+হোম স্ক্রিনের ৪-কলাম বিশিষ্ট মূল সার্ভিস গ্রিডে ১২টি কোর সার্ভিস:
+- **১ম সারি:** সেন্ড মানি (Send Money), ক্যাশ আউট (Cash Out), মোবাইল রিচার্জ (Mobile Recharge), পে বিল (Pay Bill)।
+- **২য় সারি:** অ্যাড মানি (Add Money), সঞ্চয় / সেভিংস (Savings), ফান্ড ট্রান্সফার (Fund Transfer), রিকোয়েস্ট মানি (Request Money)।
+- **৩য় সারি:** মেক পেমেন্ট (Make Payment), রেফার & আর্ন (Refer & Earn), এনপিএসবি (NPSB - Interoperability), এবং **সেফ হাব (Safe Hub)**।
 
 ---
 
-## Product Modules
-
-### 1. AI Safety & Pre-Transaction Risk Engine
-- 0–100 deterministic risk scoring
-- anomaly detection on amount, patterns, and transaction context
-- explainable Bengali safety warnings
-- cooling-off period for high-risk transactions
-- mandatory human-in-the-loop policy for critical approvals
-- scam SMS and malicious URL checking
-- practical scam-call simulation for user awareness
-
-### 2. Main MFS Services Grid
-- Send Money
-- Cash Out
-- Mobile Recharge
-- Pay Bill
-- Add Money
-- Savings / Wallet
-- Fund Transfer
-- Refer & Earn
-- NPSB / interoperability
-- Safe Hub and transaction controls
-
-### 3. Specialized Payment & Utility Services
-- Traffic Fine
-- Toll Payment
-- Govt Payment
-- Education Fee
-- NGO Payment
-- Insurance Premium
-- Donation
-- Zakat Direct Contribution
-
-### 4. Regional Voice Pay
-- Browser Speech API integration with `bn-BD`
-- localized voice commands for Bangla dialects
-- audio confirmation before funds are sent
-- pin-protected transaction approval to prevent voice-driven fraud
-
-### 5. Audio Intelligence & Live AI Assistant
-- real-time full-duplex audio interaction
-- automatic speech-to-text transcription
-- interactive AI voice test prompts
-- secure, human-validated transaction workflows
-
-### 6. Search, Maps & Finance Guidance
-- grounded Google Search for recent Bangladesh banking and regulatory updates
-- Google Maps integration for nearby agent locations and banking access points
-- AI assistant for security, spending, and transaction support
+### ৩. 🏛️ ৮টি বিশেষায়িত ইউটিলিটি ও গভর্ন্যান্স পেমেন্ট (Specialized Payment Services)
+1. **ট্রাফিক ফাইন (Traffic Fine):** ঢাকা মেট্রোপলিটন পুলিশ (DMP) ও হাইওয়ে পুলিশ ই-চালান পেমেন্ট।
+2. **টোল পেমেন্ট (Toll Pay):** পদ্মা সেতু, বঙ্গবন্ধু টানেল ও এক্সপ্রেসওয়ে দ্রুত টোল পরিশোধ।
+3. **সরকারি পেমেন্ট (Govt Pay):** জমির নামজারি, ই-পাসপোর্ট, এনআইডি ফি ও চালান।
+4. **এডুকেশন (Education):** স্কুল, কলেজ ও বিশ্ববিদ্যালয়ের সেমিস্টার ও ভর্তি ফি।
+5. **এনজিও (NGO):** আশা, ব্র্যাক ও গ্রামীণ ব্যাংকের ক্ষুদ্রঋণ কিস্তি পরিশোধ।
+6. **বীমা (Insurance):** মেটলাইফ, ডেল্টা লাইফ ও গ্রীন ডেল্টা ইন্স্যুরেন্স প্রিমিয়াম।
+7. **ডোনেশন (Donation):** আস-সুন্নাহ ফাউন্ডেশন, বিদ্যানন্দ ও রেড ক্রিসেন্টে সরাসরি অনুদান।
+8. **যাকাত ফান্ড (Zakat Direct):** হিসাবকৃত যাকাত সরাসরি ভেরিফায়েড চ্যারিটি ফান্ডে বিতরণ।
 
 ---
 
-## Technology Stack
-
-### Frontend
-- React 19
-- TypeScript
-- Tailwind CSS v4
-- Framer Motion
-- Zustand
-- Web Speech API / Web Audio API
-- Lucide icons and UI polish tools
-
-### Backend
-- Node.js
-- Express
-- TypeScript (`tsx`)
-- WebSocket server for live voice streaming
-- Google GenAI SDK
-
-### Data & Auth
-- Google Cloud Firestore
-- Firebase Authentication
+### ৪. 🗣️ আঞ্চলিক ভাষা-সচেতন ভয়েস পে (Dialect-Aware Voice Pay)
+- ব্রাউজার ওয়েব স্পিচ এপিআই (`bn-BD`) লাইভ স্ট্রিমিং ও ইনটেরিম রেজাল্ট সাপোর্ট।
+- **৪টি প্রধান আঞ্চলিক ভাষার স্বয়ংক্রিয় রূপান্তর:**
+  - **চাটগাঁইয়া (Chattogram):** *"রহিমরে পাঁচশ টিয়া পাঠাই দেও"* ➔ রহিমকে ৫০০ টাকা সেন্ড মানি।
+  - **সিলেটি (Sylhet):** *"করিমর গেসে এক হাজার টেকা পাঠাউক্কা"* ➔ করিমকে ১,০০০ টাকা প্রেরণ।
+  - **নোয়াখাইল্লা (Noakhali):** *"বিল্লাল ভাইরে আড়াইশ টেকা হাডাই দেন"* ➔ বিল্লাল ভাইকে ২৫০ টাকা প্রেরণ।
+  - **রংপুরিয়া (Rangpur):** *"মজিদক দুইশ টেকা পাঠায় দেও বাহে"* ➔ মজিদকে ২০০ টাকা প্রেরণ।
+- **উচ্চৈঃস্বরে টাকার অঙ্ক নিশ্চিতকরণ (TTS Audio)**: টাকা কাটার আগে অডিওর মাধ্যমে প্রাপক ও পরিমাণ উচ্চৈঃস্বরে পড়ে শোনানো।
+- **বাধ্যতামূলক পিন প্রটেকশন**: ভয়েস দিয়ে সরাসরি টাকা কাটা যায় না; ৪-সংখ্যার পিন দেওয়ার পরেই লেনদেন কার্যকর হয়।
 
 ---
 
-## Architecture Overview
+### ৫. 🎙️ জেমিনাই লাইভ ভয়েস গার্ডিয়ান ও অডিও ট্রান্সক্রিপশন
+- **জেমিনাই ৩.৮ লাইভ ভয়েস (Gemini-3.8-Live API)**:
+  - ফুল-ডুপ্লেক্স রিয়েল-টাইম অডিও স্ট্রিম (`/live` WebSocket)।
+  - সিকুয়েনশিয়াল অডিও বাফার কিউ (`nextPlayTimeRef`) যা অডিও কেটে যাওয়া রোধ করে মাখনের মতো মসৃণ প্লেব্যাক নিশ্চিত করে।
+  - ওয়ান-ট্যাপ কুইক ভয়েস টেস্ট প্রম্পট (পিন নিরাপত্তা, স্ক্যাম কল, ক্যাশ আউট ফি)।
+- **অডিও ট্রান্সক্রিপশন (Audio Transcribe)**:
+  - মাইক্রোফোনে কথা বলা থামালেই স্বয়ংক্রিয় এআই ট্রান্সক্রিপশন (`gemini-3.5-transcribe` ও `gemini-3.8-flash` মাল্টিমোডাল ফলব্যাক)।
+  - ৩টি রেডিমেড ভয়েস টেস্ট নমুনা ও ওয়ান-ট্যাপ ক্লিপবোর্ড কপি।
 
-```text
-Client (React App)
-      │
-      ▼
-   REST / WebSocket APIs
-      │
-      ▼
-   Express Server (Node.js / TS)
-      │
-      ├── Google GenAI SDK
-      ├── Firebase Auth / Firestore
-      ├── Web Speech + Audio APIs
-      └── AI Safety / Finance Logic
+---
+
+### ৬. 🤖 মাল্টি-টার্ন এআই চ্যাটবট ও সার্চ/ম্যাপস ইন্টেলিজেন্স
+- **সুপার-ফাস্ট চ্যাটবট**: `gemini-3.8-flash` ও `ThinkingLevel.LOW` কনফিগারেশনের মাধ্যমে সাব-সেকেন্ড রেসপন্স।
+- **স্পেশালাইজড রোল**: সাইবার সিকিউরিটি স্পেশালিস্ট ও সার্টিফাইড ফিন্যান্সিয়াল প্ল্যানার মোড।
+- **গুগল সার্চ গ্রাউন্ডিং (`googleSearch`)**: বাংলাদেশ ব্যাংকের সাম্প্রতিক সার্কুলার ও নিয়মনীতি লাইভ সার্চ রেফারেন্সসহ প্রদর্শন।
+- **গুগল ম্যাপস গ্রাউন্ডিং (`googleMaps`)**: ব্যবহারকারীর কাছাকাছি সক্রিয় এজেন্ট বুথ ও এটিএম-এর লাইভ ঠিকানা।
+
+---
+
+### ৭. 🧒 চাইল্ড ওয়ালেট ও অভিভাবক নিয়ন্ত্রণ (Child Wallet & Parental Controls)
+- শিশুদের ডিজিটাল পকেটমানি ও সঞ্চয় শেখার জন্য ডেডিকেটেড সাব-ওয়ালেট।
+- **অভিভাবক ড্যাশবোর্ড**: দৈনিক খরচের সর্বোচ্চ সীমা নির্ধারণ ও ক্যাটাগরি অনুমোদন (খাবার, বই-খাতা অ্যালাউড; কিন্তু আন-ভেরিফায়েড মার্চেন্ট বা গেমিং ব্লক)।
+- **রিকোয়েস্ট ম্যানেজমেন্ট**: সন্তানের অতিরিক্ত টাকার আবদার অভিভাবকের স্ক্রিনে নোটিফিকেশন আকারে আসা এবং অনুমোদন/বাতিল সুবিধা।
+
+---
+
+### ৮. 🤝 ডিজিটাল সমিতি (Digital Somiti: Smart ROSCA)
+- চিরাচরিত সমবায় সঞ্চয় সমিতিকে ক্লাউডে স্বয়ংক্রিয় রূপান্তর।
+- **ফেয়ার পে-আউট লটারি**: সদস্যদের জরুরি প্রয়োজন ও অতীতের ধারাবাহিকতা বিশ্লেষণ করে সুষম কিস্তি বণ্টন শিডিউল।
+- **আর্লি ওয়ার্নিং সিস্টেম**: কোনো সদস্য কিস্তি দিতে ব্যর্থ হওয়ার ঝুঁকিতে থাকলে আগে থেকেই সতর্কতা নোটিফিকেশন।
+
+---
+
+### ৯. 🔒 ট্রাস্টপে এসক্রো (TrustPay: F-Commerce Protection)
+- ফেসবুক ও ইনস্টাগ্রাম শপিংয়ের জন্য ১০০% নিরাপদ এসক্রো পেমেন্ট।
+- পণ্য হাতে পেয়ে ওটিপি বা ট্র্যাকিং ভেরিফাই করার পরই বিক্রেতার ওয়ালেটে টাকা রিলিজ হয়।
+- মার্চেন্টের বিশ্বাসযোগ্যতা রেটিং (Trust Score) ও বিরোধ মীমাংসা প্যানেল।
+
+---
+
+### ১০. 👔 পে-স্লিপ মজুরি অডিটর ও ক্লাইমেট শিল্ড
+- **পে-স্লিপ অডিটর**: তৈরি পোশাক (RMG) শ্রমিকদের বেতনের রসিদ বিশ্লেষণ করে বাংলাদেশ শ্রম আইন ২০০৬ অনুযায়ী অতিরিক্ত কর্মঘণ্টা (Overtime) ও কাটিং সঠিক আছে কি না তা যাচাই।
+- **ক্লাইমেট শিল্ড (Climate Shield)**: বন্যা বা প্রাকৃতিক দুর্যোগে ক্ষতিগ্রস্ত অঞ্চলের গ্রাহকদের তাৎক্ষণিক জরুরি ওয়ালেট ও ত্রাণ বিতরণ ট্র্যাকিং।
+- **ইনকাম পাসপোর্ট (Income Passport)**: অপ্রাতিষ্ঠানিক খাতের শ্রমিক ও ফ্রিল্যান্সারদের জন্য ডাউনলোডযোগ্য ভেরিফায়েড ক্রেডিট স্কোর সার্টিফিকেট।
+
+---
+
+### ১১. 🎁 টেলিকম অফার ব্যানার, কার্ড ও অফার হাব
+- **ইন্টারেক্টিভ ব্যানার ক্যারোসেল**: গ্রামীণফোন, বাংলালিংক, রবি ও এয়ারটেল-এর সাশ্রয়ী ইন্টারনেট ও টকটাইম প্যাক (টাচ-সোয়াইপ ও অটো-প্লে)।
+- **রিকার্শন পে কার্ড**: অনলাইন শপিং ও ফেসবুক বুস্টিং উপযোগী ডুয়েল-কারেন্সি ভার্চুয়াল কার্ড।
+- **অফার হাব**: শীর্ষস্থানীয় ব্র্যান্ডগুলোর ক্যাশব্যাক ও ডিসকাউন্ট ভাউচার।
+- **ঈদ সালামি ও ডিজিটাল শুভেচ্ছা খাম**: রঙিন অ্যানিমেটেড খামে সালামি প্রেরণ ও কনফেটি উদযাপন।
+
+---
+
+## 🧭 নেভিগেশন ও ইউআই আর্কিটেকচার (Navigation & UX System)
+
+- **স্বাধীন হিস্ট্রি ব্যাক বাটন**: প্রতিটি ফিচার স্ক্রিনের ওপরে ডেডিকেটেড **"পূর্ববর্তী" (Previous)** বাটন রয়েছে যা ব্যবহারকারীকে পূর্বে যে স্ক্রিনে ছিলেন সেখানে ফিরিয়ে নেয়।
+- **ওয়ান-ট্যাপ হোম বাটন**: যেকোনো জটিল সাব-ফিচার থেকে সরাসরি মূল ড্যাশবোর্ডে ফেরার জন্য পৃথক **"হোম" (Home)** বোতাম।
+- **স্মার্ট সার্ভিসেস স্লাইডিং ড্রয়ার**: হোম স্ক্রিনকে পরিষ্কার রাখতে বাম পাশের ড্রয়ারে সমস্ত প্ল্যাটফর্ম সেবাকে সুবিন্যস্ত করা হয়েছে।
+- **দ্বি-ভাষিক রূপান্তর**: ১ ট্যাপে সম্পূর্ণ অ্যাপ্লিকেশনটি খাঁটি বাংলা (`bn`) অথবা আন্তর্জাতিক ইংরেজি (`en`) ভাষায় পরিবর্তিত হয়।
+
+---
+
+## 🏗️ প্রযুক্তি স্ট্যাক (Technology Stack)
+
+```
+                            ┌───────────────────────────┐
+                            │    React 19 SPA Client    │
+                            │  (Tailwind v4, Zustand)   │
+                            └─────────────┬─────────────┘
+                                          │
+                           HTTP REST / WebSocket (PCM Audio)
+                                          │
+                            ┌─────────────▼─────────────┐
+                            │      Express Server       │
+                            │      (Node.js / TSX)      │
+                            └─────────────┬─────────────┘
+                                          │
+            ┌─────────────────────────────┼─────────────────────────────┐
+            │                             │                             │
+  ┌─────────▼─────────┐         ┌─────────▼─────────┐         ┌─────────▼─────────┐
+  │ Google GenAI SDK  │         │ Firebase Database │         │ Browser Web APIs  │
+  │ (Gemini 3.8 Flash,│         │ (Cloud Firestore  │         │ (Web Speech,      │
+  │  Gemini 3.8 Live, │         │  & Firebase Auth) │         │  Web Audio,       │
+  │  3.5 Transcribe)  │         │                   │         │  SpeechSynthesis) │
+  └───────────────────┘         └───────────────────┘         └───────────────────┘
 ```
 
+- **Frontend**: React 19, TypeScript, Tailwind CSS v4, Motion (Framer Motion), Zustand, Canvas Confetti, Lucide-React.
+- **Backend**: Node.js, Express, TypeScript (`tsx`), `ws` WebSocket Server (`/live`), Google GenAI SDK (`@google/genai`).
+- **Database & Auth**: Google Cloud Firestore & Firebase Auth.
+- **AI Models**:
+  - `gemini-3.8-flash` (আল্ট্রা-ফাস্ট রিস্ক এক্সপ্লেনেশন, ডায়ালেক্ট নরম্যালাইজেশন, চ্যাটবট, সার্চ ও ম্যাপস গ্রাউন্ডিং)
+  - `gemini-3.8-live` (রিয়েলটাইম ফুল-ডুপ্লেক্স ২-ওয়ে অডিও কথোপকথন)
+  - `gemini-3.5-transcribe` (অডিও স্পিচ-টু-টেক্সট ট্রান্সক্রিপশন)
+
 ---
+
+## 📡 ব্যাকএন্ড এপিআই রুট তালিকা (Backend API Routes)
+
+| মেথড | এন্ডপয়েন্ট | বিবরণ |
+| :--- | :--- | :--- |
+| `POST` | `/api/safety/risk-check` | লেনদেনের রিস্ক স্কোরিং ও এআই ব্যাখ্যা জেনারেশন |
+| `POST` | `/api/safety/scam-check` | এসএমএস ও ইউআরএল ফিশিং যাচাই |
+| `POST` | `/api/ai/transcribe` | অডিও ভয়েস থেকে নিখুঁত বাংলা টেক্সট রূপান্তর |
+| `POST` | `/api/ai/search-grounding` | গুগল সার্চ গ্রাউন্ডিং দিয়ে সর্বশেষ এমএফএস তথ্যের উত্তর |
+| `POST` | `/api/ai/maps-grounding` | গুগল ম্যাপস দিয়ে নিকটস্থ এজেন্ট ও ব্যাংকের লাইভ লোকেশন |
+| `POST` | `/api/ai/multi-turn-chat` | সাইবার সিকিউরিটি ও আর্থিক প্ল্যানার চ্যাটবট |
+| `POST` | `/api/voice/dialect-normalize` | আঞ্চলিক উপভাষা থেকে প্রমিত বাংলা কমান্ড ও পরিমাণ নিষ্কাশন |
+| `POST` | `/api/mandate/parse` | প্রাকৃতিক ভাষার পেমেন্ট রুলকে স্ট্রাকচার্ড ম্যান্ডেটে রূপান্তর |
+| `POST` | `/api/payslip/audit` | শ্রম আইন ২০০৬ অনুযায়ী বেতন ও ওভারটাইম হিসাব অডিট |
+| `POST` | `/api/somiti/ai-payout-order` | ডিজিটাল সমিতির ফেয়ার পে-আউট লটারি নির্ধারণ |
+| `POST` | `/api/somiti/early-warning-check`| সমিতির সদস্যের সম্ভাব্য ডিফল্ট ঝুঁকি বিশ্লেষণ |
+| `POST` | `/api/bundle/optimize` | টেলিকম ব্যবহার অনুযায়ী সাশ্রয়ী বান্ডেল প্যাকেজ নির্বাচন |
+| `WS` | `/live` | জেমিনাই লাইভ ভয়েস স্ট্রিমের জন্য রিয়েল-টাইম ওয়েবসকেট |
+
 ---
 
-## Local Setup
+## 🚀 লোকাল সেটআপ ও রান করার নিয়ম
 
-### Prerequisites
-- Node.js 18+
-- npm or pnpm
+### ১. রিকোয়ারমেন্টস
+- Node.js (v18 বা তদূর্ধ্ব)
+- npm বা pnpm
 
-### Install Dependencies
+### ২. ডিপেন্ডেন্সি ইনস্টলেশন
 ```bash
 npm install
 ```
 
-### Environment Variables
-Create a `.env` file in the project root:
-
+### ৩. এনভায়রনমেন্ট কনফিগারেশন (`.env`)
+প্রজেক্টের রুট ডিরেক্টরিতে `.env` ফাইলে জেমিনাই এপিআই কি দিন:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 PORT=3000
 ```
 
-### Run Development Server
+### ৪. ডেভেলপমেন্ট সার্ভার চালুকরণ
 ```bash
 npm run dev
 ```
+ব্রাউজারে [http://localhost:3000](http://localhost:3000) ওপেন করুন।
 
-Open: `http://localhost:3000`
-
-### Production Build
+### ৫. প্রোডাকশন বিল্ড ও রান
 ```bash
 npm run build
 npm start
@@ -189,38 +199,18 @@ npm start
 
 ---
 
-## Demo Credentials
+## 🔑 ডেমো ক্রেডেনশিয়ালস (Demo Credentials)
 
-The app includes demo account data for quick testing:
-
-- Phone Number: `01794809461`
-- PIN: `1234`
-- Account Name: `MD. AL-MAYNUL HASAN`
-- Balance: `৳ ১৮,৪৫০.৫০`
-
----
-
-## Security & Privacy Protocols
-
-- Zero-pin exposure in LLM prompts
-- Sensitive data masking before processing
-- Human approval for sensitive financial actions
-- Local fallback architecture for offline resilience
-- Secure-by-design flow for voice-triggered transactions
+অ্যাপটিতে ডিফল্টভাবে ডেমো অ্যাকাউন্ট সিড করা আছে:
+- **ফোন নম্বর:** `01794809461`
+- **পিন কোড:** `1234`
+- **অ্যাকাউন্ট নাম:** `MD. AL-MAYNUL HASAN`
+- **ব্যালেন্স:** `৳ ১৮,৪৫০.৫০`
 
 ---
 
-## Project Links
+## 🛡️ নিরাপত্তা ও প্রাইভেসি প্রোটোকল
 
-- GitHub: https://github.com/CseEngineerAsif/Upay_AI-Hackathon
-- Live Demo: https://recursionpay.vercel.app/
-
----
-
-## Closing Note
-
-**রিকার্শন পে** বাংলাদেশের জন্য একটি নিরাপদ, বুদ্ধিমান, ভাষা-সচেতন, এবং ব্যবহারকারী-কেন্দ্রিক ডিজিটাল ফিনান্স প্ল্যাটফর্ম।
-
-এটি কেবল একটি ওয়ালেট নয় — বরং AI-ভিত্তিক একটি ভবিষ্যত-নির্দেশিত MFS অভিজ্ঞতা।
-
-"বাংলাদেশের মানুষের জন্য, AI দ্বারা চালিত, স্থানীয় ভাষায় শক্তিশালী।" 🇧🇩
+1. **জিরো-পিন এক্সপোজার**: কোনো এআই বা এলএলএম প্রম্পটে গ্রাহকের গোপন পিন পাঠানো হয় না।
+2. **ডাটা মাস্কিং**: ফোন নম্বর ও নাম সার্ভার সাইডে প্রক্রিয়াজাত করার আগেই ক্লায়েন্টে মাস্ক করা হয়।
+3. **লোকাল ফলব্যাক আর্কিটেকচার**: নেটওয়ার্ক ড্রপ বা এআই টাইমআউট হলেও অ্যাপ কখনো ক্র্যাশ করে না; স্থানীয় ডিটারমিনিস্টিক হিউরিস্টিক অবিলম্বে সক্রিয় হয়।
