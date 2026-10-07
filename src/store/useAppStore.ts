@@ -95,6 +95,7 @@ interface AppState {
   setRiskAssessment: (assessment: RiskAssessment | null) => void;
   confirmPaymentWithPin: (pin: string, paymentOverride?: PendingPayment) => Promise<{ success: boolean; error?: string; tx?: Transaction }>;
   cancelPendingPayment: () => void;
+  recordCancelledRiskyTransfer: (payment: PendingPayment, assessment: RiskAssessment) => void;
   addGoal: (goal: Omit<SavingsGoal, 'id' | 'userId'>) => void;
   updateGoalDeposit: (goalId: string, amount: number) => void;
   toggleGoalRoundUp: (goalId: string) => void;
@@ -557,6 +558,39 @@ export const useAppStore = create<AppState>((set, get) => {
 
     cancelPendingPayment: () => {
       set({
+        pendingPayment: null,
+        currentRiskAssessment: null
+      });
+    },
+
+    recordCancelledRiskyTransfer: (payment, assessment) => {
+      const { user, transactions } = get();
+      if (!user) return;
+      const cancelledTx: Transaction = {
+        id: `tx_cancel_${Date.now()}`,
+        userId: user.id,
+        type: payment.type,
+        recipient: payment.recipient,
+        recipientName: payment.recipientName,
+        amount: payment.amount,
+        fee: payment.fee,
+        total: payment.amount + payment.fee,
+        note: payment.note || 'ঝুঁকিপূর্ণ লেনদেন বাতিল (User Cancelled After AI Warning)',
+        category: payment.category,
+        categoryEn: payment.categoryEn,
+        roundUpAmount: 0,
+        timestamp: new Date().toISOString(),
+        status: 'blocked',
+        riskScore: assessment.riskScore,
+        riskLevel: assessment.riskLevel,
+        riskSignals: assessment.signals.map((s) => s.rule),
+        feedbackGiven: 'helpful',
+        isScamConfirmed: true
+      };
+      const updatedTransactions = [cancelledTx, ...transactions];
+      saveUserTransactions(user.id, updatedTransactions);
+      set({
+        transactions: updatedTransactions,
         pendingPayment: null,
         currentRiskAssessment: null
       });
