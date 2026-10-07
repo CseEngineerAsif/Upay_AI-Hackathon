@@ -21,6 +21,7 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
     language,
     confirmPaymentWithPin,
     startPaymentFlow,
+    recordCancelledRiskyTransfer,
     giveRiskFeedback,
     transactions,
     goals
@@ -2061,6 +2062,23 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
                 )}
 
                 {/* Action buttons */}
+                {riskAssessment && (riskAssessment.riskLevel === 'high' || riskAssessment.riskLevel === 'medium') && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      recordCancelledRiskyTransfer(getCurrentPaymentPayload(), riskAssessment);
+                      onClose();
+                    }}
+                    className="w-full py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs shadow-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <span>🛡️</span>
+                    <span>
+                      {language === 'bn'
+                        ? `সতর্কতা মেনে বাতিল করুন ও ৳${Number(amount).toLocaleString()} সুরক্ষিত রাখুন`
+                        : `Cancel Risky Transfer & Protect ৳${Number(amount).toLocaleString()}`}
+                    </span>
+                  </button>
+                )}
                 <div className="flex items-center gap-2 pt-2">
                   <button
                     type="button"
