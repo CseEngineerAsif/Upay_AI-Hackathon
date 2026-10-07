@@ -1,4 +1,5 @@
 import { RiskAssessment, RiskRuleSignal, Transaction } from '../src/types';
+import { buildFeatures, mlRisk, MlRiskResult } from './mlRiskModel';
 
 export interface RiskInputParams {
   transactionId?: string;
@@ -9,6 +10,7 @@ export interface RiskInputParams {
   note?: string;
   userBaselineAvgAmount?: number;
   userRecentTransactions?: Transaction[];
+  userBalance?: number;
   isNewDevice?: boolean;
   isNewLocation?: boolean;
   timestamp?: string;
@@ -208,5 +210,123 @@ export function evaluateTransactionRisk(params: RiskInputParams): {
     recipientTrustScore,
     suggestSmallTest,
     coolingPeriodSeconds
+  };
+}
+
+export interface MlEvaluatedRisk {
+  score: number;
+  level: 'low' | 'medium' | 'high';
+  probability: number;
+  topFactors: MlRiskResult['topFactors'];
+  modelType: 'LightGBM';
+  signals: RiskRuleSignal[];
+  baselineDiffPct: number;
+  recipientTrustScore: number;
+  suggestSmallTest: boolean;
+  coolingPeriodSeconds: number;
+  features: Record<string, number>;
+}
+
+export function evaluateWithMl(params: RiskInputParams): MlEvaluatedRisk {
+  const history = params.userRecentTransactions || [];
+  const baseline = params.userBaselineAvgAmount || 1200;
+  const normalizedPhone = params.recipientPhone.replace(/[\s-]/g, '');
+
+  const now = params.timestamp ? new Date(params.timestamp) : new Date();
+  const hour = now.getHours() + now.getMinutes() / 60;
+  const nowMs = now.getTime();
+
+  // Transactions in the last 15 minutes and 1 hour
+  const tx15m = history.filter(tx => {
+    const diff = nowMs - new Date(tx.timestamp).getTime();
+    return diff >= 0 && diff <= 15 * 60 * 1000;
+  });
+  const cnt15m = tx15m.length;
+
+  const tx1h = history.filter(tx => {
+    const diff = nowMs - new Date(tx.timestamp).getTime();
+    return diff >= 0 && diff <= 60 * 60 * 1000;
+  });
+  const cnt1h = tx1h.length;
+  const sum1h = tx1h.reduce((acc, t) => acc + (t.amount || 0), 0);
+  const sum1hRatio = sum1h / Math.max(baseline, 1);
+
+  // New recipient check
+  const newRecipient = !history.some(tx => tx.recipient.replace(/[\s-]/g, '') === normalizedPhone);
+
+  // Suspicious keyword flag
+  const combinedText = `${params.note || ''} ${params.recipientName || ''}`.toLowerCase();
+  const noteFlag = SUSPICIOUS_NOTE_WORDS.some(w => combinedText.includes(w.toLowerCase()));
+
+  // Fraud reports check
+  const isBlacklisted = KNOWN_FLAGGED_NUMBERS.includes(normalizedPhone);
+  const recipientReports = isBlacklisted ? 5 : 0;
+
+  const balance = params.userBalance ?? 18450;
+  const accountAgeDays = 400;
+
+  const rawFeatures = buildFeatures({
+    amount: params.amount,
+    baseline,
+    hour,
+    newRecipient,
+    cnt15m,
+    cnt1h,
+    sum1hRatio,
+    balance,
+    accountAgeDays,
+    recipientReports,
+    noteFlag,
+  });
+
+  const mlResult = mlRisk(rawFeatures);
+
+  let finalScore = mlResult.score;
+  let finalLevel: 'low' | 'medium' | 'high' =
+    mlResult.level === 'HIGH' ? 'high' : mlResult.level === 'MEDIUM' ? 'medium' : 'low';
+
+  // Hard override: Blacklisted recipient strictly forces HIGH
+  if (isBlacklisted) {
+    finalScore = Math.max(finalScore, 90);
+    finalLevel = 'high';
+  }
+
+  const signals: RiskRuleSignal[] = mlResult.topFactors.map(factor => ({
+    rule: factor.feature.toUpperCase(),
+    labelBn: factor.labelBn || factor.feature,
+    labelEn: factor.feature,
+    points: Math.min(40, Math.max(10, Math.round(factor.impact * 15))),
+    severity: factor.impact > 1.2 ? 'high' : 'medium',
+    detailsBn: `LightGBM প্রভাবক: +${Math.round(factor.impact * 10) / 10}`
+  }));
+
+  if (isBlacklisted) {
+    signals.unshift({
+      rule: 'FLAGGED_RECIPIENT_DATABASE',
+      labelBn: 'সন্দেহজনক নম্বর ডাটাবেজ',
+      labelEn: 'Reported / Flagged Account',
+      points: 40,
+      severity: 'high',
+      detailsBn: 'এই প্রাপকের অ্যাকাউন্টের বিরুদ্ধে একাধিক প্রতারণার অভিযোগ রেকর্ড আছে।'
+    });
+  }
+
+  const baselineDiffPct = Math.round(((params.amount - baseline) / Math.max(baseline, 1)) * 100);
+  const recipientTrustScore = isBlacklisted ? 5 : newRecipient ? 30 : 85;
+  const coolingPeriodSeconds = finalLevel === 'high' ? 15 : 0;
+  const suggestSmallTest = newRecipient && params.amount > 1000;
+
+  return {
+    score: finalScore,
+    level: finalLevel,
+    probability: mlResult.probability,
+    topFactors: mlResult.topFactors,
+    modelType: 'LightGBM',
+    signals,
+    baselineDiffPct,
+    recipientTrustScore,
+    suggestSmallTest,
+    coolingPeriodSeconds,
+    features: rawFeatures
   };
 }
