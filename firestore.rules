@@ -12,14 +12,14 @@ service cloud.firestore {
     }
 
     function isOwner(userId) {
-      return (isSignedIn() && request.auth.uid == userId) || userId == 'user_main_maynul';
+      return isSignedIn() && request.auth.uid == userId;
     }
 
     function isAnalyst() {
-      return (isSignedIn() && (
+      return isSignedIn() && (
         request.auth.token.role == 'analyst' ||
         exists(/databases/$(database)/documents/analysts/$(request.auth.uid))
-      )) || !isSignedIn();
+      );
     }
 
     // Default Deny
@@ -27,39 +27,54 @@ service cloud.firestore {
       allow read, write: if false;
     }
 
-    // Connection test document
-    match /test/{docId} {
-      allow read: if true;
-    }
-
-    // 1. Users
+    // 1. Users collection: strictly owner or verified analyst
     match /users/{userId} {
-      allow get: if isOwner(userId) || isAnalyst() || isSignedIn();
-      allow list: if isAnalyst() || isSignedIn();
-      allow create, update: if isOwner(userId) || isSignedIn() || userId == 'user_main_maynul';
+      allow get: if isOwner(userId) || isAnalyst();
+      allow list: if isAnalyst();
+      allow create, update: if isOwner(userId);
       allow delete: if false;
 
       // Transactions subcollection
       match /transactions/{transactionId} {
-        allow get, list: if isOwner(userId) || isAnalyst() || isSignedIn();
-        allow create, update: if isOwner(userId) || isSignedIn() || userId == 'user_main_maynul';
-        allow delete: if false;
+        allow get, list: if isOwner(userId) || isAnalyst();
+        allow create: if isOwner(userId);
+        allow update, delete: if false;
       }
 
       // Savings Goals subcollection
       match /goals/{goalId} {
-        allow read, write: if isOwner(userId) || isSignedIn() || userId == 'user_main_maynul';
+        allow read, write: if isOwner(userId);
       }
     }
 
-    // 2. Analyst Queue
+    // 2. Analyst Queue: strictly readable and writable only by analysts
     match /analyst_queue/{itemId} {
-      allow read, write: if true;
+      allow read, write: if isAnalyst();
     }
 
-    // 3. Guardian Alerts
+    // 3. Analysts Directory
+    match /analysts/{analystId} {
+      allow read: if isAnalyst();
+      allow write: if false;
+    }
+
+    // 4. Guardian Alerts: strictly owner, guardian, or analyst
     match /guardian_alerts/{alertId} {
-      allow read, write: if true;
+      allow read: if isSignedIn() && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.guardianId == request.auth.uid ||
+        isAnalyst()
+      );
+      allow create: if isSignedIn() && (
+        request.resource.data.userId == request.auth.uid ||
+        request.resource.data.guardianId == request.auth.uid ||
+        isAnalyst()
+      );
+      allow update, delete: if isSignedIn() && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.guardianId == request.auth.uid ||
+        isAnalyst()
+      );
     }
   }
 }
