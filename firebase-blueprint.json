@@ -2,7 +2,7 @@
   "entities": {
     "User": {
       "title": "User",
-      "description": "Represents an authenticated MFS user profile",
+      "description": "Represents an authenticated MFS user profile. Clients cannot write balance, pin, pinHash, role, or risk fields.",
       "type": "object",
       "properties": {
         "name": { "type": "string", "maxLength": 100 },
@@ -21,7 +21,7 @@
     },
     "Transaction": {
       "title": "Transaction",
-      "description": "Represents an individual financial transaction",
+      "description": "Represents an individual financial transaction owned by uid; analysts have read-only access.",
       "type": "object",
       "properties": {
         "userId": { "type": "string", "maxLength": 128 },
@@ -44,7 +44,7 @@
     },
     "SavingsGoal": {
       "title": "SavingsGoal",
-      "description": "Micro-savings and target goal records",
+      "description": "Micro-savings and target goal records private to the user",
       "type": "object",
       "properties": {
         "userId": { "type": "string", "maxLength": 128 },
@@ -60,7 +60,7 @@
     },
     "AnalystQueueItem": {
       "title": "AnalystQueueItem",
-      "description": "Flagged high-risk transaction cases for manual fraud analyst review",
+      "description": "Flagged high-risk transaction cases strictly restricted to verified fraud analysts",
       "type": "object",
       "properties": {
         "transactionId": { "type": "string", "maxLength": 128 },
@@ -78,9 +78,11 @@
     },
     "GuardianAlert": {
       "title": "GuardianAlert",
-      "description": "High-risk alert records dispatched to trusted guardians with PII isolation",
+      "description": "High-risk alert records accessible only to the ward owner or invited guardian",
       "type": "object",
       "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "guardianId": { "type": "string", "maxLength": 128 },
         "guardianPhone": { "type": "string", "maxLength": 20 },
         "wardName": { "type": "string", "maxLength": 100 },
         "wardPhone": { "type": "string", "maxLength": 20 },
@@ -91,29 +93,49 @@
         "status": { "type": "string", "enum": ["pending", "acknowledged", "warned"] },
         "adviceBn": { "type": "string", "maxLength": 300 }
       },
-      "required": ["guardianPhone", "wardName", "amount", "riskScore", "status", "timestamp"]
+      "required": ["userId", "guardianId", "guardianPhone", "wardName", "amount", "riskScore", "status", "timestamp"]
+    },
+    "FraudBlocklistEntry": {
+      "title": "FraudBlocklistEntry",
+      "description": "Governed SHA-256 phone hash blocklist entry managed exclusively by admins",
+      "type": "object",
+      "properties": {
+        "phoneHash": { "type": "string", "maxLength": 64 },
+        "maskedPhone": { "type": "string", "maxLength": 20 },
+        "source": { "type": "string", "enum": ["bangladesh_bank_alert", "analyst_escalation", "community_verified", "mfs_federated_feed"] },
+        "addedBy": { "type": "string", "maxLength": 128 },
+        "addedAt": { "type": "string", "maxLength": 40 },
+        "version": { "type": "number" },
+        "status": { "type": "string", "enum": ["active", "revoked"] },
+        "reason": { "type": "string", "maxLength": 300 }
+      },
+      "required": ["phoneHash", "source", "addedBy", "addedAt", "version", "status"]
     }
   },
   "firestore": {
     "/users/{userId}": {
       "schema": { "$ref": "#/entities/User" },
-      "description": "User profile document containing balance, settings, and role"
+      "description": "User profile document; only owner can read/update non-sensitive preferences; balance/pin/risk fields are server-only"
     },
     "/users/{userId}/transactions/{transactionId}": {
       "schema": { "$ref": "#/entities/Transaction" },
-      "description": "Subcollection of transactions private to the authenticated owner"
+      "description": "Subcollection of transactions private to the owner; analysts have read-only access"
     },
     "/users/{userId}/goals/{goalId}": {
       "schema": { "$ref": "#/entities/SavingsGoal" },
-      "description": "Subcollection of financial goals and micro-savings for the user"
+      "description": "Subcollection of financial goals private to the owner"
     },
     "/analyst_queue/{itemId}": {
       "schema": { "$ref": "#/entities/AnalystQueueItem" },
-      "description": "Queue of suspicious cases accessible to fraud analysts"
+      "description": "Queue of suspicious cases accessible exclusively to verified fraud analysts"
     },
     "/guardian_alerts/{alertId}": {
       "schema": { "$ref": "#/entities/GuardianAlert" },
-      "description": "Alerts dispatched to guardian phone numbers with private data omitted"
+      "description": "Alerts accessible exclusively to the ward owner or invited guardian"
+    },
+    "/fraud_blocklist/{phoneHash}": {
+      "schema": { "$ref": "#/entities/FraudBlocklistEntry" },
+      "description": "Governed collection of SHA-256 phone hashes; admin-only write access"
     }
   }
 }
