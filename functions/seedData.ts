@@ -245,10 +245,51 @@ export function generateSeedData() {
       categoryEn: 'Others',
       roundUpAmount: 0,
       timestamp: daysAgo(18, 2, 45), // Odd hour!
-      status: 'flagged',
+      status: 'blocked',
       riskScore: 88,
       riskLevel: 'high',
       riskSignals: ['FLAGGED_RECIPIENT_DATABASE', 'SEVERE_AMOUNT_ANOMALY', 'ODD_HOURS_ACTIVITY', 'SUSPICIOUS_NOTE_KEYWORDS'],
+      feedbackGiven: 'helpful',
+      isScamConfirmed: true
+    },
+    {
+      id: 'tx_12',
+      userId: primaryUser.id,
+      type: 'send_money',
+      recipient: '01988776655',
+      recipientName: 'নতুন অনলাইন ভেন্ডর',
+      amount: 4800,
+      fee: 0,
+      total: 4800,
+      note: 'অগ্রিম গ্যাজেট অর্ডার',
+      category: 'শপিং',
+      categoryEn: 'Shopping & Groceries',
+      roundUpAmount: 0,
+      timestamp: daysAgo(21, 22, 15),
+      status: 'completed',
+      riskScore: 48,
+      riskLevel: 'medium',
+      riskSignals: ['NEW_RECIPIENT', 'ELEVATED_AMOUNT_RATIO'],
+      feedbackGiven: 'helpful'
+    },
+    {
+      id: 'tx_13',
+      userId: primaryUser.id,
+      type: 'send_money',
+      recipient: '01999999999',
+      recipientName: 'টেলিগ্রাম ডাবল মানি গ্রুপ',
+      amount: 7500,
+      fee: 0,
+      total: 7500,
+      note: 'ডাবল বোনাস ভেরিফিকেশন ফি',
+      category: 'অন্যান্য',
+      categoryEn: 'Others',
+      roundUpAmount: 0,
+      timestamp: daysAgo(25, 1, 50),
+      status: 'blocked',
+      riskScore: 91,
+      riskLevel: 'high',
+      riskSignals: ['FLAGGED_RECIPIENT_DATABASE', 'SUSPICIOUS_NOTE_KEYWORDS', 'ODD_HOURS_ACTIVITY'],
       feedbackGiven: 'helpful',
       isScamConfirmed: true
     }
@@ -354,23 +395,23 @@ export function generateSeedData() {
     const ageGroup = ageGroups[i % ageGroups.length];
     const userTenure = i % 3 === 0 ? 'new' : 'established';
     
-    // Simulate score with high fidelity
+    // Simulate score deterministically without Math.random()
     let predictedScore = 0;
     if (isActualFraud) {
-      predictedScore = 65 + Math.floor(Math.sin(i) * 15) + Math.floor(Math.random() * 15);
+      predictedScore = 72 + ((i * 7) % 24);
       predictedScore = Math.min(98, Math.max(68, predictedScore));
     } else {
-      // Normal transactions, with a few false alarms
+      // Normal transactions, with deterministic false alarms
       const falseAlarm = i % 17 === 0;
       if (falseAlarm) {
         predictedScore = 72; // False positive
       } else {
-        predictedScore = 8 + Math.floor(Math.random() * 25);
+        predictedScore = 8 + ((i * 5) % 24);
       }
     }
 
     const predictedLevel = predictedScore >= 70 ? 'high' : predictedScore >= 35 ? 'medium' : 'low';
-    const latencyMs = 85 + Math.floor(Math.random() * 110);
+    const latencyMs = 88 + ((i * 11) % 95);
     const amount = isActualFraud ? (15000 + (i * 700) % 35000) : (150 + (i * 240) % 4500);
 
     benchmarkCases.push({
