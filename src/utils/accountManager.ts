@@ -14,7 +14,6 @@ export const DEFAULT_DEMO_USER: UserProfile = {
   id: 'user_01794809461',
   phone: '01794809461',
   name: 'MD. AL-MAYNUL HASAN',
-  pin: '1234',
   balance: 18450
 };
 
@@ -208,7 +207,6 @@ export function registerNewAccount(params: NewRegistrationParams): UserProfile {
     phone: cleanedPhone,
     email: params.email?.trim() || undefined,
     balance: welcomeBonus,
-    pin: params.pin || '1234',
     isBiometricEnabled: true,
     role: 'user',
     language: 'bn',
