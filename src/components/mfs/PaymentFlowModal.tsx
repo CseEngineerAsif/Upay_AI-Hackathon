@@ -188,13 +188,10 @@ export const PaymentFlowModal: React.FC<PaymentFlowModalProps> = ({ initialType,
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: user?.id || 'user_main_maynul',
           amount: numAmount,
           recipientPhone: targetRecipient,
           recipientName,
-          note,
-          userBaselineAvgAmount: 1200,
-          recentTransactions: transactions
+          note
         })
       });
 
