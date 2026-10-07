@@ -78,18 +78,15 @@ export const BanglaQrScanModal: React.FC<{ onClose: () => void }> = ({ onClose }
 
 // 2. CHANGE PIN MODAL
 export const ChangePinModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { user, language } = useAppStore();
+  const { language, changePin } = useAppStore();
   const [oldPin, setOldPin] = useState('');
   const [newPin, setNewPin] = useState('');
   const [confirmPin, setConfirmPin] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
   const [msg, setMsg] = useState({ text: '', isError: false });
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (oldPin !== (user?.pin || '1234')) {
-      setMsg({ text: 'বর্তমান পিন সঠিক নয়', isError: true });
-      return;
-    }
     if (newPin.length !== 4) {
       setMsg({ text: 'নতুন পিন অবশ্যই ৪ ডিজিট হতে হবে', isError: true });
       return;
@@ -99,10 +96,16 @@ export const ChangePinModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
       return;
     }
 
-    if (user) {
-      user.pin = newPin;
+    setIsSaving(true);
+    const res = await changePin(oldPin, newPin);
+    setIsSaving(false);
+
+    if (!res.success) {
+      setMsg({ text: res.error || 'বর্তমান পিন সঠিক নয়', isError: true });
+      return;
     }
-    setMsg({ text: 'পিন সফলভাবে পরিবর্তিত হয়েছে!', isError: false });
+
+    setMsg({ text: 'পিন সফলভাবে সার্ভার-সাইড scrypt হ্যাশে আপডেট হয়েছে!', isError: false });
     setTimeout(onClose, 1500);
   };
 
@@ -120,7 +123,9 @@ export const ChangePinModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
 
         <form onSubmit={handleSave} className="space-y-3 text-xs">
           <div>
-            <label className="font-bold text-slate-700 block mb-1">বর্তমান পিন (বর্তমান: 1234):</label>
+            <label className="font-bold text-slate-700 block mb-1">
+              {language === 'bn' ? 'বর্তমান ৪ ডিজিটের পিন:' : 'Current 4-Digit PIN:'}
+            </label>
             <input
               type="password"
               maxLength={4}
@@ -163,9 +168,10 @@ export const ChangePinModal: React.FC<{ onClose: () => void }> = ({ onClose }) =
 
           <button
             type="submit"
-            className="w-full py-2.5 rounded-xl bg-[#0B4DA2] text-white font-bold text-xs shadow-md"
+            disabled={isSaving}
+            className="w-full py-2.5 rounded-xl bg-[#0B4DA2] text-white font-bold text-xs shadow-md disabled:opacity-60"
           >
-            পিন আপডেট করুন
+            {isSaving ? (language === 'bn' ? 'যাচাই হচ্ছে...' : 'Verifying...') : 'পিন আপডেট করুন'}
           </button>
         </form>
       </div>
